@@ -18,7 +18,7 @@ public class QueenBoard extends GameBoard {
 	}
 	
 	@Override
-	protected void setBoard(Object position) throws IllegalArgumentException {
+	public void setBoard(Object position) throws IllegalArgumentException {
 		
 		int a = 0;
 		for (int i = 0; i < column; i ++)

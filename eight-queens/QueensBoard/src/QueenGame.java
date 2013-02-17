@@ -33,7 +33,6 @@ public class QueenGame extends Game {
 	{
 		myDrawer = new GameBoardComponent(myGame);
 		drawGameBoard();
-		//Add the rest
 	}
 
 }
