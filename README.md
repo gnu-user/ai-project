@@ -8,11 +8,13 @@ Summary of Course Projects and Their Solutions
 ----------------------------------------------
 
 1.  The first course project was to implement a solution to the [8 Queens Puzzle](https://en.wikipedia.org/wiki/8_queens)
-    our solution to the problem involves using a genetic algrorithm with roulette wheel selection method,
+    our solution to the problem involves using a Genetic Algrorithm **(GA)** with roulette wheel selection method,
     as well as cross-over, mutation, and cloning for the operations on the chromosomes.
 
 2.  The second project was to implement a solution to find the mimimum/optimum solution to five functions, some of
     the functions are challenging optimization problems such as [Rosenbrock's function](http://en.wikipedia.org/wiki/Rosenbrock_function)
+    Our solution inolves the use of Differential Evolution **(DE)** in order to approach and optimal solution to find the
+    minimum for the functions quickly.
 
 
 Methodology, Analysis, and Conclusions
