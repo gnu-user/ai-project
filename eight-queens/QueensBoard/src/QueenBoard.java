@@ -3,7 +3,7 @@ public class QueenBoard extends GameBoard {
 	
 	private static final int NUMBER_OF_QUEENS = 8;
 	
-	public QueenBoard (int[] queenPosition)
+	public QueenBoard (int[] queenPosition) throws IllegalArgumentException
 	{
 		row = 8; 
 		column = 8;
@@ -13,11 +13,12 @@ public class QueenBoard extends GameBoard {
 		gridOn = true;
 		center = true;
 		pieceMove = -1;
+		
 		setBoard(queenPosition);
 	}
 	
 	@Override
-	protected void setBoard(Object position){
+	protected void setBoard(Object position) throws IllegalArgumentException {
 		
 		int a = 0;
 		for (int i = 0; i < column; i ++)
@@ -40,14 +41,14 @@ public class QueenBoard extends GameBoard {
 		
 		if (size > NUMBER_OF_QUEENS)
 		{
-			//THROW EXECEPTION
+			throw new IllegalArgumentException("Array size must be less than 8");
 		}
 		for(int i = 0; i < size ; i++)
 		{
 			QueenPiece newPos = new QueenPiece(queenPosition[i], i);
-			if(newPos.getRow() > NUMBER_OF_QUEENS)
+			if(newPos.getRow() >= NUMBER_OF_QUEENS)
 			{
-				//THROW EXECEPTION
+				throw new IllegalArgumentException("Elements in array must be between 0 and 7");
 			}
 			
 			piece[i] = newPos;
