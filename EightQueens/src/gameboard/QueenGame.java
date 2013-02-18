@@ -35,7 +35,7 @@ public class QueenGame extends Game
 		this.myGame = chessBoard;
 		
 		frame = new JFrame ();
-		frame.setSize(500,500);
+		frame.setSize(600,625);
 		frame.setTitle("8 Queens Problem");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
