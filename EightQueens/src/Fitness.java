@@ -35,7 +35,7 @@ public abstract class Fitness
 	 * population. The fitness function Calculates the fitness of each chromosome using 
 	 * the following:
 	 *
-	 * fitness = 1 - ((chromosome collisions) / (sum of all chromosomes collisions))
+	 * fitness = 1 / (chromosome collisions)
 	 * 
 	 * Each of the fitness values is a float of the fitness of the chromosome, a chromosome
 	 * without any collisions has a fitness value of 1 and is a solution.
@@ -50,25 +50,22 @@ public abstract class Fitness
 		HashMap<Chromosome, Integer> collisions = new HashMap<Chromosome, Integer>(chromosomes.size());
 		HashMap<Chromosome, Double> fitness = new HashMap<Chromosome, Double>(chromosomes.size());
 		Integer numCollisions = 0;
-		Integer totalCollisions = 0;
-		Double fitnessValue = 0.0;
+		
 		
 		/* For each chromosome calculate the number of collisions */
 		for (Chromosome chromosome : chromosomes)
 		{
 			numCollisions = calcCollisions(chromosome);			
 			collisions.put(chromosome, numCollisions);
-
-			totalCollisions += numCollisions;
 		}
 		
 		/* Calculate the fitness value of each chromosome using the fitness function:
 		 * 
-		 * fitness = 1 - ((chromosome collisions) / (sum of all chromosomes collisions))
+		 * fitness = 1 / (chromosome collisions)
 		 */
 		for (Chromosome chromosome : chromosomes)
 		{
-			fitness.put(chromosome, 1.0 - ((double) collisions.get(chromosome) / (double) totalCollisions));
+			fitness.put(chromosome, 1.0 / (double) collisions.get(chromosome));
 		}
 		
 		return fitness;
@@ -79,7 +76,8 @@ public abstract class Fitness
 	 * Takes a chromosome and returns the number of collisions that occurred.
 	 * For each queen (gene) in the chromosome the number of vertical and diagonal
 	 * collisions is counted, repeated collisions between Queens are counted relative
-	 * to each queen.
+	 * to each queen. If no collisions occur, the base case of 1 is returned to prevent
+	 * divide by zero error when calculating the fitness.
 	 *
 	 * @param chromosome The chromosome to calculate the number of collisions for
 	 * 
@@ -116,6 +114,14 @@ public abstract class Fitness
 			}
 		}
 		
-		return numCollisions;
+		/* Return the base case of 1, to prevent divide by zero if NO collisions occur */
+		if (numCollisions == 0)
+		{
+			return 1;
+		}
+		else
+		{
+			return numCollisions;
+		}
 	}
 }
