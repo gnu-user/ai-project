@@ -18,8 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Random;
+
 import com.google.common.collect.Range;
 
 
@@ -84,10 +85,8 @@ public class Chromosome
 	 * @param A secure random number generator used to seed the generation of 
 	 * a uniform random distribution of coordinates for the genes of the chromosome.
 	 */
-	public Chromosome(SecureRandom seed)
-	{
-		SecureRandom random = new SecureRandom(seed.generateSeed(16));
-		
+	public Chromosome(Random random)
+	{	
 		/* Generate random coordinates for the genes within [0, 7] range */
 		chromosome = new ArrayList<Integer>(NUMBER_GENES);
 		
@@ -101,7 +100,7 @@ public class Chromosome
 	/**
 	 * Gets the chromosome
 	 */
-	public Integer get()
+	public ArrayList<Integer> get()
 	{
 		return chromosome;
 	}
