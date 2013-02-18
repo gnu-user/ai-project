@@ -23,35 +23,59 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
+import com.google.common.primitives.Ints;
+
 public class EightQueens
 {
 	private static final Integer POPULATION = 64;
+	private static boolean solved = false;
 	
 	public static void main(String[] args)
 	{
-		/* Create an array of uniformly random chromosomes for initial population */
-		ArrayList<Chromosome> initPopulation =  new ArrayList<Chromosome>(POPULATION);
-		
-		while (initPopulation.size() < POPULATION)
+		while (!solved)
 		{
-			initPopulation.add(new Chromosome(new Random()));
-		}
-		
-		/*
-		for (Chromosome chromosome : initPopulation)
-		{
-			System.out.println(chromosome.get().toString());
-		}*/
-		
-		/* Calculate the number of collisions */
-		HashMap<Chromosome, Integer> collisions = Fitness.calculate(initPopulation);
-		
-		/* Display the number of collisions for each */
-		System.out.println("\n\nNUMBER OF COLLISIONS");
-		for (Chromosome chromosome : collisions.keySet())
-		{
-			System.out.println("\nCHROMOSOME: " + chromosome.get().toString());
-			System.out.println("COLLISIONS: " + collisions.get(chromosome));
+			/* Create an array of uniformly random chromosomes for initial population */
+			ArrayList<Chromosome> initPopulation =  new ArrayList<Chromosome>(POPULATION);
+			
+			while (initPopulation.size() < POPULATION)
+			{
+				initPopulation.add(new Chromosome(new Random()));
+			}
+			
+			/*
+			for (Chromosome chromosome : initPopulation)
+			{
+				System.out.println(chromosome.get().toString());
+			}*/
+			
+			/* Calculate the number of collisions */
+			HashMap<Chromosome, Integer> collisions = Fitness.calculate(initPopulation);
+			
+			/* Display the number of collisions for each */
+			System.out.println("\n\nNUMBER OF COLLISIONS");
+			for (Chromosome chromosome : collisions.keySet())
+			{
+				System.out.println("\nCHROMOSOME: " + chromosome.get().toString());
+				System.out.println("COLLISIONS: " + collisions.get(chromosome));
+				
+				/*
+				if (collisions.get(chromosome) == 0)
+				{
+					QueenGame myGame = null;
+					try{
+						myGame = new QueenGame (new QueenBoard(Ints.toArray(chromosome.get())));
+						myGame.playGame();
+						solved = true;
+						
+						System.out.println("DONE!!!!");
+						break;
+					}
+					catch (Exception e)
+					{
+						System.out.println("Bad set of Queens");
+					}
+				}*/
+			}
 		}
 	}
 }
