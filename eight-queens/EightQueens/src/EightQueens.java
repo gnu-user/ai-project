@@ -1,4 +1,4 @@
-/*
+/**
  * Artificial Intelligence Project -- Eight Queens Puzzle
  *
  * Copyright (C) 2013, Jonathan Gillett, Joseph Heron, and Daniel Smullen
@@ -20,6 +20,7 @@
  */
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 public class EightQueens
@@ -36,9 +37,21 @@ public class EightQueens
 			initPopulation.add(new Chromosome(new Random()));
 		}
 		
+		/*
 		for (Chromosome chromosome : initPopulation)
 		{
 			System.out.println(chromosome.get().toString());
+		}*/
+		
+		/* Calculate the number of collisions */
+		HashMap<Chromosome, Integer> collisions = Fitness.calculate(initPopulation);
+		
+		/* Display the number of collisions for each */
+		System.out.println("\n\nNUMBER OF COLLISIONS");
+		for (Chromosome chromosome : collisions.keySet())
+		{
+			System.out.println("\nCHROMOSOME: " + chromosome.get().toString());
+			System.out.println("COLLISIONS: " + collisions.get(chromosome));
 		}
 	}
 }
