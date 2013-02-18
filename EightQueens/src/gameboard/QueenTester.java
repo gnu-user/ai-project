@@ -1,4 +1,4 @@
-
+package gameboard;
 
 public class QueenTester
 {

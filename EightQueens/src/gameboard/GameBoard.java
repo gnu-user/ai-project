@@ -5,6 +5,8 @@
  * 
  * @author Joseph Heron
  */
+package gameboard;
+
 public abstract class GameBoard 
 {	
 	protected int column;		//The x size of the grid, the number of columns

@@ -1,3 +1,5 @@
+package gameboard;
+
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import java.awt.Color;

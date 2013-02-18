@@ -1,3 +1,4 @@
+package gameboard;
 
 public class Tile
 {

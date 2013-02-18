@@ -1,3 +1,5 @@
+package gameboard;
+
 import javax.swing.JFrame;
 
 
