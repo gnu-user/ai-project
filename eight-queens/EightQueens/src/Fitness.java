@@ -85,7 +85,7 @@ public abstract class Fitness
 		for (int i = 0; i < chromosome.size(); ++i)
 		{
 			/* Wrap around the genes in the chromosome to check each one */
-			for (int j = i++; j != i; ++j, j %= chromosome.size())
+			for (int j = (i + 1) % chromosome.size(); j != i; ++j, j %= chromosome.size())
 			{
 				/* Check for vertical collision */
 				if (chromosome.get(i).compareTo(chromosome.get(j)) == 0)
