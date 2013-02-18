@@ -52,17 +52,17 @@ public class EightQueens
 			}*/
 			
 			/* Calculate the number of collisions */
-			HashMap<Chromosome, Integer> collisions = Fitness.calculate(initPopulation);
+			HashMap<Chromosome, Double> fitness = Fitness.calculate(initPopulation);
 			
 			/* Display the number of collisions for each */
 			System.out.println("\n\nNUMBER OF COLLISIONS");
-			for (Chromosome chromosome : collisions.keySet())
+			for (Chromosome chromosome : fitness.keySet())
 			{
 				System.out.println("\nCHROMOSOME: " + chromosome.get().toString());
-				System.out.println("COLLISIONS: " + collisions.get(chromosome));
+				System.out.println("FITNESS: " + fitness.get(chromosome));
 				
 				
-				if (collisions.get(chromosome) == 0)
+				if (fitness.get(chromosome) == 1.0)
 				{
 					QueenGame myGame = null;
 					try{

@@ -44,24 +44,36 @@ public abstract class Fitness
 	 * 
 	 * @return A hash mapping each chromosome to it's fitness value
 	 */
-	static public HashMap<Chromosome, Integer> calculate(ArrayList<Chromosome> chromosomes)
+	static public HashMap<Chromosome, Double> calculate(ArrayList<Chromosome> chromosomes)
 	{
 		/* Mapping of each chromosome to the total number of collisions */
 		HashMap<Chromosome, Integer> collisions = new HashMap<Chromosome, Integer>(chromosomes.size());
+		HashMap<Chromosome, Double> fitness = new HashMap<Chromosome, Double>(chromosomes.size());
 		Integer numCollisions = 0;
 		Integer totalCollisions = 0;
+		Double fitnessValue = 0.0;
 		
 		/* For each chromosome calculate the number of collisions */
 		for (Chromosome chromosome : chromosomes)
 		{
-			numCollisions = calcCollisions(chromosome);
-			totalCollisions += numCollisions;
-			
+			numCollisions = calcCollisions(chromosome);			
 			collisions.put(chromosome, numCollisions);
+
+			totalCollisions += numCollisions;
 		}
 		
-		return collisions;
+		/* Calculate the fitness value of each chromosome using the fitness function:
+		 * 
+		 * fitness = 1 - ((chromosome collisions) / (sum of all chromosomes collisions))
+		 */
+		for (Chromosome chromosome : chromosomes)
+		{
+			fitness.put(chromosome, 1.0 - ((double) collisions.get(chromosome) / (double) totalCollisions));
+		}
+		
+		return fitness;
 	}
+	
 	
 	/**
 	 * Takes a chromosome and returns the number of collisions that occurred.
