@@ -19,19 +19,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class EightQueens
 {
+	private static final Integer POPULATION = 64;
+	
 	public static void main(String[] args)
 	{
 		/* Create an array of uniformly random chromosomes for initial population */
-		ArrayList<Chromosome> initPopulation =  new ArrayList<Chromosome>(10);
+		ArrayList<Chromosome> initPopulation =  new ArrayList<Chromosome>(POPULATION);
 		
-		while (initPopulation.size() < 10)
+		while (initPopulation.size() < POPULATION)
 		{
-			initPopulation.add(new Chromosome(new SecureRandom()));
+			initPopulation.add(new Chromosome(new Random()));
+		}
+		
+		for (Chromosome chromosome : initPopulation)
+		{
+			System.out.println(chromosome.get().toString());
 		}
 	}
 }
