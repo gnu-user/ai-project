@@ -83,28 +83,6 @@ public abstract class Piece {
 	 */
 	public boolean validMove(int column, int row)
 	{
-		int tempX = column - this.column;
-		int tempY = this.row - row;
-		
-		if (!validDirection(Direction.direction(tempX, tempY)))
-		{
-			return false;
-		}
-		
-		if (tempX < 0)
-		{
-			tempX*=-1;
-		}
-		
-		if (tempY < 0)
-		{
-			tempY*=-1;
-		}
-		
-		if (distX() != tempX || distY() != tempY)
-		{			
-			return false;
-		}
-		return true;
+		return false;
 	}	
 }

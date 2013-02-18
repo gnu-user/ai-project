@@ -1,7 +1,11 @@
+import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import java.awt.Color;
 import java.awt.Graphics;			//Used to create a 2D graphic
 import java.awt.Graphics2D;			//Used to Draw a Rectangle and a name
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
 
 public class GameBoardComponent extends JComponent  {
 
@@ -11,6 +15,8 @@ public class GameBoardComponent extends JComponent  {
 	public static final Color PLAYER1 = Color.RED;
 	public static final Color PLAYER2 = Color.BLUE;
 	public GameBoard myGame;
+	
+	public static int difference = 6;
 	
 	public GameBoardComponent (GameBoard myGame)
 	{
@@ -29,6 +35,7 @@ public class GameBoardComponent extends JComponent  {
 		int col = -1;
 		int row = -1;
 		int [][] myMove = new int[0][2];
+		Image image = new ImageIcon("img/queen.png").getImage();
 		
 		//Draw order
 		//	Squares
@@ -85,6 +92,9 @@ public class GameBoardComponent extends JComponent  {
 							//g2.setColor(PLAYER2);
 						
 						g2.fillOval(myGame.getX(i+1), myGame.getY(j+1), myGame.getWidth(), myGame.getHeight());
+						
+						g2.drawImage(image, myGame.getX(i+1), myGame.getY(j+1), 
+								myGame.getWidth(), myGame.getHeight(), null);
 					}
 				}
 			}
