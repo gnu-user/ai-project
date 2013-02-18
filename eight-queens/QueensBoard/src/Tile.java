@@ -1,6 +1,6 @@
 
-public class Tile {
-
+public class Tile
+{
 	private boolean occupy;			//Indicates whether a the tile is occupied
 
 	/**

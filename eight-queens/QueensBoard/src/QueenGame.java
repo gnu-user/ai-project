@@ -1,11 +1,11 @@
 import javax.swing.JFrame;
 
 
-public class QueenGame extends Game {
-
+public class QueenGame extends Game
+{
 	private JFrame frame;
 	private GameBoardComponent myDrawer; 
-	protected GameBoard myGame;
+	protected GameBoard myGame;	
 	
 	
 	public QueenGame(QueenBoard chessBoard)
@@ -18,7 +18,6 @@ public class QueenGame extends Game {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 	}
-	
 
 	@Override
 	public void drawGameBoard() 
@@ -34,5 +33,4 @@ public class QueenGame extends Game {
 		myDrawer = new GameBoardComponent(myGame);
 		drawGameBoard();
 	}
-
 }

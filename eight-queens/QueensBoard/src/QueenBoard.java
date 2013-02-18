@@ -1,6 +1,6 @@
 
-public class QueenBoard extends GameBoard {
-	
+public class QueenBoard extends GameBoard
+{	
 	private static final int NUMBER_OF_QUEENS = 8;
 	
 	public QueenBoard (int[] queenPosition) throws IllegalArgumentException
@@ -68,5 +68,4 @@ public class QueenBoard extends GameBoard {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-
 }

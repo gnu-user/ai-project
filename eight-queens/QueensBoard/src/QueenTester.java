@@ -1,6 +1,7 @@
 
 
-public class QueenTester {
+public class QueenTester
+{
 	public static boolean android = false;
 	
 	public static void main (String[] args) throws InterruptedException
@@ -10,7 +11,8 @@ public class QueenTester {
 		//CheckerGame myGame = new CheckerGamePC(new CheckerBoard());
 		int[] positions = new int[]{ 0, 1, 2, 3, 4, 5, 6, 7};
 		QueenGame myGame = null;
-		try{
+		try
+		{
 			myGame = new QueenGame (new QueenBoard(positions));
 			myGame.playGame();
 		}
@@ -18,7 +20,5 @@ public class QueenTester {
 		{
 			System.out.println("Bad set of Queens");
 		}
-		
-		
 	}
 }

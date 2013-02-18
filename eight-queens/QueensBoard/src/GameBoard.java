@@ -19,24 +19,6 @@ public abstract class GameBoard
 	protected boolean gridOn;
 	protected int pieceMove;
 	
-	/**
-	 * Creates a grid that will fit on the screen and can be used to can be
-	 * resized to change the number of rows and columns
-	 * @param column : integer
-	 * @param row : integer
-	 * @param center : boolean keeps the board in the centre 
-	 * @param gridOn : boolean turns the grid on and off
-	 */
-	/*public GameBoard2 (int column, int row, boolean center, boolean gridOn)
-	{
-		
-		this.column = column;
-		this.row = row;
-		this.owner= new Piece [column][row];
-		this.center = center;
-		this.gridOn = gridOn;
-		//setOwner();
-	}*/
 	
 	/**
 	 * default constructor
@@ -45,49 +27,6 @@ public abstract class GameBoard
 	{
 		
 	}
-	
-	/**
-	 * Find the index of the piece at the given column and row
-	 * @param column : integer, the column of the piece 
-	 * @param row : integer, the row of the piece
-	 * @return : integer, the index for the piece at the given column and row or -1 if no piece is found
-	 */
-	/*protected int findPiece(int column, int row)
-	{
-		for (int i = 0; i < piece.length; i++)
-		{
-			if (piece[i].getColumn() == column && piece[i].getRow() == row)
-			{
-				if (piece[i].getOwner() > 0)
-				{
-					return i;
-				}
-			}
-		}
-		return -1;
-	}*/
-	
-	/*protected boolean removePiece(int pieceNum)
-	{
-		if (pieceNum < 0)
-		{
-			return false;
-		}
-		Piece p [] = new Piece[piece.length-1];
-		for (int i = 0; i < piece.length-1; i ++)
-		{
-			if (i >= pieceNum)
-			{
-				p[i].equal(piece[i+1]);
-			}
-			else 
-			{
-				p[i].equal(piece[i]);
-			}
-		}
-		piece = p;
-		return true;
-	}*/
 	
 	/**
 	 * Sets the owner of the grid spots
@@ -111,34 +50,6 @@ public abstract class GameBoard
 	 * @return the player that has lost
 	 */
 	public abstract int getLost ();
-	
-	/**
-	 * Calculates the number of Pieces owned by the given player
-	 * @param playerNumber an integer, the player that owns the Pieces
-	 * @return an integer, the number of Pieces the player owns
-	 */
-	/*protected int getPieceCount (int playerNumber)
-	{
-		int count = 0;
-		for (int i = 0; i < piece.length; i++)
-		{
-			if (piece[i].getOwner() == playerNumber)
-			{
-				count++;
-			}
-		}
-		return count;
-	}*/
-	
-	/**
-	 * Find the index of the piece that is being moved
-	 * @param col : integer, the column of the piece 
-	 * @param row : integer, the row of the piece
-	 */
-	/*public void setPieceMove(int col, int row)
-	{
-		this.pieceMove = findPiece(col,row);
-	}*/
 	
 	/**
 	 * The piece that is being currently moved
@@ -216,42 +127,6 @@ public abstract class GameBoard
 	}
 	
 	/**
-	 * Checks if the given column and row are on the GameBoard
-	 * @param col : integer
-	 * @param row : integer
-	 * @return : boolean, if the column and row are > 0 and less then the size
-	 * of the GameBoard then it will return true
-	 */
-	public boolean onBoard(int col, int row)
-	{
-		if (col >= 0 && col < this.column && row >= 0 && row < this.row) 
-		{
-			return true;
-		}
-		return false;
-	}
-	
-	/**
-	 * Changes the number of rows in the grid
-	 * @param newRow : integer
-	 */
-	/*protected void setRows (int newRow)
-	{
-		row = newRow;
-		resetArray();
-	}*/
-	
-	/**
-	 * Changes the number of columns in the grid
-	 * @param newColumn : integer
-	 */
-	/*protected void setColums (int newCol)
-	{
-		column = newCol;
-		resetArray();
-	}*/
-	
-	/**
 	 * Get row
 	 * @return the number of rows : integer
 	 */
@@ -259,91 +134,6 @@ public abstract class GameBoard
 	{
 		return row;
 	}
-	
-	/**
-	 * get the owner of the coordinate
-	 * @param column : integer
-	 * @param row : integer
-	 * @return owner : integer 
-	 */
-	/*public int getOwner (int column, int row)
-	{
-		if (findPiece(column, row) >= 0)
-		{
-			return piece[findPiece(column,row)].getOwner();
-		}
-		return findPiece(column,row);
-	}*/
-	
-	/**
-	 * get the owner of the coordinate
-	 * @param pieceNum : integer
-	 * @return owner : integer 
-	 */
-	/*public int getOwner (int pieceNum)
-	{
-		return piece[pieceNum].getOwner();
-	}*/
-	
-	/**
-	 * Changes the size of the gridSpot array to fit the changed column or row
-	 * Adds the colours from the previous grid to the new one
-	 * Initialises the colour of the new spots to be white
-	 */
-	/*private void resetArray ()
-	{
-		Piece newOwner[][] = new Piece [column][row];
-		
-		//Transfer colours to new grid
-		for (int i = 0; i < piece.length; i++ )
-		{
-			if (i >= column)
-				break;
-			for (int j = 0; j < piece[0].length; j++)
-			{
-				if (j >= row)
-					break;
-				newOwner[i][j]  = piece[i][j];
-			}
-		}
-		
-		//Initialise the new spots to white
-		if ( ((column+1)-  piece.length) > 0 || ((row+1) - piece[0].length) > 0)
-		{	
-			if (((column+1)-  piece.length) > 0)
-			{
-				for (int i = ((column+1) - ((column+1) -  piece.length)); i < column; i++)
-				{
-					for (int j = 0; j < row; j++)
-					{
-						//System.out.println ("NO");
-						newOwner[i][j].setOwner(0);
-					}
-				}
-			}
-			if (((row+1) - piece[0].length) > 0)
-			{
-				for (int i = 0; i < ((column+1) -  ((column+1) -  piece.length)); i++)
-				{
-					for (int j = ((row+1) - ((row+1) - piece[0].length)); j < row; j++)
-					{
-						newOwner[i][j].setOwner(0);
-					}
-				}
-			}
-		}
-		//Change the grid size
-		piece = newOwner;
-	}*/
-	
-	/**
-	 * Creates a grid on the window
-	 * @param gridOn : boolean
-	 */
-	/*public void setGridVisible (boolean gridOn)
-	{
-		this.gridOn = gridOn;
-	}*/
 	
 	/**
 	 * Set whether the grid is shown

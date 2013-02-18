@@ -1,5 +1,6 @@
 
-public abstract class Piece {
+public abstract class Piece
+{
 	protected int column;
 	protected int row;
 	

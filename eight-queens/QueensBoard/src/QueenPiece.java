@@ -1,6 +1,6 @@
 
-public class QueenPiece extends Piece {
-
+public class QueenPiece extends Piece
+{
 	public QueenPiece(int column, int row)
 	{
 		this.column = column;
@@ -24,5 +24,4 @@ public class QueenPiece extends Piece {
 		// TODO Auto-generated method stub
 		return false;
 	}
-
 }

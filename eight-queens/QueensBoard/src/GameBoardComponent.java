@@ -7,21 +7,17 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 
-public class GameBoardComponent extends JComponent  {
-
+public class GameBoardComponent extends JComponent
+{
 	public static final Color PASS = Color.BLACK;
 	public static final Color MOVE = Color.GREEN;
 	public static final Color NOPASS = Color.WHITE;
 	public static final Color PLAYER1 = Color.RED;
-	public static final Color PLAYER2 = Color.BLUE;
 	public GameBoard myGame;
-	
-	public static int difference = 6;
 	
 	public GameBoardComponent (GameBoard myGame)
 	{
 		this.myGame = myGame;
-		
 	}
 	
 	/**
@@ -42,13 +38,6 @@ public class GameBoardComponent extends JComponent  {
 		// 	Valid moves
 		//	Circles 
 		myGame.setSize(getWidth(), getHeight());
-		/*if (myGame.getPiece()>=0)
-		{
-			player = myGame.getOwner(myGame.getPiece());
-			col = myGame.getPieceX(myGame.getPiece()); 
-			row = myGame.getPieceY(myGame.getPiece());
-			myMove = ((CheckerBoard) myGame).validMoves(player, col, row);
-		}*/
 		
 		if (myGame.getGridOn())	
 		{
@@ -84,12 +73,7 @@ public class GameBoardComponent extends JComponent  {
 					
 					if (!myGame.isTileNull(i, j) && myGame.getTileOwner(i,j))
 					{
-						//if (i == 0 && j == 4|| j == 5 && i == 1)
-							//System.out.println(myGame.getTiles(i,j).getOccupy() + "HELLO?" + i + " " + j);
-						//if (myGame.getOwner(i, j) == 1)
 						g2.setColor(PLAYER1);
-						//else if (myGame.getOwner(i, j) == 2)
-							//g2.setColor(PLAYER2);
 						
 						g2.fillOval(myGame.getX(i+1), myGame.getY(j+1), myGame.getWidth(), myGame.getHeight());
 						
