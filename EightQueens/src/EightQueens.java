@@ -18,12 +18,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import gameboard.QueenGame;
+import gameboard.QueenBoard;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
 import com.google.common.primitives.Ints;
+
 
 public class EightQueens
 {
@@ -58,7 +61,7 @@ public class EightQueens
 				System.out.println("\nCHROMOSOME: " + chromosome.get().toString());
 				System.out.println("COLLISIONS: " + collisions.get(chromosome));
 				
-				/*
+				
 				if (collisions.get(chromosome) == 0)
 				{
 					QueenGame myGame = null;
@@ -74,7 +77,7 @@ public class EightQueens
 					{
 						System.out.println("Bad set of Queens");
 					}
-				}*/
+				}
 			}
 		}
 	}
