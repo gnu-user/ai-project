@@ -18,7 +18,7 @@ Fitness Function
 - abstract function that basically takes an array of chromosomes and returns 
   a fitness distribution (hashma
 
-- getDist(chromosomes)
+- calculate(chromosomes)
 
 
 FitnessDist

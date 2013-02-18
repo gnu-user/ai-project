@@ -66,8 +66,16 @@ Collisions can occur in three ways:
 
 4.  Calculate the fitness of each chromosome using the following fitness function
 
+    OLD
+    //fitness = 1 - (chromosome collision) / (sum all chromosomes collisions)
 
-    fitness = 1 - (chromosome collision) / (sum all chromosomes collisions)
+    *** THIS ONE WAS PREFERRED TO MAKE IT SO THAT THE MUCH BETTER CHROMOSOMES
+        REALLY STAND OUT
+    ***
+
+    fitness = 1 / (chromosome collision)
+
+    where the base case is chromosome collision == 1, to avoid divide by 0
 
 
 5.  Each of the fitness values is a float of the fitness of the chromosome, stop
