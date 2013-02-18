@@ -1,4 +1,4 @@
-/*
+/**
  * Artificial Intelligence Project -- Eight Queens Puzzle
  *
  * Copyright (C) 2013, Jonathan Gillett, Joseph Heron, and Daniel Smullen
@@ -50,7 +50,7 @@ public class Chromosome
 	/**
 	 * Constructs a new chromosome given the array of integers provided.
 	 * 
-	 * @param The arraylist of vertical coordinates to construct 
+	 * @param coordinates The arraylist of vertical coordinates to construct 
 	 * the chromosome with, the maximum size of the array is 8 and no value
 	 * in the array can be greater than 7.
 	 * 
@@ -82,7 +82,7 @@ public class Chromosome
 	 * Construct a new chromosome with random initial values for each of the genes,
 	 * use this constructor to create the initial population of chromosomes.
 	 * 
-	 * @param A secure random number generator used to seed the generation of 
+	 * @param random A secure random number generator used to seed the generation of 
 	 * a uniform random distribution of coordinates for the genes of the chromosome.
 	 */
 	public Chromosome(Random random)
@@ -105,10 +105,13 @@ public class Chromosome
 		return chromosome;
 	}
 	
+	
 	/**
 	 * Gets either an index or a range of genes from the chromosome
 	 * 
-	 * @param The index of the gene to get from the chromosome
+	 * @param index The index of the gene to get from the chromosome
+	 * 
+	 * @return A gene from the chromosome
 	 * 
 	 * @throws IndexOutOfBoundsException  If the index is out of bounds
 	 */
@@ -121,12 +124,24 @@ public class Chromosome
 	/**
 	 * Gets either an index or a range of genes from the chromosome
 	 * 
-	 * @param The index of the gene to get from the chromosome
+	 * @param start The starting index of the gene to get from the chromosome
+	 * @param end The ending index of the gene to get from the chromosome
+	 * 
+	 * @return The specified genes from the chromosome
 	 * 
 	 * @throws IllegalArgumentException If the index is out of bounds
 	 */
 	public ArrayList<Integer> get(int start, int end) throws IndexOutOfBoundsException
 	{
 		return (ArrayList<Integer>) chromosome.subList(start, end);
+	}
+	
+	/**
+	 * Returns the number of genes that the chromosome has, useful for iterating
+	 * through each of the genes.
+	 */
+	public Integer size()
+	{
+		return NUMBER_GENES;
 	}
 }
