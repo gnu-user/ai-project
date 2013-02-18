@@ -22,6 +22,7 @@ import gameboard.QueenGame;
 import gameboard.QueenBoard;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -32,9 +33,68 @@ public class EightQueens
 {
 	private static final Integer POPULATION = 64;
 	private static boolean solved = false;
+	private static ArrayList<Chromosome> solutions;
+	
+	/**
+	 * Determines if the solution to the eight queens puzzle is unique if
+	 * so returns true.
+	 * 
+	 * @param chromosome The potential unique solution chromosome
+	 * @return True if the chromosome is a unique solution
+	 */
+	public static boolean uniqueSolution(Chromosome chromosome)
+	{
+		boolean unique = false;
+		
+		for (Chromosome uniqChromosome : solutions)
+		{
+			for (int i = 0; i < uniqChromosome.size(); ++i)
+			{
+				/* If any of the chromosome genes differ the genes are unique */
+				if (chromosome.get(i).compareTo(uniqChromosome.get(i)) == 0)
+				{
+					/* Current genes match */
+					unique = false;
+				}
+				else
+				{
+					unique = true;
+					break;
+				}
+			}
+			
+			/* If the current chromosome is not unique don't continue checking */
+			if (! unique)
+			{
+				break;
+			}
+		}
+		
+		return unique;
+	}
 	
 	public static void main(String[] args)
 	{
+		solutions = new ArrayList<Chromosome>();
+		
+		/*
+		solutions.add(new Chromosome(new ArrayList<Integer>(Arrays.asList(4, 2, 0, 6, 1, 7, 5, 3))));
+		solutions.add(new Chromosome(new ArrayList<Integer>(Arrays.asList(4, 3, 0, 6, 1, 7, 5, 3))));
+		
+		Chromosome temp = new Chromosome(new ArrayList<Integer>(Arrays.asList(4, 3, 0, 6, 1, 7, 5, 3)));
+		
+		if (uniqueSolution(temp))
+		{
+			System.out.println("UNIQUE!");
+			System.exit(0);
+		}
+		else
+		{
+			System.out.println("NOT UNIQUE!");
+			System.exit(0);
+		}*/
+		
+		
 		while (!solved)
 		{
 			/* Create an array of uniformly random chromosomes for initial population */
