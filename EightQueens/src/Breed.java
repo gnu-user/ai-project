@@ -38,9 +38,9 @@ public abstract class Breed
 	private static Random random;
 	
 	/* The cloning, crossover, and mutation percentage intervals */
-	public static final Range<Integer> CLONING = Range.closedOpen(0, 30);
-	public static final Range<Integer> CROSSOVER = Range.closedOpen(30, 99);
-	public static final Range<Integer> MUTATION = Range.closedOpen(99, 100);
+	public static  Range<Integer> CLONING = Range.closedOpen(0, 30);
+	public static  Range<Integer> CROSSOVER = Range.closedOpen(30, 99);
+	public static  Range<Integer> MUTATION = Range.closedOpen(99, 100);
 	
 	
 	/**
@@ -49,6 +49,27 @@ public abstract class Breed
 	static public void init(Random random)
 	{
 		Breed.random = random;
+	}
+	
+	/**
+	 * Increases the amount of genetic mutations that occur, which is usually
+	 * as a result of in breeding in genetics. This simulates the negative effects
+	 * of in-breeding within a population and increases the mutation rate by 5% each
+	 * time up to a maximum threshold value of 50%. 
+	 */
+	static public void inBreeding()
+	{
+		if (MUTATION.lowerEndpoint() > 49)
+		{
+			/* Decrease the CLONING upper endpoint by 2 */
+			Breed.CLONING = Range.closedOpen(0, CLONING.upperEndpoint() - 2);
+			
+			/* Decrease the lower bound by 2 and upper bound by 5 for CROSSOVER */
+			Breed.CROSSOVER = Range.closedOpen(CLONING.upperEndpoint(), CROSSOVER.upperEndpoint() - 5);
+			
+			/* Decrease the MUTATION lower bound by 5 */
+			Breed.MUTATION = Range.closedOpen(CROSSOVER.upperEndpoint(), 100);
+		}
 	}
 	
 	
