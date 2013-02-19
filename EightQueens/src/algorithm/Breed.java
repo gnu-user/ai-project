@@ -54,7 +54,7 @@ public abstract class Breed
 	
 	/**
 	 * Increases the amount of genetic mutations that occur, which is usually
-	 * as a result of in breeding in genetics. This simulates the negative effects
+	 * as a result of in-breeding in genetics. This simulates the negative effects
 	 * of in-breeding within a population and increases the mutation rate by 5% each
 	 * time up to a maximum threshold value, otherwise if the population is not in-bred
 	 * the amount of mutation decreases down to the original mutation rate of 1%.

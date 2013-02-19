@@ -138,7 +138,7 @@ public class Chromosome
 	
 	
 	/**
-	 * Gets the chromosome
+	 * Gets the chromosome coordinates (genes)
 	 */
 	public ArrayList<Integer> get()
 	{
@@ -165,7 +165,7 @@ public class Chromosome
 	
 	
 	/**
-	 * Gets either an index or a range of genes from the chromosome
+	 * Gets a gene from the chromosome at the index specified
 	 * 
 	 * @param index The index of the gene to get from the chromosome
 	 * 
@@ -197,7 +197,7 @@ public class Chromosome
 	
 	
 	/**
-	 * Gets either an index or a range of genes from the chromosome
+	 * Gets a range of genes from the chromosome
 	 * 
 	 * @param start The starting index of the gene to get from the chromosome
 	 * @param end The ending index of the gene to get from the chromosome
