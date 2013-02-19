@@ -32,11 +32,13 @@ import com.google.common.primitives.Ints;
 public class EightQueens
 {
 	private static final Integer POPULATION = 64;
-	private static boolean solved = false;
+	private static final Double INBREEDING_THRESHOLD = 0.25;
+	
+	private static ArrayList<Chromosome> population;
 	private static ArrayList<Chromosome> solutions;
-	
+
+	private static boolean solved = false;
 	private static Random random;
-	
 	private static Integer numGenerations = 0;
 	
 	/**
@@ -77,12 +79,87 @@ public class EightQueens
 		return unique;
 	}
 	
+	
+	/**
+	 * Calculates the percentage of chromosomes that are similar, this is an indication
+	 * about how much in-breeding has occurred.
+	 * 
+	 * @return Percentage of the number of chromosomes that are similar
+	 */
+	public static Double similarChromosomes(ArrayList<Chromosome> chromosomes)
+	{
+		boolean unique = true;
+		
+		int similar = 0;
+		int curSimilar = 0;
+		int curIndex = 0;
+		
+		/* Create a copy of the chromosome arraylist */
+		ArrayList<Chromosome> localChromosomes = new ArrayList<Chromosome>(chromosomes);
+		
+
+		for (Chromosome chromosomeA : localChromosomes)
+		{
+			curSimilar = 0;
+			curIndex = chromosomes.indexOf(chromosomeA);
+			
+			/* Check each chromosome to see if there are any similar */
+			for (Chromosome chromosomeB : localChromosomes)
+			{	
+				/* If the current iterator index is not ourselves */
+				if (chromosomes.indexOf(chromosomeA) != chromosomes.indexOf(chromosomeB))
+				{
+					/* Check to see if the chromosomes are similar */
+					for (int i = 0; i < chromosomeB.size(); ++i)
+					{
+						/* If any of the chromosome genes differ the genes are unique */
+						if (chromosomeA.get(i).compareTo(chromosomeB.get(i)) == 0)
+						{
+							/* Current genes match */
+							unique = false;
+						}
+						else
+						{
+							unique = true;
+							break;
+						}
+					}
+					
+					/* If the chromosome is not unique increment counter, remove chromosome */
+					if (! unique)
+					{
+						++curSimilar;
+						localChromosomes.remove(chromosomeB);
+					}
+				}
+			}
+			
+			/* If there were any similar chromosomes found, remove chromosomeA */
+			if (curSimilar > 0)
+			{
+				++curSimilar;
+				localChromosomes.remove(chromosomeA);
+				
+				similar += curSimilar;
+			}
+		}
+		
+		/* Calculate the percentage of chromosomes that were similar */
+		if (similar > 0)
+		{
+			return (double) similar / (double) chromosomes.size();
+		}
+		
+		return 0.0;
+	}
+	
+	
 	public static void main(String[] args)
 	{
 		solutions = new ArrayList<Chromosome>();
 		
 		/* Create an array of uniformly random chromosomes for initial population */
-		ArrayList<Chromosome> population =  new ArrayList<Chromosome>(POPULATION);
+		population =  new ArrayList<Chromosome>(POPULATION);
 		
 		random = new Random();
 		
@@ -113,6 +190,7 @@ public class EightQueens
 			System.out.println("NOT UNIQUE!");
 			System.exit(0);
 		}*/	
+		
 		
 		while (!solved)
 		{	
