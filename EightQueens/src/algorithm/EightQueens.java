@@ -1,3 +1,4 @@
+package algorithm;
 /**
  * Artificial Intelligence Project -- Eight Queens Puzzle
  *
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
+
 
 import com.google.common.primitives.Ints;
 

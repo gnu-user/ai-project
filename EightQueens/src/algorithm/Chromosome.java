@@ -1,3 +1,4 @@
+package algorithm;
 /**
  * Artificial Intelligence Project -- Eight Queens Puzzle
  *
