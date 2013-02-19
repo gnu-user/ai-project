@@ -55,21 +55,51 @@ public abstract class Breed
 	 * Increases the amount of genetic mutations that occur, which is usually
 	 * as a result of in breeding in genetics. This simulates the negative effects
 	 * of in-breeding within a population and increases the mutation rate by 5% each
-	 * time up to a maximum threshold value of 50%. 
+	 * time up to a maximum threshold value, otherwise if the population is not in-bred
+	 * the amount of mutation decreases down to the original mutation rate of 1%.
+	 * 
+	 * If the population is in-bred the amount of genetic mutation that occur increases,
+	 * whereas if the amount of in-breeding is minimal the amount of genetic mutations
+	 * that occurs is minimized.
+	 * 
+	 * @inBred True if the current population is in-bred and at the minimum threshold,
+	 * false otherwise.
 	 */
-	static public void inBreeding()
+	static public void inBreeding(boolean inBred)
 	{
-		if (MUTATION.lowerEndpoint() > 49)
+		
+		if (inBred)
 		{
-			/* Decrease the CLONING upper endpoint by 2 */
-			Breed.CLONING = Range.closedOpen(0, CLONING.upperEndpoint() - 2);
-			
-			/* Decrease the lower bound by 2 and upper bound by 5 for CROSSOVER */
-			Breed.CROSSOVER = Range.closedOpen(CLONING.upperEndpoint(), CROSSOVER.upperEndpoint() - 5);
-			
-			/* Decrease the MUTATION lower bound by 5 */
-			Breed.MUTATION = Range.closedOpen(CROSSOVER.upperEndpoint(), 100);
+			if (MUTATION.lowerEndpoint() > 49)
+			{
+				/* Decrease the CLONING upper endpoint by 2 */
+				Breed.CLONING = Range.closedOpen(0, CLONING.upperEndpoint() - 2);
+				
+				/* Decrease the lower bound by 2 and upper bound by 5 for CROSSOVER */
+				Breed.CROSSOVER = Range.closedOpen(CLONING.upperEndpoint(), CROSSOVER.upperEndpoint() - 5);
+				
+				/* Decrease the MUTATION lower bound by 5 */
+				Breed.MUTATION = Range.closedOpen(CROSSOVER.upperEndpoint(), 100);
+			}
 		}
+		else
+		{
+			if (MUTATION.lowerEndpoint() < 99)
+			{
+				/* Increase the CLONING upper endpoint by 2 */
+				Breed.CLONING = Range.closedOpen(0, CLONING.upperEndpoint() + 2);
+				
+				/* Increase the lower bound by 2 and upper bound by 5 for CROSSOVER */
+				Breed.CROSSOVER = Range.closedOpen(CLONING.upperEndpoint(), CROSSOVER.upperEndpoint() + 5);
+				
+				/* Increase the MUTATION lower bound by 5 */
+				Breed.MUTATION = Range.closedOpen(CROSSOVER.upperEndpoint(), 100);
+			}
+		}
+		
+		//System.out.println("\nCLONING:   " + Breed.CLONING.toString());
+		//System.out.println("CROSSOVER: " + Breed.CROSSOVER.toString());
+		//System.out.println("MUTATION:  " + Breed.MUTATION.toString());
 	}
 	
 	
