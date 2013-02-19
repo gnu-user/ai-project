@@ -129,9 +129,9 @@ public class Selection
 		{
 			if (selection.get(chromosome).contains(randomNum))
 			{
-				System.out.println("RIGHT BOUND " + rightBound);
-				System.out.println("VALUE: " + randomNum);
-				System.out.println(selection.get(chromosome).toString());
+				//System.out.println("RIGHT BOUND " + rightBound);
+				//System.out.println("VALUE: " + randomNum);
+				//System.out.println(selection.get(chromosome).toString());
 				
 				/* Return a DEEP copy of the chromosome */
 				return new Chromosome(new ArrayList<Integer>(chromosome.get()));
