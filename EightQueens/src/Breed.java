@@ -20,6 +20,7 @@
  */
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 
@@ -70,7 +71,42 @@ public abstract class Breed
 	 */
 	static public ArrayList<Chromosome> crossover(Selection selection)
 	{
-		return null;
+		ArrayList<Chromosome> chromosomes = new ArrayList<Chromosome>(2);
+
+		Chromosome parent1 = selection.next();
+		Chromosome parent2 = selection.next();
+		
+		System.out.println("PARENT 1 BEFORE: " + parent1.get().toString());
+		System.out.println("PARENT 2 BEFORE: " + parent2.get().toString());
+		
+		/* Select a cross-over point, copy the genes, and then crossover the genes.
+		 * The genes MUST be copied instead of by reference in order to copy the
+		 * from each chromosome without them being altered.
+		 */
+		Integer crossover = random.nextInt(parent1.size());
+		
+		ArrayList<Integer> genes1 = new ArrayList<Integer>(
+											parent1.get(crossover, 
+														parent1.size() - 1)
+											);
+		ArrayList<Integer> genes2 = new ArrayList<Integer>(
+											parent2.get(crossover, 
+														parent2.size() - 1)
+											);
+		
+		System.out.println("CROSSOVER: " + crossover); 
+		
+		/* Perform crossover with the pair of genes from the chromosomes */
+		parent1.set(crossover, parent1.size() - 1, genes2);
+		parent2.set(crossover, parent2.size() - 1, genes1);
+		
+		chromosomes.add(parent1);
+		chromosomes.add(parent2);
+		
+		System.out.println("PARENT 1 AFTER:  " + chromosomes.get(0).get().toString());
+		System.out.println("PARENT 2 AFTER:  " + chromosomes.get(1).get().toString());
+		
+		return chromosomes;
 	}
 
 	
