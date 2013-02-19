@@ -33,7 +33,7 @@ import com.google.common.primitives.Ints;
 public class EightQueens
 {
 	private static final Integer POPULATION = 8;
-	private static final Double INBREEDING_THRESHOLD = 0.50;
+	private static final Double INBREEDING_THRESHOLD = 0.15;
 	
 	private static ArrayList<Chromosome> population;
 	private static ArrayList<Chromosome> solutions;
@@ -209,14 +209,19 @@ public class EightQueens
 		*/
 		
 		
-		while (solutions.size() < 1)
+		while (solutions.size() < 92)
 		{	
 			/* If the percentage of similar chromosomes due to in-breeding exceeds
 			 * the minimum threshold value, increase the amount of mutation
 			 */
 			if (similarChromosomes(population) >= INBREEDING_THRESHOLD)
 			{
-				Breed.inBreeding();
+				Breed.inBreeding(true);
+			}
+			
+			else
+			{
+				Breed.inBreeding(false);
 			}
 			
 			
@@ -272,6 +277,8 @@ public class EightQueens
 				{
 					/* Save a copy of the chromosome */
 					solutions.add(new Chromosome(new ArrayList<Integer>(chromosome.get())));
+					
+					System.out.println("\nNUMBER OF SOLUTIONS:   " + solutions.size());
 					System.out.println("NUMBER OF GENERATIONS: " + numGenerations);
 					
 					/* Create a new initial initial population of uniformly random chromosomes */
@@ -300,6 +307,7 @@ public class EightQueens
 			try{
 				myGame = new QueenGame (new QueenBoard(Ints.toArray(solution.get())));
 				myGame.playGame();
+				break;
 			}
 			catch (Exception e)
 			{
