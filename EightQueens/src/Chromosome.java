@@ -84,7 +84,8 @@ public class Chromosome
 	
 	
 	/**
-	 * Constructs a new chromosome given the array of integers provided.
+	 * Copy constructor, which constructs a new chromosome given the array of coordinates
+	 * (genes) provided.
 	 * 
 	 * @param coordinates The arraylist of vertical coordinates to construct 
 	 * the chromosome with, the maximum size of the array is 8 and no value

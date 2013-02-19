@@ -18,6 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Random;
@@ -111,6 +113,10 @@ public class Selection
 	 * The iterator method which uses roulette wheel selection to get the next
 	 * chromosome to be used for the genetic algorithm.
 	 * 
+	 * NOTE: The selection method creates a DEEP copy of the object rather than by
+	 * references to prevent crossover/mutation collision if the same chromosome
+	 * is selected multiple times.
+	 * 
 	 * @return The next chromosome selected using roulette wheel selection
 	 */
 	public Chromosome next() throws ArithmeticException
@@ -128,7 +134,9 @@ public class Selection
 				System.out.println("RIGHT BOUND " + rightBound);
 				System.out.println("VALUE: " + randomNum);
 				System.out.println(selection.get(chromosome).toString());
-				return chromosome;
+				
+				/* Return a DEEP copy of the chromosome */
+				return new Chromosome(new ArrayList<Integer>(chromosome.get()));
 			}
 		}
 		
