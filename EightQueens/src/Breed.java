@@ -96,8 +96,8 @@ public abstract class Breed
 			System.out.println("BEFORE: " + mutated.get().toString());
 			
 			/* Mutate one of the genes in the chromosome */
-			mutated.set(random.nextInt(mutated.numGenes()), 
-						random.nextInt(mutated.numGenes()));
+			mutated.set(random.nextInt(mutated.size()), 
+						random.nextInt(mutated.size()));
 			
 			chromosomes.add(mutated);
 			
