@@ -16,11 +16,11 @@ each queen represented as x & y.
 The following is an example of a chromose with the 8 queens represented as genes
 of the chromosome.
 
-    ```
+
     -----------------------------
     | Q1 | Q2 | Q3 | ..... | Q8 |
     -----------------------------
-    ```
+
 
 
 
@@ -51,8 +51,8 @@ Collisions can occur in three ways:
     collisions and diagonal collisions, the horizontal case does not occur do
     to the ordering of queens (genes) in the chromosome.
 
-    ie. Q1 = 2
-        Q2 = 5
+        ie. Q1 = 2
+            Q2 = 5
 
     Repeated collisions are still counted so if Q1 collides with Q2 they would EACH
     have one collision marked down (both Q1 and Q2). This is to keep consistency
@@ -66,14 +66,14 @@ Collisions can occur in three ways:
 
 4.  Calculate the fitness of each chromosome using the following fitness function
 
-    OLD
-    //fitness = 1 - (chromosome collision) / (sum all chromosomes collisions)
-
-    *** THIS ONE WAS PREFERRED TO MAKE IT SO THAT THE MUCH BETTER CHROMOSOMES
-        REALLY STAND OUT
-    ***
-
-    fitness = 1 / (chromosome collision)
+        OLD
+        //fitness = 1 - (chromosome collision) / (sum all chromosomes collisions)
+    
+        *** THIS ONE WAS PREFERRED TO MAKE IT SO THAT THE MUCH BETTER CHROMOSOMES
+            REALLY STAND OUT
+        ***
+    
+        fitness = 1 / (chromosome collision)
 
     where the base case is chromosome collision == 1, to avoid divide by 0
 
@@ -93,7 +93,9 @@ Selection Method
 
     For example if Q1 = 0.4, Q2 = 0.3, Q3 = 0.6
 
-    Q1 = [0, 0.4), Q2 = [0.4, 0.7), Q3 = [0.7, 1.3]
+        Q1 = [0, 0.4)  
+        Q2 = [0.4, 0.7)  
+        Q3 = [0.7, 1.3]
 
 2.  Next, use a PRNG to generate a random double value % (#queens - 1) in order
     to select the chromosomes using roulette wheel selection.
@@ -110,23 +112,23 @@ below. The three operations represent a range of values out of 100, a random num
 between 0 - 99 is selected and if it lies within the range of the operation then
 that operation is applied.
 
-Cloning = 0.3     [0, 29]
-Crossover = 0.69  [30, 98]
-Mutation = 0.01   [99]
+Cloning = 0.3     [0, 29]  
+Crossover = 0.69  [30, 98]  
+Mutation = 0.01   [99]  
 
 
-## Cloning
+### Cloning
 
 In cloning the chromosome is simply cloned/copied to next population.
 
 
-## Crossover
+### Crossover
 
 Two chromosomes are selected and a random number < 8 is selected to determine
 the point where the two chromosomes are crossed over to create two new offspring.
 
 
-## Mutation
+### Mutation
 
 A random gene (queen) is selected and the value is randomly changed to a new
 value between [0, 7]
