@@ -118,9 +118,14 @@ public class EightQueens
 			
 			test.init(fitness);
 			
-			System.out.println("DONE");
-
 			System.out.println(test.next().get().toString());
+			
+			Breed.init(new Random());
+			
+			Breed.mutation(test);
+			
+			
+			System.out.println("DONE");
 			
 			System.exit(0);
 			
