@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.google.common.primitives.Ints;
 
@@ -32,7 +33,7 @@ import com.google.common.primitives.Ints;
 public class EightQueens
 {
 	private static final Integer POPULATION = 64;
-	private static final Double INBREEDING_THRESHOLD = 0.25;
+	private static final Double INBREEDING_THRESHOLD = 0.50;
 	
 	private static ArrayList<Chromosome> population;
 	private static ArrayList<Chromosome> solutions;
@@ -92,16 +93,13 @@ public class EightQueens
 		
 		int similar = 0;
 		int curSimilar = 0;
-		int curIndex = 0;
 		
 		/* Create a copy of the chromosome arraylist */
-		ArrayList<Chromosome> localChromosomes = new ArrayList<Chromosome>(chromosomes);
+		CopyOnWriteArrayList<Chromosome> localChromosomes = new CopyOnWriteArrayList<Chromosome>(chromosomes);
 		
-
 		for (Chromosome chromosomeA : localChromosomes)
 		{
 			curSimilar = 0;
-			curIndex = chromosomes.indexOf(chromosomeA);
 			
 			/* Check each chromosome to see if there are any similar */
 			for (Chromosome chromosomeB : localChromosomes)
@@ -191,17 +189,37 @@ public class EightQueens
 			System.exit(0);
 		}*/	
 		
+		/*
+		ArrayList<Chromosome> test = new ArrayList<Chromosome>();
+		
+		test.add(new Chromosome(new ArrayList<Integer>(Arrays.asList(4, 3, 0, 6, 1, 7, 5, 3))));
+		test.add(new Chromosome(new ArrayList<Integer>(Arrays.asList(4, 3, 0, 6, 1, 7, 5, 3))));
+		test.add(new Chromosome(new ArrayList<Integer>(Arrays.asList(3, 3, 0, 6, 1, 7, 5, 3))));
+		
+		System.out.println(similarChromosomes(test));
+		System.exit(0);
+		*/
+		
 		
 		while (!solved)
 		{	
+			/* If the percentage of similar chromosomes due to in-breeding exceeds
+			 * the minimum threshold value, increase the amount of mutation
+			 */
+			if (similarChromosomes(population) >= INBREEDING_THRESHOLD)
+			{
+				Breed.inBreeding();
+				System.out.println("MUTATION: " + Breed.MUTATION);
+			}
+			
 			/* Calculate the fitness distribution of the current population */
 			HashMap<Chromosome, Double> fitness = Fitness.calculate(population);
 			
 			/* If there are any solutions (fitness of 1) that are unique save them */
 			for (Chromosome chromosome : fitness.keySet())
 			{		
-				System.out.println("\nCHROMOSOME: " + chromosome.get().toString());
-				System.out.println("FITNESS: " + fitness.get(chromosome));
+				//System.out.println("\nCHROMOSOME: " + chromosome.get().toString());
+				//System.out.println("FITNESS: " + fitness.get(chromosome));
 				
 				if (fitness.get(chromosome) == 1.0 && uniqueSolution(chromosome))
 				{
