@@ -21,13 +21,17 @@
 package gameboard;
 
 import javax.imageio.ImageIO;
+import java.net.URL; 
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
+
 import java.awt.Color;
 import java.awt.Graphics;			//Used to create a 2D graphic
 import java.awt.Graphics2D;			//Used to Draw a Rectangle and a name
 import java.awt.Image;
 import java.awt.RenderingHints;
+import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
 
@@ -35,10 +39,16 @@ import java.io.IOException;
 public class GameBoardComponent extends JComponent
 {
 	public GameBoard myGame;
+	private Image image;
 	
 	public GameBoardComponent (GameBoard myGame)
 	{
 		this.myGame = myGame;
+		
+		// TODO use this ONLY if creating a JAR file
+		//URL imageurl = getClass().getResource("/image/queen.png");
+		//this.image = Toolkit.getDefaultToolkit().getImage(imageurl);
+		//new JLabel(new ImageIcon( image ));
 	}
 	
 	/**
@@ -53,8 +63,10 @@ public class GameBoardComponent extends JComponent
 		int col = -1;
 		int row = -1;
 		int [][] myMove = new int[0][2];
-		Image image = ImageIO.read(new File("img/queen.png"));
 		
+		// TODO Use this if NOT using JAR for better looking icons
+		image = ImageIO.read(new File("img/queen.png"));
+	
 		//Draw order
 		//	Squares
 		// 	Valid moves
@@ -90,7 +102,6 @@ public class GameBoardComponent extends JComponent
 					
 					if (!myGame.isTileNull(i, j) && myGame.getTileOwner(i,j))
 					{
-						
 						g2.drawImage(image, myGame.getX(i+1), myGame.getY(j+1), 
 								myGame.getWidth(), myGame.getHeight(), null);
 					}
