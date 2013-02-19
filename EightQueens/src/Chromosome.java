@@ -19,6 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 import com.google.common.collect.Range;
@@ -48,6 +49,41 @@ public class Chromosome
 	
 	
 	/**
+	 * Validate the coordinates, throws and exception  if any of the coordinates
+	 * is not [0, 7]
+	 * 
+	 * @throws IllegalArgumentException If any of the coordinates is not [0, 7]
+	*/
+	private void validateCoordinates(ArrayList<Integer> coordinates) throws IllegalArgumentException
+	{		
+		/* If any coordinate is not [0, 7] throw exception */
+		for (Integer coordinate : coordinates)
+		{
+			if (! Range.closed(0, 7).contains(coordinate))
+			{
+				throw new IllegalArgumentException("Invalid coordinate value, must be less than 8");
+			}
+		}
+	}
+	
+	
+	/**
+	 * Validate the length, throw an exception if the length is not 8
+	 * 
+	 * @throws IllegalArgumentException If an arraylist of coordinates that does
+	 * not contain 8 elements is given, or if any of the coordinates is not [0, 7]
+	*/
+	private void validateLength(ArrayList<Integer> coordinates) throws IllegalArgumentException
+	{		
+		/* Throw an exception if the length is not 8 */
+		if (coordinates.size() != 8)
+		{
+			throw new IllegalArgumentException("Invalid coordinates size, must be 8 elements");
+		}
+	}	
+	
+	
+	/**
 	 * Constructs a new chromosome given the array of integers provided.
 	 * 
 	 * @param coordinates The arraylist of vertical coordinates to construct 
@@ -59,20 +95,9 @@ public class Chromosome
 	 */
 	public Chromosome(ArrayList<Integer> coordinates) throws IllegalArgumentException
 	{
-		/* If the length is not 8 throw an exception */
-		if (coordinates.size() != 8)
-		{
-			throw new IllegalArgumentException("Invalid coordinates size, must be 8 elements");
-		}
-		
-		/* If any coordinate is not [0, 7] throw exception */
-		for (Integer coordinate : coordinates)
-		{
-			if (! Range.closed(0, 7).contains(coordinate))
-			{
-				throw new IllegalArgumentException("Invalid coordinate value, must be less than 8");
-			}
-		}
+		/* Throw an exception of length not 8 or any coordinates not [0, 7) */
+		validateLength(coordinates);
+		validateCoordinates(coordinates);
 		
 		this.chromosome = coordinates;
 	}
@@ -90,10 +115,20 @@ public class Chromosome
 		/* Generate random coordinates for the genes within [0, 7] range */
 		chromosome = new ArrayList<Integer>(NUMBER_GENES);
 		
-		while (chromosome.size() < 8)
+		while (chromosome.size() < NUMBER_GENES)
 		{
-			chromosome.add(random.nextInt(8));
+			chromosome.add(random.nextInt(NUMBER_GENES));
 		}
+	}
+	
+	/**
+	 * Returns the number of genes the chromosome has
+	 * 
+	 * @return The number of genes in the chromosome
+	 */
+	public Integer numGenes()
+	{
+		return NUMBER_GENES;
 	}
 	
 	
@@ -103,6 +138,23 @@ public class Chromosome
 	public ArrayList<Integer> get()
 	{
 		return chromosome;
+	}
+	
+	
+	/**
+	 * Sets the chromosome to the coordinates specified
+	 * 
+	 * @param The arraylist of vertical coordinates to set the 
+	 * chromosome to, the maximum size of the array is 8 and no value
+	 * in the array can be greater than 7.
+	 */
+	public void set(ArrayList<Integer> coordinates) throws IllegalArgumentException
+	{
+		/* Throw an exception if length noth 8 or any coordinates not [0, 7) */
+		validateLength(coordinates);
+		validateCoordinates(coordinates);
+		
+		chromosome = coordinates;
 	}
 	
 	
@@ -118,6 +170,21 @@ public class Chromosome
 	public Integer get(int index) throws IndexOutOfBoundsException
 	{
 		return chromosome.get(index);
+	}
+	
+	
+	/**
+	 * Sets the gene of the chromosome to the value specified
+	 * 
+	 * @param The arraylist of vertical coordinates to set the 
+	 * chromosome to, the maximum size of the array is 8 and no value
+	 * in the array can be greater than 7.
+	 */
+	public void set(int index, Integer gene) throws IllegalArgumentException
+	{
+		validateCoordinates(new ArrayList<Integer>(Arrays.asList(gene)));
+		
+		chromosome.set(index, gene);
 	}
 	
 	
