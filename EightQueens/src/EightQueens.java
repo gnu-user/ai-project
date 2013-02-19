@@ -32,14 +32,13 @@ import com.google.common.primitives.Ints;
 
 public class EightQueens
 {
-	private static final Integer POPULATION = 64;
+	private static final Integer POPULATION = 8;
 	private static final Double INBREEDING_THRESHOLD = 0.50;
 	
 	private static ArrayList<Chromosome> population;
 	private static ArrayList<Chromosome> solutions;
 
-	private static boolean solved = false;
-	private static Random random;
+	private static Random random = new Random();
 	private static Integer numGenerations = 0;
 	
 	/**
@@ -152,19 +151,28 @@ public class EightQueens
 	}
 	
 	
-	public static void main(String[] args)
+	/**
+	 * Creates an initial population of uniformly random chromosomes
+	 */
+	static public void initPopulation()
 	{
-		solutions = new ArrayList<Chromosome>();
-		
 		/* Create an array of uniformly random chromosomes for initial population */
 		population =  new ArrayList<Chromosome>(POPULATION);
 		
-		random = new Random();
 		
 		while (population.size() < POPULATION)
 		{
 			population.add(new Chromosome(random));
 		}
+	}
+	
+	
+	public static void main(String[] args)
+	{
+		solutions = new ArrayList<Chromosome>();
+		
+		/* Create an initial population of uniformly random chromosomes */
+		initPopulation();
 		
 		/*
 		for (Chromosome chromosome : initPopulation)
@@ -201,7 +209,7 @@ public class EightQueens
 		*/
 		
 		
-		while (!solved)
+		while (solutions.size() < 1)
 		{	
 			/* If the percentage of similar chromosomes due to in-breeding exceeds
 			 * the minimum threshold value, increase the amount of mutation
@@ -209,29 +217,11 @@ public class EightQueens
 			if (similarChromosomes(population) >= INBREEDING_THRESHOLD)
 			{
 				Breed.inBreeding();
-				System.out.println("MUTATION: " + Breed.MUTATION);
 			}
+			
 			
 			/* Calculate the fitness distribution of the current population */
-			HashMap<Chromosome, Double> fitness = Fitness.calculate(population);
-			
-			/* If there are any solutions (fitness of 1) that are unique save them */
-			for (Chromosome chromosome : fitness.keySet())
-			{		
-				//System.out.println("\nCHROMOSOME: " + chromosome.get().toString());
-				//System.out.println("FITNESS: " + fitness.get(chromosome));
-				
-				if (fitness.get(chromosome) == 1.0 && uniqueSolution(chromosome))
-				{
-					/* Save a copy of the chromosome */
-					solutions.add(new Chromosome(new ArrayList<Integer>(chromosome.get())));
-					
-					solved = true;
-					
-					System.out.println("NUMBER OF GENERATIONS: " + numGenerations);
-					break;
-				}
-			}
+			HashMap<Chromosome, Double> fitness = Fitness.calculate(population);			
 			
 			
 			/* Instantiate the selection iterator using the fitness distribution,
@@ -271,11 +261,50 @@ public class EightQueens
 				}
 			}
 			
+			
+			/* If there are any solutions (fitness of 1) that are unique save them */
+			for (Chromosome chromosome : fitness.keySet())
+			{		
+				//System.out.println("\nCHROMOSOME: " + chromosome.get().toString());
+				//System.out.println("FITNESS: " + fitness.get(chromosome));
+				
+				if (fitness.get(chromosome) == 1.0 && uniqueSolution(chromosome))
+				{
+					/* Save a copy of the chromosome */
+					solutions.add(new Chromosome(new ArrayList<Integer>(chromosome.get())));
+					System.out.println("NUMBER OF GENERATIONS: " + numGenerations);
+					
+					/* Create a new initial initial population of uniformly random chromosomes */
+					/*initPopulation();
+					System.out.println("NEW POPULATION!");
+					
+					for (Chromosome chromosomeB : population)
+					{
+						System.out.println(chromosomeB.get().toString());
+					}*/
+				}
+			}
+			
 			/* Set the current population as the NEXT population */
 			fitness.clear();
 			population = nextPopulation;
 			
 			++numGenerations;
+		}
+		
+		
+		/* Display the solutions to eight queens puzzle */
+		for (Chromosome solution : solutions)
+		{
+			QueenGame myGame = null;
+			try{
+				myGame = new QueenGame (new QueenBoard(Ints.toArray(solution.get())));
+				myGame.playGame();
+			}
+			catch (Exception e)
+			{
+				System.out.println("Bad set of Queens");
+			}
 		}
 	}
 }
