@@ -111,11 +111,20 @@ public class EightQueens
 				System.out.println(chromosome.get().toString());
 			}*/
 			
-			/* Calculate the number of collisions */
+			/* Calculate the fitness distribution */
 			HashMap<Chromosome, Double> fitness = Fitness.calculate(initPopulation);
 			
-			/* Display the number of collisions for each */
-			System.out.println("\n\nNUMBER OF COLLISIONS");
+			Selection test = new Selection(new Random());
+			
+			test.init(fitness);
+			
+			System.out.println("DONE");
+
+			System.out.println(test.next().get().toString());
+			
+			System.exit(0);
+			
+			/* Display the fitness for each */
 			for (Chromosome chromosome : fitness.keySet())
 			{
 				System.out.println("\nCHROMOSOME: " + chromosome.get().toString());
