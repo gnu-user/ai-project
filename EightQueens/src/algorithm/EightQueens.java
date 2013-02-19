@@ -36,6 +36,7 @@ public class EightQueens
 {
 	private static final Integer POPULATION = 8;
 	private static final Double INBREEDING_THRESHOLD = 0.15;
+	private static final Integer NUM_DISPLAY = 10;
 	
 	private static ArrayList<Chromosome> population;
 	private static ArrayList<Chromosome> solutions;
@@ -305,15 +306,23 @@ public class EightQueens
 		/* Display the solutions to eight queens puzzle */
 		for (Chromosome solution : solutions)
 		{
-			QueenGame myGame = null;
-			try{
-				myGame = new QueenGame (new QueenBoard(Ints.toArray(solution.get())));
-				myGame.playGame();
-				break;
-			}
-			catch (Exception e)
+			/* Only display the specified number of solutions rather than all */
+			if (solutions.indexOf(solution) < NUM_DISPLAY)
 			{
-				System.out.println("Bad set of Queens");
+				QueenGame myGame = null;
+				try
+				{
+					myGame = new QueenGame (new QueenBoard(Ints.toArray(solution.get())));
+					myGame.playGame();
+				}
+				catch (Exception e)
+				{
+					System.out.println("Bad set of Queens");
+				}
+			}
+			else
+			{
+				break;
 			}
 		}
 	}
