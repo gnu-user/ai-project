@@ -1,4 +1,3 @@
-package algorithm;
 /**
  * Artificial Intelligence Project -- Eight Queens Puzzle
  *
@@ -19,9 +18,12 @@ package algorithm;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package algorithm;
+
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.lang.Math;
+
 
 /**
  * Fitness function, it calculates the fitness of a chromosome based on the
