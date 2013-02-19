@@ -23,6 +23,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import com.google.common.collect.Range;
+
 
 /**
  * Applies the crossover and mutation operation to chromosomes which
@@ -34,6 +36,12 @@ import java.util.Random;
 public abstract class Breed
 {
 	private static Random random;
+	
+	/* The cloning, crossover, and mutation percentage intervals */
+	public static final Range<Integer> CLONING = Range.closedOpen(0, 30);
+	public static final Range<Integer> CROSSOVER = Range.closedOpen(30, 99);
+	public static final Range<Integer> MUTATION = Range.closedOpen(99, 100);
+	
 	
 	/**
 	 * Initialize the breeding selection with a uniform random number
@@ -76,8 +84,8 @@ public abstract class Breed
 		Chromosome parent1 = selection.next();
 		Chromosome parent2 = selection.next();
 		
-		System.out.println("PARENT 1 BEFORE: " + parent1.get().toString());
-		System.out.println("PARENT 2 BEFORE: " + parent2.get().toString());
+		//System.out.println("PARENT 1 BEFORE: " + parent1.get().toString());
+		//System.out.println("PARENT 2 BEFORE: " + parent2.get().toString());
 		
 		/* Select a cross-over point, copy the genes, and then crossover the genes.
 		 * The genes MUST be copied instead of by reference in order to copy the
@@ -94,7 +102,7 @@ public abstract class Breed
 														parent2.size() - 1)
 											);
 		
-		System.out.println("CROSSOVER: " + crossover); 
+		//System.out.println("CROSSOVER: " + crossover); 
 		
 		/* Perform crossover with the pair of genes from the chromosomes */
 		parent1.set(crossover, parent1.size() - 1, genes2);
@@ -103,8 +111,8 @@ public abstract class Breed
 		chromosomes.add(parent1);
 		chromosomes.add(parent2);
 		
-		System.out.println("PARENT 1 AFTER:  " + chromosomes.get(0).get().toString());
-		System.out.println("PARENT 2 AFTER:  " + chromosomes.get(1).get().toString());
+		//System.out.println("PARENT 1 AFTER:  " + chromosomes.get(0).get().toString());
+		//System.out.println("PARENT 2 AFTER:  " + chromosomes.get(1).get().toString());
 		
 		return chromosomes;
 	}
@@ -124,12 +132,12 @@ public abstract class Breed
 		ArrayList<Chromosome> chromosomes = new ArrayList<Chromosome>(2);
 		
 		/* Mutate each chromosome */
-		int i = 0;
+		//int i = 0;
 		while (chromosomes.size() < 2)
 		{
 			Chromosome mutated = selection.next();
 			
-			System.out.println("BEFORE: " + mutated.get().toString());
+			//System.out.println("BEFORE: " + mutated.get().toString());
 			
 			/* Mutate one of the genes in the chromosome */
 			mutated.set(random.nextInt(mutated.size()), 
@@ -137,7 +145,7 @@ public abstract class Breed
 			
 			chromosomes.add(mutated);
 			
-			System.out.println("AFTER:  " + chromosomes.get(i++).get().toString());
+			//System.out.println("AFTER:  " + chromosomes.get(i++).get().toString());
 		}
 		
 		return chromosomes;
