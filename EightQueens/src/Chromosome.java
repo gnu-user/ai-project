@@ -121,12 +121,12 @@ public class Chromosome
 		}
 	}
 	
+	
 	/**
-	 * Returns the number of genes the chromosome has
-	 * 
-	 * @return The number of genes in the chromosome
+	 * Returns the number of genes that the chromosome has, useful for iterating
+	 * through each of the genes.
 	 */
-	public Integer numGenes()
+	public Integer size()
 	{
 		return NUMBER_GENES;
 	}
@@ -201,14 +201,5 @@ public class Chromosome
 	public ArrayList<Integer> get(int start, int end) throws IndexOutOfBoundsException
 	{
 		return (ArrayList<Integer>) chromosome.subList(start, end);
-	}
-	
-	/**
-	 * Returns the number of genes that the chromosome has, useful for iterating
-	 * through each of the genes.
-	 */
-	public Integer size()
-	{
-		return NUMBER_GENES;
 	}
 }
