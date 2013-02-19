@@ -35,6 +35,10 @@ public class EightQueens
 	private static boolean solved = false;
 	private static ArrayList<Chromosome> solutions;
 	
+	private static Random random;
+	
+	private static Integer numGenerations = 0;
+	
 	/**
 	 * Determines if the solution to the eight queens puzzle is unique if
 	 * so returns true.
@@ -44,7 +48,7 @@ public class EightQueens
 	 */
 	public static boolean uniqueSolution(Chromosome chromosome)
 	{
-		boolean unique = false;
+		boolean unique = true;
 		
 		for (Chromosome uniqChromosome : solutions)
 		{
@@ -77,6 +81,22 @@ public class EightQueens
 	{
 		solutions = new ArrayList<Chromosome>();
 		
+		/* Create an array of uniformly random chromosomes for initial population */
+		ArrayList<Chromosome> population =  new ArrayList<Chromosome>(POPULATION);
+		
+		random = new Random();
+		
+		while (population.size() < POPULATION)
+		{
+			population.add(new Chromosome(random));
+		}
+		
+		/*
+		for (Chromosome chromosome : initPopulation)
+		{
+			System.out.println(chromosome.get().toString());
+		}*/
+		
 		/*
 		solutions.add(new Chromosome(new ArrayList<Integer>(Arrays.asList(4, 2, 0, 6, 1, 7, 5, 3))));
 		solutions.add(new Chromosome(new ArrayList<Integer>(Arrays.asList(4, 3, 0, 6, 1, 7, 5, 3))));
@@ -92,67 +112,74 @@ public class EightQueens
 		{
 			System.out.println("NOT UNIQUE!");
 			System.exit(0);
-		}*/
-		
+		}*/	
 		
 		while (!solved)
-		{
-			/* Create an array of uniformly random chromosomes for initial population */
-			ArrayList<Chromosome> initPopulation =  new ArrayList<Chromosome>(POPULATION);
+		{	
+			/* Calculate the fitness distribution of the current population */
+			HashMap<Chromosome, Double> fitness = Fitness.calculate(population);
 			
-			while (initPopulation.size() < POPULATION)
-			{
-				initPopulation.add(new Chromosome(new Random()));
-			}
-			
-			/*
-			for (Chromosome chromosome : initPopulation)
-			{
-				System.out.println(chromosome.get().toString());
-			}*/
-			
-			/* Calculate the fitness distribution */
-			HashMap<Chromosome, Double> fitness = Fitness.calculate(initPopulation);
-			
-			Selection test = new Selection(new Random());
-			
-			test.init(fitness);
-			
-			System.out.println(test.next().get().toString());
-			
-			Breed.init(new Random());
-			
-			Breed.mutation(test);
-			
-			
-			System.out.println("DONE");
-			
-			System.exit(0);
-			
-			/* Display the fitness for each */
+			/* If there are any solutions (fitness of 1) that are unique save them */
 			for (Chromosome chromosome : fitness.keySet())
-			{
+			{		
 				System.out.println("\nCHROMOSOME: " + chromosome.get().toString());
 				System.out.println("FITNESS: " + fitness.get(chromosome));
 				
-				
-				if (fitness.get(chromosome) == 1.0)
+				if (fitness.get(chromosome) == 1.0 && uniqueSolution(chromosome))
 				{
-					QueenGame myGame = null;
-					try{
-						myGame = new QueenGame (new QueenBoard(Ints.toArray(chromosome.get())));
-						myGame.playGame();
-						solved = true;
-						
-						System.out.println("DONE!!!!");
-						break;
-					}
-					catch (Exception e)
-					{
-						System.out.println("Bad set of Queens");
-					}
+					/* Save a copy of the chromosome */
+					solutions.add(new Chromosome(new ArrayList<Integer>(chromosome.get())));
+					
+					solved = true;
+					
+					System.out.println("NUMBER OF GENERATIONS: " + numGenerations);
+					break;
 				}
 			}
+			
+			
+			/* Instantiate the selection iterator using the fitness distribution,
+			 * the selection iterator uses roulette wheel selection to select
+			 * each chromosome.
+			 */
+			Selection selection = new Selection(new Random());
+			selection.init(fitness);
+			
+			
+			/* Generate the next population by selecting chromosomes from the current
+			 * population using selection iterator and applying the cloning, crossover,
+			 * and mutation operations.
+			 */
+			ArrayList<Chromosome> nextPopulation =  new ArrayList<Chromosome>(POPULATION);
+			Breed.init(new Random());
+			
+			while (nextPopulation.size() < POPULATION)
+			{
+				/* Select a random number and apply the breeding operation */
+				Integer randomNum = random.nextInt(1000);
+				
+				/* Pair of parent chromosomes continue on to the next generation.*/
+				if (Breed.CLONING.contains(randomNum))
+				{
+					nextPopulation.addAll(Breed.cloning(selection));
+				}
+				/* Pair of parent chromosomes are cross-overed to create new pair */
+				else if (Breed.CROSSOVER.contains(randomNum))
+				{
+					nextPopulation.addAll(Breed.crossover(selection));
+				}
+				/* Pair of chromosomes are mutated */
+				else if (Breed.MUTATION.contains(randomNum))
+				{
+					nextPopulation.addAll(Breed.mutation(selection));
+				}
+			}
+			
+			/* Set the current population as the NEXT population */
+			fitness.clear();
+			population = nextPopulation;
+			
+			++numGenerations;
 		}
 	}
 }
