@@ -250,7 +250,7 @@ public class EightQueens
 			while (nextPopulation.size() < POPULATION)
 			{
 				/* Select a random number and apply the breeding operation */
-				Integer randomNum = random.nextInt(1000);
+				Integer randomNum = random.nextInt(100);
 				
 				/* Pair of parent chromosomes continue on to the next generation.*/
 				if (Breed.CLONING.contains(randomNum))
