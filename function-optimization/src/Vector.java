@@ -8,10 +8,10 @@ public class Vector {
 
 	public Vector(Random random, Double fitness)
 	{
-		this.input = new ArrayList<Double>(ControlVariables.DIMENTIONS);
+		this.input = new ArrayList<Double>(ControlVariables.DIMENSIONS);
 		this.fitness = fitness;
 		
-		while(input.size() < ControlVariables.DIMENTIONS)
+		while(input.size() < ControlVariables.DIMENSIONS)
 		{
 			input.add(random.nextDouble());
 		}
