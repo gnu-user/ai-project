@@ -39,9 +39,9 @@ public abstract class Breed
 	private static Random random;
 	
 	/* The cloning, crossover, and mutation percentage intervals */
-	public static  Range<Integer> CLONING = Range.closedOpen(0, 30);
-	public static  Range<Integer> CROSSOVER = Range.closedOpen(30, 99);
-	public static  Range<Integer> MUTATION = Range.closedOpen(99, 100);
+	public static  Range<Integer> CLONING = Range.closedOpen(0, 30); 		// 30 %
+	public static  Range<Integer> CROSSOVER = Range.closedOpen(30, 99);		// 69 %
+	public static  Range<Integer> MUTATION = Range.closedOpen(99, 100);		//  1 %
 	
 	
 	/**
@@ -105,7 +105,7 @@ public abstract class Breed
 	
 	
 	/**
-	 * Performs the cloning operation which simple returns the pair
+	 * Performs the cloning operation which simply returns the pair
 	 * of parent chromosomes, these parents continue on to the next
 	 * generation.
 	 * 
