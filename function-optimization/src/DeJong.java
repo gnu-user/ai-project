@@ -60,15 +60,22 @@ public class DeJong implements FitnessFunction
 	public Double evaluate(ArrayList<Vector> vector) throws IllegalArgumentException
 	{
 		Double fitness;
-		
-		for (Vector parameter : vector.get())
+	
+		/* Compute the fitness function for De Jong:
+		 * 
+		 * f(X) = sigma (xi^2)
+		 * 
+		 */
+		for (Double parameter : vector.get())
 		{
 			if (! BOUNDS.contains(parameter))
 			{
 				throw new IllegalArgumentException("A vector parameter was outside the bounds of the De Jong function.");
 			}
+			
+			fitness += Math.pow(parameter, 2.0);
 		}
-		
+	
+		return fitness;
 	}
-
 }
