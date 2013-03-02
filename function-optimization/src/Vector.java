@@ -16,4 +16,34 @@ public class Vector {
 			input.add(random.nextDouble());
 		}
 	}
+	
+	public ArrayList<Double> getParameters()
+	{
+		return this.input;
+	}
+	
+	public Double getFitness()
+	{
+		return this.fitness;
+	}
+	
+	public void setFitness(Double fitness) throws IllegalArgumentException
+	{
+		this.fitness = fitness;
+	}
+	
+	public Double get(int index) throws IndexOutOfBoundsException
+	{
+		return this.input.get(index);
+	}
+	
+	public void setParameter(int index, Double parameter) throws IllegalArgumentException
+	{
+		this.input.set(index, parameter);
+	}
+	
+	public void setParameter(ArrayList<Double> parameter) throws IllegalArgumentException
+	{
+		this.input = parameter;
+	}
 }
