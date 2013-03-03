@@ -33,6 +33,8 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
+import org.jfree.chart.axis.LogAxis;
+import org.jfree.chart.axis.NumberAxis;
 
 /**
  * Plots the performance graph of the best fitness value so far versus the
@@ -56,8 +58,12 @@ public abstract class PerformanceGraph
 		
 		/* Add the NFC and best fitness value data to the series */
 		for (Integer NFC : bestFitness.keySet())
-		{
-			series.add(NFC, bestFitness.get(NFC));
+		{	
+			/* Jfreechart crashes if double values are too large! */
+			if (bestFitness.get(NFC) <= 10E12)
+			{
+				series.add(NFC.doubleValue(), bestFitness.get(NFC).doubleValue());
+			}
 		}
 		
 		/* Add the x,y series data to the dataset */
@@ -85,18 +91,27 @@ public abstract class PerformanceGraph
 		plot.setRangeGridlinesVisible(true);
 		plot.setRangeGridlinePaint(Color.black);
 		plot.setDomainGridlinePaint(Color.black);
-
+		
+		
+		/* Set the domain range from 0 to 30,000 for NFC */
+		NumberAxis domain = (NumberAxis) plot.getDomainAxis();
+		domain.setRange(0.0, 30000.0);
+		
+		/* Logarithmic range axis */
+		plot.setRangeAxis(new LogAxis());
+		
+		
 		/* Set the thickness and colour of the lines */
 		XYItemRenderer renderer = plot.getRenderer();
-		BasicStroke thickLine = new BasicStroke(2.0f);
+		BasicStroke thickLine = new BasicStroke(3.0f);
 		renderer.setSeriesStroke(0, thickLine);
 		renderer.setPaint(Color.BLACK);
 
 		
 		/* Display the plot in a JFrame */
-		ChartFrame frame1 = new ChartFrame(fitnessFunction + "Best Fitness Value", chart);
-		frame1.setVisible(true);
-		frame1.setSize(1000, 600);
+		ChartFrame frame = new ChartFrame(fitnessFunction + "Best Fitness Value", chart);
+		frame.setVisible(true);
+		frame.setSize(1000, 600);
 		
 		/* Save the plot as an image named after fitness function */
 		try

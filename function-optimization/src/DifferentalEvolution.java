@@ -119,8 +119,6 @@ public class DifferentalEvolution {
 				{
 					prevAmount = fitnessFunction.getNFC();
 					lowestFit.put(prevAmount, population.get(i).getFitness());
-					
-					
 				}
 
 			}			
