@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.Random;
 
 import com.google.common.collect.Range;
@@ -10,7 +11,7 @@ public class DifferentalEvolution {
 	private static ArrayList<Vector> population;
 	private static ArrayList<Vector> solutions;
 	private static Random random = new Random();
-	private static Double lowestFit = Double.MAX_VALUE;
+	private static LinkedHashMap<Integer, Double> lowestFit = new LinkedHashMap<Integer, Double>();
 	
 	public static void initPopulation(Range<Double> bounds)
 	{
@@ -22,9 +23,9 @@ public class DifferentalEvolution {
 			newVector.setFitness(fitnessFunction.evaluate(newVector));
 			population.add(newVector);
 			
-			if(population.get(population.size()-1).getFitness() < lowestFit)
+			if(population.get(population.size()-1).getFitness() < lowestFit.get(0))
 			{
-				lowestFit = population.get(population.size()-1).getFitness();
+				lowestFit.put(0, population.get(population.size()-1).getFitness());
 				System.out.println("New Lowest = " + lowestFit);
 			}
 		}
@@ -42,6 +43,8 @@ public class DifferentalEvolution {
 		//fitnessFunction = new HyperEllipsoid();
 		//fitnessFunction = new Schwefel();
 		fitnessFunction = new Rastrigin();
+		
+		lowestFit.put(0, Double.MAX_VALUE);
 		
 		initPopulation(fitnessFunction.getBounds());
 		
@@ -106,9 +109,9 @@ public class DifferentalEvolution {
 					System.out.println("New Lowest = " + lowestFit.getFitness());
 				}*/
 				
-				if(population.get(i).getFitness() < lowestFit)
+				if(population.get(i).getFitness() < lowestFit.get(lowestFit.size()-1))
 				{
-					lowestFit = population.get(i).getFitness();
+					lowestFit.put(fitnessFunction.getNFC(), population.get(i).getFitness());
 					System.out.println("New Lowest = " + lowestFit);
 				}
 
