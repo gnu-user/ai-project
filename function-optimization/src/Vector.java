@@ -32,6 +32,11 @@ public class Vector {
 		this.fitness = fitness;
 	}
 	
+	public ArrayList<Double> get() throws IndexOutOfBoundsException
+	{
+		return this.input;
+	}
+	
 	public Double get(int index) throws IndexOutOfBoundsException
 	{
 		return this.input.get(index);
