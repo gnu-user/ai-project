@@ -14,7 +14,8 @@ public class DifferentalEvolution {
 		
 		while(population.size() < ControlVariables.POPULATION_SIZE)
 		{
-			population.add(new Vector(random, Double.valueOf(0)));
+			// TODO add bounds
+			population.add(new Vector(random, Double.valueOf(0), null));
 		}
 	}
 	
