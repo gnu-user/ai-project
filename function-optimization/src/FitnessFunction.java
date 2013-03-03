@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import java.util.ArrayList;
 import com.google.common.collect.Range;
 
 
@@ -35,6 +34,14 @@ public interface FitnessFunction
 	 * @return Range The bounds of the benchmark function
 	 */
 	public Range<Double> getBounds();
+	
+	/**
+	 * Returns the number of function calls (NFC) this is a count of
+	 * the number of times the fitness function has been called.
+	 * 
+	 * @return The number of function calls NFC
+	 */
+	public Integer getNFC();
 	
 	/**
 	 * Evaluates the fitness of the benchmark function and returns

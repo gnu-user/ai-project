@@ -29,7 +29,13 @@ import java.lang.Math;
 public class HyperEllipsoid implements FitnessFunction
 {
 	/* The bounds of the axis parallel hyper-ellipsoid benchmark function */
-	private static Range<Double> BOUNDS = Range.closed(-5.12, 5.12);
+	private static final Range<Double> BOUNDS = Range.closed(-5.12, 5.12);
+	
+	/* The number of function calls, includes the sum of all function calls
+	 * for all instances of the object
+	 */
+	private static Integer NFC = 0;
+	
 	
 	public HyperEllipsoid()
 	{
@@ -47,6 +53,18 @@ public class HyperEllipsoid implements FitnessFunction
 		return BOUNDS;
 	}
 
+	/**
+	 * Returns the number of function calls (NFC) this is a count of
+	 * the number of times the fitness function has been called.
+	 * 
+	 * @return The number of function calls NFC
+	 */
+	@Override
+	public Integer getNFC()
+	{
+		return NFC;
+	}
+	
 	/**
 	 * Evaluates the fitness of the axis parallel hyper-ellipsoid benchmark function, 
 	 * an easy, unimodal, scalable, convex function.
@@ -79,6 +97,7 @@ public class HyperEllipsoid implements FitnessFunction
 			fitness += (Double) ((i + 1) * Math.pow(parameter, 2.0));
 		}
 	
+		++NFC;
 		return fitness;
 	}
 }

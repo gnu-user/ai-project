@@ -23,14 +23,12 @@ import java.lang.Math;
 
 
 /**
- * Calculates the fitness of Rosenbrock's Valley benchmark function. This function
- * is known as the Bannana function, it is a non-convex unimodal classic optimization
- * problem that is very challenging for many optimizers.
+ * Calculates the fitness of Rastrigin's function.
  */
-public class RosenbrocksValley implements FitnessFunction
+public class Rastrigin implements FitnessFunction
 {
-	/* The bounds of Rosenbrock's Valley */
-	private static final Range<Double> BOUNDS = Range.closed(-2.0, 2.0);
+	/* The bounds of Rastrigin's Function */
+	private static final Range<Double> BOUNDS = Range.closed(-5.12, 5.12);
 	
 	/* The number of function calls, includes the sum of all function calls
 	 * for all instances of the object
@@ -38,14 +36,14 @@ public class RosenbrocksValley implements FitnessFunction
 	private static Integer NFC = 0;
 	
 	
-	public RosenbrocksValley()
+	public Rastrigin()
 	{
 	}
 
 	/**
-	 * Returns the bounds for Rosenbrock's Valley, which is, [-2, 2].
+	 * Returns the bounds for Rastrigin's Function, which is, [-5.12, 5.12].
 	 * 
-	 * @return Range The bounds of Rosenbrock's Valley
+	 * @return Range The bounds of Rastrigin's Function
 	 */
 	@Override
 	public Range<Double> getBounds()
@@ -66,38 +64,31 @@ public class RosenbrocksValley implements FitnessFunction
 	}
 	
 	/**
-	 * Evaluates the fitness of Rosenbrock's Valley benchmark function, which is known 
-	 * as the Bannana function, it is a non-convex unimodal classic optimization
-	 * problem that is very challenging for many optimizers.
+	 * Evaluates the fitness of Rastrigin's Function benchmark function.
 	 * 
 	 * @return The fitness value
 	 * @throws IllegalArgumentException if one of the parameters in the vector
-	 * is outside the bounds of Rosenbrock's Valley.
+	 * is outside the bounds of Rastrigin's Function.
 	 */
 	@Override
 	public Double evaluate(Vector vector)
 	{
-		Double fitness = 0.0;
+		Double fitness = 10.0 * vector.size();
 		
-		/* First check that the parameters in the vector are within the bounds */
+		/* Compute the fitness function for Rastrigin's Function:
+		 * 
+		 * f(X) = 10n + sigma (Xi^2 - 10cos(2*pi*Xi))
+		 * 
+		 */
 		for (Double parameter : vector.get())
 		{
 			if (! BOUNDS.contains(parameter))
 			{
 				throw new IllegalArgumentException("A vector parameter was outside the bounds of the function.");
 			}
-		}
-		
-		/* Compute the fitness function for Rosenbrock's Valley:
-		 * 
-		 * f(X) = sigma,n-1 [100(Xi+1 - Xi^2)^2 + (1 - Xi)^2]
-		 * 
-		 */
-		for (int i = 0; i < vector.size() - 1; ++i)
-		{
+
 			/* Calculate the fitness */
-			fitness +=   100 * Math.pow((vector.get(i + 1) - Math.pow(vector.get(i), 2.0)),  2.0)
-					   + Math.pow((1 - vector.get(i)), 2.0);
+			fitness += Math.pow(parameter, 2.0) - 10.0 * Math.cos(2 * Math.PI * parameter);
 		}
 		
 		++NFC;
