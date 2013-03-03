@@ -41,6 +41,7 @@ public class DifferentalEvolution {
 		//fitnessFunction = new RosenbrocksValley();
 		//fitnessFunction = new HyperEllipsoid();
 		//fitnessFunction = new Schwefel();
+		fitnessFunction = new Rastrigin();
 		
 		initPopulation(fitnessFunction.getBounds());
 		
