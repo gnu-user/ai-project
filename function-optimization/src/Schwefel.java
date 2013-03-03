@@ -1,7 +1,7 @@
 /**
  * Artificial Intelligence Project -- Differential Evolution
  *
- * Copyright (C) 2013, Joseph Heron, Jonathan Gillett, and Daniel Smullen
+ * Copyright (C) 2013, Jonathan Gillett, Joseph Heron, and Daniel Smullen
  * All rights reserved.
  *
  *

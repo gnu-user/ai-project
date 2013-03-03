@@ -93,7 +93,7 @@ public abstract class PerformanceGraph
 		plot.setDomainGridlinePaint(Color.black);
 		
 		
-		/* Set the domain range from 0 to 30,000 for NFC */
+		/* Set the domain range from 0 to NFC */
 		NumberAxis domain = (NumberAxis) plot.getDomainAxis();
 		domain.setRange(0.0, ControlVariables.MAX_FUNCTION_CALLS.doubleValue());
 		
