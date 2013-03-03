@@ -13,6 +13,8 @@ public class DifferentalEvolution {
 	private static Random random = new Random();
 	private static LinkedHashMap<Integer, Double> lowestFit = new LinkedHashMap<Integer, Double>();
 	
+	private static int prevAmount = 0;
+	
 	public static void initPopulation(Range<Double> bounds)
 	{
 		population = new ArrayList<Vector>(ControlVariables.POPULATION_SIZE);
@@ -23,10 +25,14 @@ public class DifferentalEvolution {
 			newVector.setFitness(fitnessFunction.evaluate(newVector));
 			population.add(newVector);
 			
-			if(population.get(population.size()-1).getFitness() < lowestFit.get(0))
+			//System.out.println(prevAmount);
+			//System.out.println(lowestFit.get(prevAmount));
+			if(population.get(population.size()-1).getFitness() < lowestFit.get(prevAmount))
 			{
-				lowestFit.put(0, population.get(population.size()-1).getFitness());
-				System.out.println("New Lowest = " + lowestFit);
+				prevAmount = fitnessFunction.getNFC();
+				lowestFit.put(prevAmount, population.get(population.size()-1).getFitness());
+				//System.out.println("New Lowest = " + lowestFit);
+				
 			}
 		}
 	}
@@ -38,13 +44,13 @@ public class DifferentalEvolution {
 	
 	public static void main (String[] args)
 	{
-		//fitnessFunction = new DeJong();
+		fitnessFunction = new DeJong();
 		//fitnessFunction = new RosenbrocksValley();
 		//fitnessFunction = new HyperEllipsoid();
 		//fitnessFunction = new Schwefel();
-		fitnessFunction = new Rastrigin();
+		//fitnessFunction = new Rastrigin();
 		
-		lowestFit.put(0, Double.MAX_VALUE);
+		lowestFit.put(prevAmount, Double.MAX_VALUE);
 		
 		initPopulation(fitnessFunction.getBounds());
 		
@@ -109,13 +115,18 @@ public class DifferentalEvolution {
 					System.out.println("New Lowest = " + lowestFit.getFitness());
 				}*/
 				
-				if(population.get(i).getFitness() < lowestFit.get(lowestFit.size()-1))
+				if(population.get(i).getFitness() < lowestFit.get(prevAmount))
 				{
-					lowestFit.put(fitnessFunction.getNFC(), population.get(i).getFitness());
-					System.out.println("New Lowest = " + lowestFit);
+					prevAmount = fitnessFunction.getNFC();
+					lowestFit.put(prevAmount, population.get(i).getFitness());
+					
+					
 				}
 
 			}			
 		}
+		
+		System.out.println("New Lowest = " + lowestFit);
+		PerformanceGraph.plot(lowestFit, "De Jong");
 	}
 }
