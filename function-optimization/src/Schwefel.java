@@ -29,7 +29,13 @@ import java.lang.Math;
 public class Schwefel implements FitnessFunction
 {
 	/* The bounds of Schwefel's problem */
-	private static Range<Double> BOUNDS = Range.closed(-65.0, 65.0);
+	private static final Range<Double> BOUNDS = Range.closed(-65.0, 65.0);
+	
+	/* The number of function calls, includes the sum of all function calls
+	 * for all instances of the object
+	 */
+	private static Integer NFC = 0;
+	
 	
 	public Schwefel()
 	{
@@ -46,6 +52,18 @@ public class Schwefel implements FitnessFunction
 		return BOUNDS;
 	}
 
+	/**
+	 * Returns the number of function calls (NFC) this is a count of
+	 * the number of times the fitness function has been called.
+	 * 
+	 * @return The number of function calls NFC
+	 */
+	@Override
+	public Integer getNFC()
+	{
+		return NFC;
+	}
+	
 	/**
 	 * Evaluates the fitness of Schwefel's problem benchmark function, 
 	 * a unimodal and scalable function.
@@ -85,6 +103,7 @@ public class Schwefel implements FitnessFunction
 			fitness += Math.pow(innerSum, 2.0);
 		}
 	
+		++NFC;
 		return fitness;
 	}
 }

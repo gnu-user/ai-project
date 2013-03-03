@@ -30,7 +30,13 @@ import java.lang.Math;
 public class RosenbrocksValley implements FitnessFunction
 {
 	/* The bounds of Rosenbrock's Valley */
-	private static Range<Double> BOUNDS = Range.closed(-2.0, 2.0);
+	private static final Range<Double> BOUNDS = Range.closed(-2.0, 2.0);
+	
+	/* The number of function calls, includes the sum of all function calls
+	 * for all instances of the object
+	 */
+	private static Integer NFC = 0;
+	
 	
 	public RosenbrocksValley()
 	{
@@ -47,6 +53,18 @@ public class RosenbrocksValley implements FitnessFunction
 		return BOUNDS;
 	}
 
+	/**
+	 * Returns the number of function calls (NFC) this is a count of
+	 * the number of times the fitness function has been called.
+	 * 
+	 * @return The number of function calls NFC
+	 */
+	@Override
+	public Integer getNFC()
+	{
+		return NFC;
+	}
+	
 	/**
 	 * Evaluates the fitness of Rosenbrock's Valley benchmark function, which is known 
 	 * as the Bannana function, it is a non-convex unimodal classic optimization
@@ -82,6 +100,7 @@ public class RosenbrocksValley implements FitnessFunction
 					   + Math.pow((1 - vector.get(i)), 2.0);
 		}
 		
+		++NFC;
 		return fitness;
 	}
 }
