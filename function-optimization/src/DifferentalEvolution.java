@@ -38,7 +38,9 @@ public class DifferentalEvolution {
 	public static void main (String[] args)
 	{
 		//fitnessFunction = new DeJong();
-		fitnessFunction = new RosenbrocksValley();
+		//fitnessFunction = new RosenbrocksValley();
+		//fitnessFunction = new HyperEllipsoid();
+		//fitnessFunction = new Schwefel();
 		
 		initPopulation(fitnessFunction.getBounds());
 		
