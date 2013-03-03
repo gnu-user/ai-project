@@ -91,6 +91,7 @@ public class Rastrigin implements FitnessFunction
 			fitness += Math.pow(parameter, 2.0) - 10.0 * Math.cos(2 * Math.PI * parameter);
 		}
 		
+		++NFC;
 		return fitness;
 	}
 }
