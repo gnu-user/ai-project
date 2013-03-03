@@ -151,6 +151,6 @@ public class DifferentalEvolution
 		
 		System.out.println("New Lowest = " + lowestFit);
 		System.out.println(lowestFit.size());
-		PerformanceGraph.plot(lowestFit, "De Jong");
+		PerformanceGraph.plot(lowestFit, fitnessFunction.getName());
 	}
 }

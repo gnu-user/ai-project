@@ -73,7 +73,8 @@ public abstract class PerformanceGraph
 		/* Plot the data as an X,Y line chart */
 		JFreeChart chart = ChartFactory.createXYLineChart(
 								"Best Fitness Value Vs. Number of Function Calls",
-								"Number of Function Calls (NFC)", "Best Fitness Value",
+								"Number of Function Calls (NFC)", 
+								"Best Fitness Value",
 								dataset,
 								PlotOrientation.VERTICAL,
 								true,
@@ -109,14 +110,14 @@ public abstract class PerformanceGraph
 
 		
 		/* Display the plot in a JFrame */
-		ChartFrame frame = new ChartFrame(fitnessFunction + "Best Fitness Value", chart);
+		ChartFrame frame = new ChartFrame(fitnessFunction + " Best Fitness Value", chart);
 		frame.setVisible(true);
 		frame.setSize(1000, 600);
 		
 		/* Save the plot as an image named after fitness function */
 		try
 		{
-			ChartUtilities.saveChartAsJPEG(new File(fitnessFunction + ".jpg"), chart, 1000, 600);
+			ChartUtilities.saveChartAsJPEG(new File("plots/" + fitnessFunction + ".jpg"), chart, 1000, 600);
 		}
 		catch (IOException e)
 		{
