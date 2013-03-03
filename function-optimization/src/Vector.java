@@ -9,10 +9,13 @@ public class Vector {
 	private Double fitness;
 	private Range<Double> bounds;
 
-	public Vector(Random random, Double fitness, Range<Double> bounds)
+	public Vector(Random random, Range<Double> bounds)
 	{
 		this.input = new ArrayList<Double>(ControlVariables.DIMENSIONS);
-		this.fitness = fitness;
+		
+		// Set to infinity
+		this.fitness = Double.MAX_VALUE;
+		
 		this.bounds = bounds;
 				
 		while(input.size() < ControlVariables.DIMENSIONS)
@@ -20,6 +23,18 @@ public class Vector {
 			this.input.add(((this.bounds.upperEndpoint() - this.bounds.lowerEndpoint()) * 
 					random.nextDouble()) + this.bounds.lowerEndpoint());
 		}
+	}
+	
+	public Vector(Range<Double> bounds)
+	{
+		this.input = new ArrayList<Double>(ControlVariables.DIMENSIONS);
+		
+		// Set to infinity
+		this.fitness = Double.MAX_VALUE;
+		
+		this.bounds = bounds;
+		
+		
 	}
 	
 	public ArrayList<Double> getParameters()
@@ -62,6 +77,23 @@ public class Vector {
 	public int size()
 	{
 		return this.input.size();
+	}
+	
+	public Range<Double> getBounds()
+	{
+		return bounds;
+	}
+	
+	public void addParameter(Double parameter) throws IllegalArgumentException
+	{
+		if (bounds.contains(parameter))
+		{
+			this.input.add(parameter);
+		}
+		else
+		{
+			throw new IllegalArgumentException("A vector parameter was outside the bounds of the function.");
+		}
 	}
 	
 	/*public void setParameter(ArrayList<Double> parameter) throws IllegalArgumentException
