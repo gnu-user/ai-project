@@ -95,7 +95,7 @@ public abstract class PerformanceGraph
 		
 		/* Set the domain range from 0 to 30,000 for NFC */
 		NumberAxis domain = (NumberAxis) plot.getDomainAxis();
-		domain.setRange(0.0, 30000.0);
+		domain.setRange(0.0, ControlVariables.MAX_FUNCTION_CALLS.doubleValue());
 		
 		/* Logarithmic range axis */
 		plot.setRangeAxis(new LogAxis());
