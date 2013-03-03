@@ -20,8 +20,8 @@ public class Vector {
 				
 		while(input.size() < ControlVariables.DIMENSIONS)
 		{
-			this.input.add(((this.bounds.upperEndpoint() - this.bounds.lowerEndpoint()) * 
-					random.nextDouble()) + this.bounds.lowerEndpoint());
+			this.input.add(	new Double(((this.bounds.upperEndpoint() - this.bounds.lowerEndpoint()) * 
+					random.nextDouble()) + this.bounds.lowerEndpoint()));
 		}
 	}
 	
@@ -70,7 +70,14 @@ public class Vector {
 		}
 		else
 		{
-			throw new IllegalArgumentException("A vector parameter was outside the bounds of the function.");
+			if(this.input.get(index) < this.bounds.lowerEndpoint())
+			{
+				this.input.set(index, this.bounds.lowerEndpoint());
+			}
+			else if(this.input.get(index) > this.bounds.upperEndpoint())
+			{
+				this.input.set(index, this.bounds.upperEndpoint());
+			}
 		}
 	}
 	
@@ -84,6 +91,7 @@ public class Vector {
 		return bounds;
 	}
 	
+	//TODO document that if a vector's parameter is out of bounds it will be set to the bound.
 	public void addParameter(Double parameter) throws IllegalArgumentException
 	{
 		if (bounds.contains(parameter))
@@ -92,7 +100,14 @@ public class Vector {
 		}
 		else
 		{
-			throw new IllegalArgumentException("A vector parameter was outside the bounds of the function.");
+			if(parameter < this.bounds.lowerEndpoint())
+			{
+				this.input.add(this.bounds.lowerEndpoint());
+			}
+			else if(parameter > this.bounds.upperEndpoint())
+			{
+				this.input.add(this.bounds.upperEndpoint());
+			}
 		}
 	}
 	

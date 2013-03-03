@@ -10,6 +10,7 @@ public class DifferentalEvolution {
 	private static ArrayList<Vector> population;
 	private static ArrayList<Vector> solutions;
 	private static Random random = new Random();
+	private static Double lowestFit = Double.MAX_VALUE;
 	
 	public static void initPopulation(Range<Double> bounds)
 	{
@@ -18,33 +19,43 @@ public class DifferentalEvolution {
 		while(population.size() < ControlVariables.POPULATION_SIZE)
 		{
 			newVector = new Vector(random, bounds);
-			//newVector.setFitness(fitness.eval(newVector.get()));
+			newVector.setFitness(fitnessFunction.evaluate(newVector));
 			population.add(newVector);
+			
+			if(population.get(population.size()-1).getFitness() < lowestFit)
+			{
+				lowestFit = population.get(population.size()-1).getFitness();
+				System.out.println("New Lowest = " + lowestFit);
+			}
 		}
 	}
 	
 	public static int getRandomIndex()
 	{
-		return ControlVariables.POPULATION_SIZE * random.nextInt();
+		return random.nextInt(ControlVariables.POPULATION_SIZE-1);
 	}
 	
 	public static void main (String[] args)
 	{
-		initPopulation(null);
+		//fitnessFunction = new DeJong();
+		fitnessFunction = new RosenbrocksValley();
 		
-		fitnessFunction = new DeJong();
+		initPopulation(fitnessFunction.getBounds());
+		
+		//Vector lowestFit = new Vector(fitnessFunction.getBounds());
+		
+		
 		int a;
 		int b;
 		int c;
 		boolean validVector = false;
 		Vector noisyVector = null;
 		
-		while(1 < ControlVariables.MAX_FUNCTION_CALLS)
+		while(fitnessFunction.getNFC() < ControlVariables.MAX_FUNCTION_CALLS)
 		{
 			for (int i = 0; i < ControlVariables.POPULATION_SIZE; i++)
 			{
 				// Select 3 Mutually Exclusive Parents i != a != b != c
-				
 				while(!validVector)
 				{
 					do
@@ -63,6 +74,7 @@ public class DifferentalEvolution {
 					} while(c == i || c == a || c == b);
 					
 					// Catch invalid vectors
+					//System.out.println ("Using a = " + a + " b = " + b + " c = " + c);
 					try
 					{
 						validVector = true;
@@ -75,6 +87,9 @@ public class DifferentalEvolution {
 					}
 				}
 				
+				//System.out.println();
+				validVector = false;
+				
 				Vector trialVector = VectorOperations.crossover(population.get(i), noisyVector, random);
 				
 				trialVector.setFitness(fitnessFunction.evaluate(trialVector));
@@ -82,6 +97,18 @@ public class DifferentalEvolution {
 				population.set(i, VectorOperations.selection(population.get(i), trialVector));
 				
 				// TODO get best so far
+				/*if(population.get(i).getFitness() < lowestFit.getFitness())
+				{
+					lowestFit = population.get(i);
+					System.out.println("New Lowest = " + lowestFit.getFitness());
+				}*/
+				
+				if(population.get(i).getFitness() < lowestFit)
+				{
+					lowestFit = population.get(i).getFitness();
+					System.out.println("New Lowest = " + lowestFit);
+				}
+
 			}			
 		}
 	}
