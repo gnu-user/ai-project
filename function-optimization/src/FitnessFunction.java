@@ -43,5 +43,5 @@ public interface FitnessFunction
 	 * @param The vector parameter that the benchmark function is applied to
 	 * @return The fitness value
 	 */
-	public Double evaluate(ArrayList<Vector> vector);
+	public Double evaluate(Vector vector);
 }

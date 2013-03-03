@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import java.util.ArrayList;
 import com.google.common.collect.Range;
 import java.lang.Math;
 
@@ -43,6 +42,7 @@ public class DeJong implements FitnessFunction
 	 * 
 	 * @return Range The bounds of the De Jong benchmark function
 	 */
+	@Override
 	public Range<Double> getBounds()
 	{
 		return BOUNDS;
@@ -57,9 +57,9 @@ public class DeJong implements FitnessFunction
 	 * is outside the bounds of the De Jong function.
 	 */
 	@Override
-	public Double evaluate(ArrayList<Vector> vector) throws IllegalArgumentException
+	public Double evaluate(Vector vector) throws IllegalArgumentException
 	{
-		Double fitness;
+		Double fitness = 0.0;
 	
 		/* Compute the fitness function for De Jong:
 		 * 
