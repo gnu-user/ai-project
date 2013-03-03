@@ -15,6 +15,11 @@ public class DifferentalEvolution {
 	
 	private static int prevAmount = 0;
 	
+	/**
+	 * Initializes the population with random parameters within the bounds. 
+	 * 
+	 * @param bounds The defined bounds of the fitnessFunction.
+	 */
 	public static void initPopulation(Range<Double> bounds)
 	{
 		population = new ArrayList<Vector>(ControlVariables.POPULATION_SIZE);
@@ -24,19 +29,20 @@ public class DifferentalEvolution {
 			newVector = new Vector(random, bounds);
 			newVector.setFitness(fitnessFunction.evaluate(newVector));
 			population.add(newVector);
-			
-			//System.out.println(prevAmount);
-			//System.out.println(lowestFit.get(prevAmount));
+
 			if(population.get(population.size()-1).getFitness() < lowestFit.get(prevAmount))
 			{
 				prevAmount = fitnessFunction.getNFC();
 				lowestFit.put(prevAmount, population.get(population.size()-1).getFitness());
-				//System.out.println("New Lowest = " + lowestFit);
-				
+			
 			}
 		}
 	}
 	
+	/**
+	 * Creates a random integer between 0 and the population size.
+	 * @return The random integer.
+	 */
 	public static int getRandomIndex()
 	{
 		return random.nextInt(ControlVariables.POPULATION_SIZE-1);
@@ -85,8 +91,6 @@ public class DifferentalEvolution {
 						 c = getRandomIndex();
 					} while(c == i || c == a || c == b);
 					
-					// Catch invalid vectors
-					//System.out.println ("Using a = " + a + " b = " + b + " c = " + c);
 					try
 					{
 						validVector = true;
@@ -99,7 +103,6 @@ public class DifferentalEvolution {
 					}
 				}
 				
-				//System.out.println();
 				validVector = false;
 				
 				Vector trialVector = VectorOperations.crossover(population.get(i), noisyVector, random);
