@@ -1,28 +1,49 @@
+import java.util.Random;
+
 
 public abstract class VectorOperations {
 
-	private static Vector difference(Vector vector1, Vector vector2)
+	public static Vector mutation(Vector positiveV, Vector negativeV, Vector positiveV2)
 	{
-		return null;
+		Vector noisyVector = new Vector(positiveV.getBounds());
+		for(int i = 0; i < ControlVariables.POPULATION_SIZE; i++)
+		{
+			// Catch out of bounds exception and generate new one.
+			noisyVector.addParameter(positiveV2.get(i) + 
+					ControlVariables.MUTATION_RATE * (positiveV.get(i) - negativeV.get(i)));
+		}
+		return noisyVector;
 	}
-	
-	private static Vector createNoisy(Vector vector1, Vector vector2)
+		
+	public static Vector crossover(Vector targetVector, Vector noisyVector, Random random)
 	{
-		return null;
-	}
-	
-	public static Vector mutation(Vector vector1, Vector vector2, Vector vector3)
-	{
-		return null;
-	}
-	
-	public static Vector crossover(Vector target, Vector noisy)
-	{
-		return null;
+		Vector trialVector = new Vector(targetVector.getBounds());
+		
+		for(int i = 0; i < ControlVariables.POPULATION_SIZE; i++)
+		{
+			if(random.nextDouble() <= ControlVariables.CROSSOVER_RATE)
+			{
+				trialVector.addParameter(noisyVector.get(i));
+			}
+			else
+			{
+				trialVector.addParameter(targetVector.get(i));
+			}				
+		}
+		
+		// TODO calculate fitness
+		return trialVector;
 	}
 	
 	public static Vector selection(Vector target, Vector trial)
 	{
-		return null;
+		if(target.getFitness() <= trial.getFitness())
+		{
+			return target;
+		}
+		else
+		{
+			return trial;
+		}
 	}
 }
