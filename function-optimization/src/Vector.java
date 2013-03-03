@@ -17,8 +17,8 @@ public class Vector {
 				
 		while(input.size() < ControlVariables.DIMENSIONS)
 		{
-			this.input.add(((bounds.upperEndpoint() - bounds.lowerEndpoint()) * 
-					random.nextDouble()) + bounds.lowerEndpoint());
+			this.input.add(((this.bounds.upperEndpoint() - this.bounds.lowerEndpoint()) * 
+					random.nextDouble()) + this.bounds.lowerEndpoint());
 		}
 	}
 	
@@ -44,11 +44,18 @@ public class Vector {
 	
 	public void setParameter(int index, Double parameter) throws IllegalArgumentException
 	{
-		this.input.set(index, parameter);
+		if (bounds.contains(parameter))
+		{
+			this.input.set(index, parameter);
+		}
+		else
+		{
+			throw new IllegalArgumentException("A vector parameter was outside the bounds of the function.");
+		}
 	}
 	
-	public void setParameter(ArrayList<Double> parameter) throws IllegalArgumentException
+	/*public void setParameter(ArrayList<Double> parameter) throws IllegalArgumentException
 	{
 		this.input = parameter;
-	}
+	}*/
 }
