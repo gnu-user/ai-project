@@ -59,6 +59,11 @@ public class Vector {
 		}
 	}
 	
+	public int size()
+	{
+		return this.input.size();
+	}
+	
 	/*public void setParameter(ArrayList<Double> parameter) throws IllegalArgumentException
 	{
 		this.input = parameter;
