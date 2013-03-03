@@ -14,6 +14,7 @@ public class DifferentalEvolution {
 	private static LinkedHashMap<Integer, Double> lowestFit = new LinkedHashMap<Integer, Double>();
 	
 	private static int prevAmount = 0;
+	private static Double bestValue = Double.MAX_VALUE;
 	
 	public static void initPopulation(Range<Double> bounds)
 	{
@@ -118,13 +119,18 @@ public class DifferentalEvolution {
 				if(population.get(i).getFitness() < lowestFit.get(prevAmount))
 				{
 					prevAmount = fitnessFunction.getNFC();
-					lowestFit.put(prevAmount, population.get(i).getFitness());
+					bestValue =  population.get(i).getFitness();
+					lowestFit.put(prevAmount, bestValue);
+					
 				}
-
+				
+				/* Set the last value (NFC) to the best value found */
+				lowestFit.put(ControlVariables.MAX_FUNCTION_CALLS, bestValue);
 			}			
 		}
 		
 		System.out.println("New Lowest = " + lowestFit);
+		System.out.println(lowestFit.size());
 		PerformanceGraph.plot(lowestFit, "De Jong");
 	}
 }
