@@ -1,7 +1,7 @@
 /**
  * Artificial Intelligence Project -- Differential Evolution
  *
- * Copyright (C) 2013, Joseph Heron, Jonathan Gillett, and Daniel Smullen
+ * Copyright (C) 2013, Jonathan Gillett, Joseph Heron, and Daniel Smullen
  * All rights reserved.
  *
  *
@@ -36,12 +36,24 @@ public interface FitnessFunction
 	public Range<Double> getBounds();
 	
 	/**
+	 * Returns the name of the fitness function, this is useful for plotting
+	 * the fitness results and saving the image as the name of the fitness function.
+	 */
+	public String getName();
+	
+	/**
 	 * Returns the number of function calls (NFC) this is a count of
 	 * the number of times the fitness function has been called.
 	 * 
 	 * @return The number of function calls NFC
 	 */
 	public Integer getNFC();
+	
+	/**
+	 * Resets the NFC count, this is useful when running multiple new 
+	 * instances of the DE algorithm and you wish to reset the NFC.
+	 */
+	public void resetNFC();
 	
 	/**
 	 * Evaluates the fitness of the benchmark function and returns

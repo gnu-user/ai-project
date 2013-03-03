@@ -1,3 +1,23 @@
+/**
+ * Artificial Intelligence Project -- Differential Evolution
+ *
+ * Copyright (C) 2013, Joseph Heron, Jonathan Gillett, and Daniel Smullen
+ * All rights reserved.
+ *
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Random;
@@ -5,8 +25,8 @@ import java.util.Random;
 import com.google.common.collect.Range;
 
 
-public class DifferentalEvolution {
-
+public class DifferentalEvolution
+{
 	private static FitnessFunction fitnessFunction;
 	private static ArrayList<Vector> population;
 	private static ArrayList<Vector> solutions;
@@ -14,6 +34,7 @@ public class DifferentalEvolution {
 	private static LinkedHashMap<Integer, Double> lowestFit = new LinkedHashMap<Integer, Double>();
 	
 	private static int prevAmount = 0;
+	private static Double bestValue = Double.MAX_VALUE;
 	
 	/**
 	 * Initializes the population with random parameters within the bounds. 
@@ -121,15 +142,18 @@ public class DifferentalEvolution {
 				if(population.get(i).getFitness() < lowestFit.get(prevAmount))
 				{
 					prevAmount = fitnessFunction.getNFC();
-					lowestFit.put(prevAmount, population.get(i).getFitness());
-					
+					bestValue =  population.get(i).getFitness();
+					lowestFit.put(prevAmount, bestValue);
 					
 				}
-
+				
+				/* Set the last value (NFC) to the best value found */
+				lowestFit.put(ControlVariables.MAX_FUNCTION_CALLS, bestValue);
 			}			
 		}
 		
 		System.out.println("New Lowest = " + lowestFit);
-		PerformanceGraph.plot(lowestFit, "De Jong");
+		System.out.println(lowestFit.size());
+		PerformanceGraph.plot(lowestFit, fitnessFunction.getName());
 	}
 }

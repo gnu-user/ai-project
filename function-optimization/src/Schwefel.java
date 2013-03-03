@@ -1,7 +1,7 @@
 /**
  * Artificial Intelligence Project -- Differential Evolution
  *
- * Copyright (C) 2013, Joseph Heron, Jonathan Gillett, and Daniel Smullen
+ * Copyright (C) 2013, Jonathan Gillett, Joseph Heron, and Daniel Smullen
  * All rights reserved.
  *
  *
@@ -31,15 +31,14 @@ public class Schwefel implements FitnessFunction
 	/* The bounds of Schwefel's problem */
 	private static final Range<Double> BOUNDS = Range.closed(-65.0, 65.0);
 	
+	/* The name of the fitness function */
+	private static final String NAME = "Schwefel's Problem";
+	
 	/* The number of function calls, includes the sum of all function calls
 	 * for all instances of the object
 	 */
 	private static Integer NFC = 0;
 	
-	
-	public Schwefel()
-	{
-	}
 
 	/**
 	 * Returns the bounds for Schwefel's problem, which is, [-65, 65].
@@ -53,6 +52,16 @@ public class Schwefel implements FitnessFunction
 	}
 
 	/**
+	 * Returns the name of the fitness function, this is useful for plotting
+	 * the fitness results and saving the image as the name of the fitness function.
+	 */
+	@Override
+	public String getName()
+	{
+		return NAME;
+	}
+	
+	/**
 	 * Returns the number of function calls (NFC) this is a count of
 	 * the number of times the fitness function has been called.
 	 * 
@@ -62,6 +71,16 @@ public class Schwefel implements FitnessFunction
 	public Integer getNFC()
 	{
 		return NFC;
+	}
+	
+	/**
+	 * Resets the NFC count, this is useful when running multiple new 
+	 * instances of the DE algorithm and you wish to reset the NFC.
+	 */
+	@Override
+	public void resetNFC()
+	{
+		NFC = 0;
 	}
 	
 	/**

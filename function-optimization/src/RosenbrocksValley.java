@@ -1,7 +1,7 @@
 /**
  * Artificial Intelligence Project -- Differential Evolution
  *
- * Copyright (C) 2013, Joseph Heron, Jonathan Gillett, and Daniel Smullen
+ * Copyright (C) 2013, Jonathan Gillett, Joseph Heron, and Daniel Smullen
  * All rights reserved.
  *
  *
@@ -32,15 +32,14 @@ public class RosenbrocksValley implements FitnessFunction
 	/* The bounds of Rosenbrock's Valley */
 	private static final Range<Double> BOUNDS = Range.closed(-2.0, 2.0);
 	
+	/* The name of the fitness function */
+	private static final String NAME = "Rosenbrock's Valley";
+	
 	/* The number of function calls, includes the sum of all function calls
 	 * for all instances of the object
 	 */
 	private static Integer NFC = 0;
 	
-	
-	public RosenbrocksValley()
-	{
-	}
 
 	/**
 	 * Returns the bounds for Rosenbrock's Valley, which is, [-2, 2].
@@ -54,6 +53,16 @@ public class RosenbrocksValley implements FitnessFunction
 	}
 
 	/**
+	 * Returns the name of the fitness function, this is useful for plotting
+	 * the fitness results and saving the image as the name of the fitness function.
+	 */
+	@Override
+	public String getName()
+	{
+		return NAME;
+	}
+	
+	/**
 	 * Returns the number of function calls (NFC) this is a count of
 	 * the number of times the fitness function has been called.
 	 * 
@@ -64,6 +73,17 @@ public class RosenbrocksValley implements FitnessFunction
 	{
 		return NFC;
 	}
+	
+	/**
+	 * Resets the NFC count, this is useful when running multiple new 
+	 * instances of the DE algorithm and you wish to reset the NFC.
+	 */
+	@Override
+	public void resetNFC()
+	{
+		NFC = 0;
+	}
+
 	
 	/**
 	 * Evaluates the fitness of Rosenbrock's Valley benchmark function, which is known 
