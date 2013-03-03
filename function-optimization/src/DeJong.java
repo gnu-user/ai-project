@@ -70,7 +70,7 @@ public class DeJong implements FitnessFunction
 		{
 			if (! BOUNDS.contains(parameter))
 			{
-				throw new IllegalArgumentException("A vector parameter was outside the bounds of the De Jong function.");
+				throw new IllegalArgumentException("A vector parameter was outside the bounds of the function.");
 			}
 			
 			fitness += Math.pow(parameter, 2.0);
