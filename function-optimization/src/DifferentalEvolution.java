@@ -6,6 +6,7 @@ import com.google.common.collect.Range;
 
 public class DifferentalEvolution {
 
+	private static FitnessFunction fitnessFunction;
 	private static ArrayList<Vector> population;
 	private static ArrayList<Vector> solutions;
 	private static Random random = new Random();
@@ -22,26 +23,62 @@ public class DifferentalEvolution {
 		}
 	}
 	
+	public static int getRandomIndex()
+	{
+		return ControlVariables.POPULATION_SIZE * random.nextInt();
+	}
+	
 	public static void main (String[] args)
 	{
 		initPopulation(null);
+		
+		fitnessFunction = new DeJong();
+		int a;
+		int b;
+		int c;
+		boolean validVector = false;
+		Vector noisyVector = null;
 		
 		while(1 < ControlVariables.MAX_FUNCTION_CALLS)
 		{
 			for (int i = 0; i < ControlVariables.POPULATION_SIZE; i++)
 			{
-				// Select 3 parents
-					// Mutually Exclusive Parents i != a != b != c
-				int a = 1; 
-				int b = 2; 
-				int c = 3;
+				// Select 3 Mutually Exclusive Parents i != a != b != c
 				
-				// TODO catch invalid vectors
-				Vector noisyVector = VectorOperations.mutation(population.get(c), population.get(b), population.get(a));
+				while(!validVector)
+				{
+					do
+					{
+						a = getRandomIndex(); 
+					} while(a == i);
+					
+					do
+					{
+						b = getRandomIndex();
+					} while(b == i || b == a);
+					
+					do
+					{
+						 c = getRandomIndex();
+					} while(c == i || c == a || c == b);
+					
+					// Catch invalid vectors
+					try
+					{
+						validVector = true;
+						noisyVector = VectorOperations.mutation(population.get(c),
+								population.get(b), population.get(a));
+					}
+					catch (IllegalArgumentException e)
+					{
+						validVector = false;
+					}
+				}
 				
 				Vector trialVector = VectorOperations.crossover(population.get(i), noisyVector, random);
 				
-				// TODO calc fitness of values
+				trialVector.setFitness(fitnessFunction.evaluate(trialVector));
+				
 				population.set(i, VectorOperations.selection(population.get(i), trialVector));
 				
 				// TODO get best so far
