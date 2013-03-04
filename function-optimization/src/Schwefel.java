@@ -98,13 +98,13 @@ public class Schwefel implements FitnessFunction
 		Double innerSum = 0.0;
 		
 		/* First check that the parameters in the vector are within the bounds */
-		for (Double parameter : vector.get())
+		/*for (Double parameter : vector.get())
 		{
 			if (! BOUNDS.contains(parameter))
 			{
 				throw new IllegalArgumentException("A vector parameter was outside the bounds of the function.");
 			}
-		}
+		}*/
 		
 		/* Compute the fitness function for Schwefel's problem:
 		 * 
