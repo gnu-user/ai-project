@@ -29,9 +29,9 @@ public class DifferentalEvolution
 {
 	private static FitnessFunction fitnessFunction;
 	private static ArrayList<Vector> population;
-	private static ArrayList<Vector> solutions;
+	private static ArrayList<Double> solutions;
 	private static Random random = new Random();
-	private static LinkedHashMap<Integer, Double> lowestFit = new LinkedHashMap<Integer, Double>();
+	private static LinkedHashMap<Integer, Double> lowestFit;
 	
 	private static int prevAmount = 0;
 	private static Double bestValue = Double.MAX_VALUE;
@@ -40,20 +40,17 @@ public class DifferentalEvolution
 	{
 		population = new ArrayList<Vector>(ControlVariables.POPULATION_SIZE);
 		Vector newVector;
+		
 		while(population.size() < ControlVariables.POPULATION_SIZE)
 		{
 			newVector = new Vector(random, bounds);
 			newVector.setFitness(fitnessFunction.evaluate(newVector));
 			population.add(newVector);
 			
-			//System.out.println(prevAmount);
-			//System.out.println(lowestFit.get(prevAmount));
 			if(population.get(population.size()-1).getFitness() < lowestFit.get(prevAmount))
 			{
 				prevAmount = fitnessFunction.getNFC();
 				lowestFit.put(prevAmount, population.get(population.size()-1).getFitness());
-				//System.out.println("New Lowest = " + lowestFit);
-				
 			}
 		}
 	}
@@ -65,92 +62,98 @@ public class DifferentalEvolution
 	
 	public static void main (String[] args)
 	{
-		fitnessFunction = new DeJong();
-		//fitnessFunction = new RosenbrocksValley();
+		solutions = new ArrayList<Double>(ControlVariables.RUNS_PER_FUNCTION);
+		
+		//fitnessFunction = new DeJong();
+		fitnessFunction = new RosenbrocksValley();
 		//fitnessFunction = new HyperEllipsoid();
 		//fitnessFunction = new Schwefel();
 		//fitnessFunction = new Rastrigin();
 		
-		lowestFit.put(prevAmount, Double.MAX_VALUE);
+		/* Execute the differential evolution algorithm a number of times per function */
+		for (int runs = 0; runs < ControlVariables.RUNS_PER_FUNCTION; ++runs)
+		{			
+			int a;
+			int b;
+			int c;
+			boolean validVector = false;
+			Vector noisyVector = null;
+			
+			
+			/* Reset the array of the best values found */
+			lowestFit = new LinkedHashMap<Integer, Double>();
+			lowestFit.put(prevAmount, Double.MAX_VALUE);
 		
-		initPopulation(fitnessFunction.getBounds());
+			initPopulation(fitnessFunction.getBounds());
 		
-		//Vector lowestFit = new Vector(fitnessFunction.getBounds());
-		
-		
-		int a;
-		int b;
-		int c;
-		boolean validVector = false;
-		Vector noisyVector = null;
-		
-		while(fitnessFunction.getNFC() < ControlVariables.MAX_FUNCTION_CALLS)
-		{
-			for (int i = 0; i < ControlVariables.POPULATION_SIZE; i++)
+			/* Reset the fitness function NFC each time */
+			fitnessFunction.resetNFC();
+			
+			while(fitnessFunction.getNFC() < ControlVariables.MAX_FUNCTION_CALLS)
 			{
-				// Select 3 Mutually Exclusive Parents i != a != b != c
-				while(!validVector)
+				for (int i = 0; i < ControlVariables.POPULATION_SIZE; i++)
 				{
-					do
+					// Select 3 Mutually Exclusive Parents i != a != b != c
+					while(!validVector)
 					{
-						a = getRandomIndex(); 
-					} while(a == i);
-					
-					do
-					{
-						b = getRandomIndex();
-					} while(b == i || b == a);
-					
-					do
-					{
-						 c = getRandomIndex();
-					} while(c == i || c == a || c == b);
-					
-					// Catch invalid vectors
-					//System.out.println ("Using a = " + a + " b = " + b + " c = " + c);
-					try
-					{
-						validVector = true;
-						noisyVector = VectorOperations.mutation(population.get(c),
-								population.get(b), population.get(a));
+						do
+						{
+							a = getRandomIndex(); 
+						} while(a == i);
+						
+						do
+						{
+							b = getRandomIndex();
+						} while(b == i || b == a);
+						
+						do
+						{
+							 c = getRandomIndex();
+						} while(c == i || c == a || c == b);
+						
+						// Catch invalid vectors
+						try
+						{
+							validVector = true;
+							noisyVector = VectorOperations.mutation(population.get(c),
+									population.get(b), population.get(a));
+						}
+						catch (IllegalArgumentException e)
+						{
+							validVector = false;
+						}
 					}
-					catch (IllegalArgumentException e)
+					
+					validVector = false;
+					
+					Vector trialVector = VectorOperations.crossover(population.get(i), noisyVector, random);
+					
+					trialVector.setFitness(fitnessFunction.evaluate(trialVector));
+					
+					population.set(i, VectorOperations.selection(population.get(i), trialVector));
+					
+					if(population.get(i).getFitness() < lowestFit.get(prevAmount))
 					{
-						validVector = false;
+						prevAmount = fitnessFunction.getNFC();
+						bestValue =  population.get(i).getFitness();
+						lowestFit.put(prevAmount, bestValue);
+						
 					}
 				}
-				
-				//System.out.println();
-				validVector = false;
-				
-				Vector trialVector = VectorOperations.crossover(population.get(i), noisyVector, random);
-				
-				trialVector.setFitness(fitnessFunction.evaluate(trialVector));
-				
-				population.set(i, VectorOperations.selection(population.get(i), trialVector));
-				
-				// TODO get best so far
-				/*if(population.get(i).getFitness() < lowestFit.getFitness())
-				{
-					lowestFit = population.get(i);
-					System.out.println("New Lowest = " + lowestFit.getFitness());
-				}*/
-				
-				if(population.get(i).getFitness() < lowestFit.get(prevAmount))
-				{
-					prevAmount = fitnessFunction.getNFC();
-					bestValue =  population.get(i).getFitness();
-					lowestFit.put(prevAmount, bestValue);
-					
-				}
-				
-				/* Set the last value (NFC) to the best value found */
-				lowestFit.put(ControlVariables.MAX_FUNCTION_CALLS, bestValue);
-			}			
+			}
+			
+			/* Save the best value found to the solutions array */
+			solutions.add(bestValue);
+			System.out.println("New Lowest = " + lowestFit);
+			System.out.println(lowestFit.size());
 		}
 		
-		System.out.println("New Lowest = " + lowestFit);
-		System.out.println(lowestFit.size());
+		for (Double value : solutions)
+		{
+			System.out.println(value);
+		}
+		/* Set the last value (NFC) to the best value found */
+		lowestFit.put(ControlVariables.MAX_FUNCTION_CALLS, bestValue);
 		PerformanceGraph.plot(lowestFit, fitnessFunction.getName());
 	}
 }
