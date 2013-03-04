@@ -124,11 +124,11 @@ public class Vector
 	 */
 	public void setParameter(int index, Double parameter) throws IllegalArgumentException
 	{
-		if (bounds.contains(parameter))
-		{
+		//if (bounds.contains(parameter))
+		//{
 			this.input.set(index, parameter);
-		}
-		else
+		//}
+		/*else
 		{
 			if(this.input.get(index) < this.bounds.lowerEndpoint())
 			{
@@ -138,7 +138,7 @@ public class Vector
 			{
 				this.input.set(index, this.bounds.upperEndpoint());
 			}
-		}
+		}*/
 	}
 	
 	/**
@@ -171,11 +171,11 @@ public class Vector
 	 */
 	public void addParameter(Double parameter) throws IllegalArgumentException
 	{
-		if (bounds.contains(parameter))
-		{
+		//if (bounds.contains(parameter))
+		//{
 			this.input.add(parameter);
-		}
-		else
+		//}
+		/*else
 		{
 			if(parameter < this.bounds.lowerEndpoint())
 			{
@@ -185,6 +185,6 @@ public class Vector
 			{
 				this.input.add(this.bounds.upperEndpoint());
 			}
-		}
+		}*/
 	}
 }

@@ -101,10 +101,10 @@ public class Rastrigin implements FitnessFunction
 		 */
 		for (Double parameter : vector.get())
 		{
-			if (! BOUNDS.contains(parameter))
+			/*if (! BOUNDS.contains(parameter))
 			{
 				throw new IllegalArgumentException("A vector parameter was outside the bounds of the function.");
-			}
+			}*/
 
 			/* Calculate the fitness */
 			fitness += Math.pow(parameter, 2.0) - 10.0 * Math.cos(2 * Math.PI * parameter);

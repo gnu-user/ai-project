@@ -108,10 +108,10 @@ public class HyperEllipsoid implements FitnessFunction
 		{
 			parameter = vector.get(i);
 			
-			if (! BOUNDS.contains(parameter))
+			/*if (! BOUNDS.contains(parameter))
 			{
 				throw new IllegalArgumentException("A vector parameter was outside the bounds of the function.");
-			}
+			}*/
 			
 			/* Increment i by one, summation starts at i = 1 */
 			fitness += (Double) ((i + 1) * Math.pow(parameter, 2.0));

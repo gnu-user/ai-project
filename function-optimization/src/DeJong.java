@@ -104,10 +104,10 @@ public class DeJong implements FitnessFunction
 		 */
 		for (Double parameter : vector.get())
 		{
-			if (! BOUNDS.contains(parameter))
+			/*if (! BOUNDS.contains(parameter))
 			{
 				throw new IllegalArgumentException("A vector parameter was outside the bounds of the function.");
-			}
+			}*/
 			
 			fitness += Math.pow(parameter, 2.0);
 		}
