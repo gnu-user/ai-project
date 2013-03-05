@@ -22,7 +22,10 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Random;
 
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+
 import com.google.common.collect.Range;
+import com.google.common.primitives.Doubles;
 
 
 public class DifferentalEvolution
@@ -161,6 +164,15 @@ public class DifferentalEvolution
 		{
 			System.out.println(value);
 		}
+		
+		/* Display the mean and standard deviation */
+		DescriptiveStatistics stats = new DescriptiveStatistics(Doubles.toArray(solutions));
+		
+		/* Display the mean and standard deviation */
+		System.out.println("MEAN: " + stats.getMean());
+		System.out.println("STD: " + stats.getStandardDeviation());
+		//System.out.println("MEAN: " + Statistics.mean(solutions));
+		//System.out.println("STD: " + Statistics.std(solutions));
 		
 		/* Set the last value (NFC) to the best value found */
 		lowestFit.put(ControlVariables.MAX_FUNCTION_CALLS, bestValue);
