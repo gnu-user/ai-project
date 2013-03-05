@@ -23,6 +23,8 @@ package algorithm;
 import gameboard.QueenGame;
 import gameboard.QueenBoard;
 
+import plotting.SeriesPlot;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
@@ -40,6 +42,8 @@ public class EightQueens
 	
 	private static ArrayList<Chromosome> population;
 	private static ArrayList<Chromosome> solutions;
+	
+	private static ArrayList<Double> avgFitness;
 
 	private static Random random = new Random();
 	private static Integer numGenerations = 0;
@@ -173,6 +177,7 @@ public class EightQueens
 	public static void main(String[] args)
 	{
 		solutions = new ArrayList<Chromosome>();
+		avgFitness = new ArrayList<Double>();
 		
 		/* Create an initial population of uniformly random chromosomes */
 		initPopulation();
@@ -212,7 +217,7 @@ public class EightQueens
 		*/
 		
 		
-		while (solutions.size() < 92)
+		while (solutions.size() < 1)
 		{	
 			/* If the percentage of similar chromosomes due to in-breeding exceeds
 			 * the minimum threshold value, increase the amount of mutation
@@ -307,21 +312,34 @@ public class EightQueens
 				}
 			}
 			
+			
+			/* Store the mean fitness for the population */
+			Double sum = 0.0;
+			for (Double value : fitness.values())
+			{
+				sum += (Double) value;
+			}
+			avgFitness.add((Double) sum / fitness.size());
+			
 			/* Set the current population as the NEXT population */
 			fitness.clear();
-			population = nextPopulation;
+			population = nextPopulation;			
 			
 			++numGenerations;
 		}
 		
 		
+		/* Plot the average fitness as a time series of generations */
+		SeriesPlot plot = new SeriesPlot("Fitness over Generations", "Number of Generations", "Fitness");
+		plot.plot(avgFitness);
+		
 		/* Display the solutions to eight queens puzzle */
+		QueenGame myGame = null;
 		for (Chromosome solution : solutions)
 		{
 			/* Only display the specified number of solutions rather than all */
 			if (solutions.indexOf(solution) < NUM_DISPLAY)
 			{
-				QueenGame myGame = null;
 				try
 				{
 					myGame = new QueenGame (new QueenBoard(Ints.toArray(solution.get())));
