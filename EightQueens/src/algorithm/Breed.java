@@ -40,7 +40,7 @@ public abstract class Breed
 	
 	/* The cloning, crossover, and mutation percentage intervals */
 	public static  Range<Integer> CLONING = Range.closedOpen(0, 30); 		// 30 %
-	public static  Range<Integer> CROSSOVER = Range.closedOpen(30, 99);		// 69 %
+	public static  Range<Integer> CROSSOVER = Range.closedOpen(30, 100);	// 70 %
 	public static  Range<Integer> MUTATION = Range.closedOpen(99, 100);		//  1 %
 	
 	
@@ -74,13 +74,13 @@ public abstract class Breed
 			if (MUTATION.lowerEndpoint() > 49)
 			{
 				/* Decrease the CLONING upper endpoint by 2 */
-				Breed.CLONING = Range.closedOpen(0, CLONING.upperEndpoint() - 2);
+				//Breed.CLONING = Range.closedOpen(0, CLONING.upperEndpoint() - 2);
 				
 				/* Decrease the lower bound by 2 and upper bound by 5 for CROSSOVER */
-				Breed.CROSSOVER = Range.closedOpen(CLONING.upperEndpoint(), CROSSOVER.upperEndpoint() - 5);
+				//Breed.CROSSOVER = Range.closedOpen(CLONING.upperEndpoint(), CROSSOVER.upperEndpoint() - 5);
 				
 				/* Decrease the MUTATION lower bound by 5 */
-				Breed.MUTATION = Range.closedOpen(CROSSOVER.upperEndpoint(), 100);
+				Breed.MUTATION = Range.closedOpen(MUTATION.lowerEndpoint() - 5, 100);
 			}
 		}
 		else
@@ -88,13 +88,13 @@ public abstract class Breed
 			if (MUTATION.lowerEndpoint() < 99)
 			{
 				/* Increase the CLONING upper endpoint by 2 */
-				Breed.CLONING = Range.closedOpen(0, CLONING.upperEndpoint() + 2);
+				//Breed.CLONING = Range.closedOpen(0, CLONING.upperEndpoint() + 2);
 				
 				/* Increase the lower bound by 2 and upper bound by 5 for CROSSOVER */
-				Breed.CROSSOVER = Range.closedOpen(CLONING.upperEndpoint(), CROSSOVER.upperEndpoint() + 5);
+				//Breed.CROSSOVER = Range.closedOpen(CLONING.upperEndpoint(), CROSSOVER.upperEndpoint() + 5);
 				
 				/* Increase the MUTATION lower bound by 5 */
-				Breed.MUTATION = Range.closedOpen(CROSSOVER.upperEndpoint(), 100);
+				Breed.MUTATION = Range.closedOpen(MUTATION.lowerEndpoint() + 5, 100);
 			}
 		}
 		
@@ -179,27 +179,12 @@ public abstract class Breed
 	 * 
 	 * @return A pair of mutated chromosomes
 	 */
-	static public ArrayList<Chromosome> mutation(Selection selection)
-	{		
-		ArrayList<Chromosome> chromosomes = new ArrayList<Chromosome>(2);
+	static public Chromosome mutation(Chromosome chromosome)
+	{
+		/* Mutate one of the genes in the chromosome */
+		chromosome.set(random.nextInt(chromosome.size()), 
+					   random.nextInt(chromosome.size()));
 		
-		/* Mutate each chromosome */
-		//int i = 0;
-		while (chromosomes.size() < 2)
-		{
-			Chromosome mutated = selection.next();
-			
-			//System.out.println("BEFORE: " + mutated.get().toString());
-			
-			/* Mutate one of the genes in the chromosome */
-			mutated.set(random.nextInt(mutated.size()), 
-						random.nextInt(mutated.size()));
-			
-			chromosomes.add(mutated);
-			
-			//System.out.println("AFTER:  " + chromosomes.get(i++).get().toString());
-		}
-		
-		return chromosomes;
+		return chromosome;
 	}
 }

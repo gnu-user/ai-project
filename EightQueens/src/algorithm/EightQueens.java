@@ -245,6 +245,7 @@ public class EightQueens
 			 * and mutation operations.
 			 */
 			ArrayList<Chromosome> nextPopulation =  new ArrayList<Chromosome>(POPULATION);
+			ArrayList<Chromosome> chromosomes = new ArrayList<Chromosome>(2);
 			Breed.init(new Random());
 			
 			while (nextPopulation.size() < POPULATION)
@@ -255,18 +256,29 @@ public class EightQueens
 				/* Pair of parent chromosomes continue on to the next generation.*/
 				if (Breed.CLONING.contains(randomNum))
 				{
-					nextPopulation.addAll(Breed.cloning(selection));
+					chromosomes.addAll(Breed.cloning(selection));
 				}
 				/* Pair of parent chromosomes are cross-overed to create new pair */
 				else if (Breed.CROSSOVER.contains(randomNum))
 				{
-					nextPopulation.addAll(Breed.crossover(selection));
+					chromosomes.addAll(Breed.crossover(selection));
 				}
-				/* Pair of chromosomes are mutated */
-				else if (Breed.MUTATION.contains(randomNum))
+				
+				/* Apply the background mutation operator to the chromosomes */
+				for (Chromosome chromosome : chromosomes)
 				{
-					nextPopulation.addAll(Breed.mutation(selection));
+					randomNum = random.nextInt(100);
+					
+					if (Breed.MUTATION.contains(randomNum))
+					{
+						nextPopulation.add(Breed.mutation(chromosome));
+					}
+					else
+					{
+						nextPopulation.add(chromosome);
+					}
 				}
+				chromosomes.clear();
 			}
 			
 			
