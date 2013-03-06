@@ -71,7 +71,7 @@ public abstract class Breed
 		
 		if (inBred)
 		{
-			if (MUTATION.lowerEndpoint() > 49)
+			if (MUTATION.lowerEndpoint() > 1)
 			{
 				/* Decrease the CLONING upper endpoint by 2 */
 				//Breed.CLONING = Range.closedOpen(0, CLONING.upperEndpoint() - 2);
@@ -80,7 +80,7 @@ public abstract class Breed
 				//Breed.CROSSOVER = Range.closedOpen(CLONING.upperEndpoint(), CROSSOVER.upperEndpoint() - 5);
 				
 				/* Decrease the MUTATION lower bound by 5 */
-				Breed.MUTATION = Range.closedOpen(MUTATION.lowerEndpoint() - 5, 100);
+				Breed.MUTATION = Range.closedOpen(MUTATION.lowerEndpoint() - 1, 100);
 			}
 		}
 		else
@@ -94,7 +94,7 @@ public abstract class Breed
 				//Breed.CROSSOVER = Range.closedOpen(CLONING.upperEndpoint(), CROSSOVER.upperEndpoint() + 5);
 				
 				/* Increase the MUTATION lower bound by 5 */
-				Breed.MUTATION = Range.closedOpen(MUTATION.lowerEndpoint() + 5, 100);
+				Breed.MUTATION = Range.closedOpen(MUTATION.lowerEndpoint() + 1, 100);
 			}
 		}
 		

@@ -48,6 +48,9 @@ public class EightQueens
 	
 	private static ArrayList<Double> avgFitness;
 	private static ArrayList<Double> bestFitness;
+	
+	private static ArrayList<Double> similarity;
+	private static ArrayList<Double> mutationRate;
 
 	private static Random random = new Random();
 	private	static DescriptiveStatistics stats;
@@ -184,6 +187,8 @@ public class EightQueens
 		solutions = new ArrayList<Chromosome>();
 		avgFitness = new ArrayList<Double>();
 		bestFitness = new ArrayList<Double>();
+		similarity = new ArrayList<Double>();
+		mutationRate = new ArrayList<Double>();
 		
 		/* Create an initial population of uniformly random chromosomes */
 		initPopulation();
@@ -323,6 +328,10 @@ public class EightQueens
 			avgFitness.add(stats.getMean());
 			bestFitness.add(stats.getMax());
 			
+			/* Save chromosome similarity and mutation rate for current generation */
+			similarity.add(similarChromosomes(nextPopulation));
+			mutationRate.add((Breed.MUTATION.upperEndpoint() - Breed.MUTATION.lowerEndpoint()) / 100.0 );
+			
 			/* Set the current population as the NEXT population */
 			fitness.clear();
 			population = nextPopulation;			
@@ -334,6 +343,10 @@ public class EightQueens
 		/* Plot the average and best fitness as a time series of generations */		
 		SeriesPlot plot = new SeriesPlot("Fitness Over Generations", "Number of Generations", "Fitness");
 		plot.plot(avgFitness, bestFitness);
+		
+		/* Plot relationship between chromosome similarity and mutation rate from inbreeding */
+		SeriesPlot plot2 = new SeriesPlot("Chromosome Similarity and Mutation Rate due to In-Breeding", "Number of Generations", "Rate");
+		plot2.plot(similarity, mutationRate);
 		
 		/* Display the solutions to eight queens puzzle */
 		QueenGame myGame = null;
