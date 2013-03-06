@@ -30,7 +30,10 @@ import java.util.HashMap;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
+
+import com.google.common.primitives.Doubles;
 import com.google.common.primitives.Ints;
 
 
@@ -44,8 +47,10 @@ public class EightQueens
 	private static ArrayList<Chromosome> solutions;
 	
 	private static ArrayList<Double> avgFitness;
+	private static ArrayList<Double> bestFitness;
 
 	private static Random random = new Random();
+	private	static DescriptiveStatistics stats;
 	private static Integer numGenerations = 0;
 	
 	/**
@@ -178,6 +183,7 @@ public class EightQueens
 	{
 		solutions = new ArrayList<Chromosome>();
 		avgFitness = new ArrayList<Double>();
+		bestFitness = new ArrayList<Double>();
 		
 		/* Create an initial population of uniformly random chromosomes */
 		initPopulation();
@@ -311,15 +317,11 @@ public class EightQueens
 					}*/
 				}
 			}
-			
-			
-			/* Store the mean fitness for the population */
-			Double sum = 0.0;
-			for (Double value : fitness.values())
-			{
-				sum += (Double) value;
-			}
-			avgFitness.add((Double) sum / fitness.size());
+						
+			/* Save the average and best fitness values for the current generation */
+			stats = new DescriptiveStatistics(Doubles.toArray(fitness.values()));
+			avgFitness.add(stats.getMean());
+			bestFitness.add(stats.getMax());
 			
 			/* Set the current population as the NEXT population */
 			fitness.clear();
@@ -329,9 +331,9 @@ public class EightQueens
 		}
 		
 		
-		/* Plot the average fitness as a time series of generations */
-		SeriesPlot plot = new SeriesPlot("Fitness over Generations", "Number of Generations", "Fitness");
-		plot.plot(avgFitness);
+		/* Plot the average and best fitness as a time series of generations */		
+		SeriesPlot plot = new SeriesPlot("Fitness Over Generations", "Number of Generations", "Fitness");
+		plot.plot(avgFitness, bestFitness);
 		
 		/* Display the solutions to eight queens puzzle */
 		QueenGame myGame = null;

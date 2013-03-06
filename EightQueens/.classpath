@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="../lib/guava-14.0-rc2.jar" sourcepath="../lib/guava-14.0-rc2-sources.jar">
+	<classpathentry kind="lib" path="../lib/guava-14.0-rc2.jar" sourcepath="/lib/guava-14.0-rc2-sources.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="jar:file:../lib/guava-14.0-rc2-javadoc.jar!/"/>
 		</attributes>
@@ -13,5 +13,10 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="../lib/VectorGraphics2D-0.9-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="../lib/commons-math3-3.1.1.jar" sourcepath="../lib/commons-math3-3.1.1-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:../lib/commons-math3-3.1.1-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
