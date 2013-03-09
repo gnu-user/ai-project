@@ -24,6 +24,7 @@ import gameboard.QueenGame;
 import gameboard.QueenBoard;
 
 import plotting.SeriesPlot;
+import plotting.SeriesBoxPlot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,6 +53,10 @@ public class EightQueens
 	private static ArrayList<Double> similarity;
 	private static ArrayList<Double> mutationRate;
 
+	/* Ratio of similarity to mutation and mutation to similarity */
+	private static ArrayList<Double> similarityMutation;
+	private static ArrayList<Double> mutationSimilarity;
+	
 	private static Random random = new Random();
 	private	static DescriptiveStatistics stats;
 	private static Integer numGenerations = 0;
@@ -189,6 +194,8 @@ public class EightQueens
 		bestFitness = new ArrayList<Double>();
 		similarity = new ArrayList<Double>();
 		mutationRate = new ArrayList<Double>();
+		similarityMutation = new ArrayList<Double>();
+		mutationSimilarity = new ArrayList<Double>();
 		
 		/* Create an initial population of uniformly random chromosomes */
 		initPopulation();
@@ -332,6 +339,13 @@ public class EightQueens
 			similarity.add(similarChromosomes(nextPopulation));
 			mutationRate.add((Breed.MUTATION.upperEndpoint() - Breed.MUTATION.lowerEndpoint()) / 100.0 );
 			
+			/* Save the ratios of chromosome similarity and mutation rates */
+			similarityMutation.add(   (similarity.get(similarity.size() - 1)) 
+									/ (mutationRate.get(mutationRate.size() -1)) );
+			
+			mutationSimilarity.add(   (mutationRate.get(mutationRate.size() -1))
+									/ (similarity.get(similarity.size() - 1)) );
+			
 			/* Set the current population as the NEXT population */
 			fitness.clear();
 			population = nextPopulation;			
@@ -340,13 +354,42 @@ public class EightQueens
 		}
 		
 		
-		/* Plot the average and best fitness as a time series of generations */		
-		SeriesPlot plot = new SeriesPlot("Fitness Over Generations", "Number of Generations", "Fitness");
-		plot.plot(avgFitness, "Average Fitness", bestFitness, "Best Fitness");
+		/* Plot the average and best fitness of generations */		
+		SeriesPlot fitnessPlot = new SeriesPlot("Fitness Over Generations", "Number of Generations", "Fitness");
+		SeriesBoxPlot fitnessBoxPlot = new SeriesBoxPlot("Fitness Over Generations", "Fitness");
+		
+		fitnessPlot.plot(avgFitness, "Average Fitness", bestFitness, "Best Fitness");
+		fitnessBoxPlot.plot(avgFitness, "Average Fitness", bestFitness, "Best Fitness");
+		
 		
 		/* Plot relationship between chromosome similarity and mutation rate from inbreeding */
-		SeriesPlot plot2 = new SeriesPlot("Chromosome Similarity and Mutation Rate due to In-Breeding", "Number of Generations", "Rate");
-		plot2.plot(similarity, "Chromosome Similarity", mutationRate, "Mutation Rate");
+		SeriesPlot mutationPlot = new SeriesPlot("Chromosome Similarity and Mutation Rate due to In-Breeding", "Number of Generations", "Rate");
+		SeriesBoxPlot mutationBoxPlot = new SeriesBoxPlot("Chromosome Similarity and Mutation Rate due to In-Breeding", "Rate");
+		
+		mutationPlot.plot(similarity, "Chromosome Similarity", mutationRate, "Mutation Rate");
+		mutationBoxPlot.plot(similarity, "Chromosome Similarity", mutationRate, "Mutation Rate");
+		
+		
+		/* Plot the ratio of similarity/mutation rate */
+		SeriesPlot ratioPlot1 = new SeriesPlot( "Ratio of Chromosome Similarity to Mutation Rate due to In-Breeding",
+												"Number of Generations", 
+												"Rate"
+											  );
+		SeriesBoxPlot ratioBoxPlot1 = new SeriesBoxPlot( "Ratio of Chromosome Similarity to Mutation Rate due to In-Breeding","Rate");
+		
+		ratioPlot1.plot(similarityMutation, "Ratio of Chromosome Similarity to Mutation Rate");
+		ratioBoxPlot1.plot(similarityMutation, "Ratio of Chromosome Similarity to Mutation Rate");
+		
+		
+		/* Plot the ratio of mutation rate/similarity */
+		SeriesPlot ratioPlot2 = new SeriesPlot( "Ratio of Mutation Rate to Chromosome Similarity due to In-Breeding",
+				"Number of Generations", 
+				"Rate"
+			  );
+		ratioPlot2.plot(mutationSimilarity, "Ratio of Mutation Rate to Chromosome Similarity");
+		
+		
+
 		
 		/* Display the solutions to eight queens puzzle */
 		QueenGame myGame = null;

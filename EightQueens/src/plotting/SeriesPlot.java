@@ -125,6 +125,7 @@ public class SeriesPlot extends Panel
 	 * @param data2 The second time series dataset to plot on the Y axis
 	 * @param label2 The label for the second time series dataset
 	 */
+	@SuppressWarnings("unchecked")
 	public void plot(ArrayList<Double> data1, String label1, ArrayList<Double> data2, String label2)
 	{
 		/* Add the data provided to the data table series */
