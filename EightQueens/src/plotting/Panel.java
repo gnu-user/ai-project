@@ -43,7 +43,7 @@ public abstract class Panel extends JPanel
 	public Panel()
 	{
 		super(new BorderLayout());
-		setPreferredSize(new Dimension(1000, 600));
+		setPreferredSize(new Dimension(1920, 1080));
 		setBackground(Color.WHITE);
 	}
 

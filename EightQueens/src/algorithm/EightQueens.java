@@ -342,11 +342,11 @@ public class EightQueens
 		
 		/* Plot the average and best fitness as a time series of generations */		
 		SeriesPlot plot = new SeriesPlot("Fitness Over Generations", "Number of Generations", "Fitness");
-		plot.plot(avgFitness, bestFitness);
+		plot.plot(avgFitness, "Average Fitness", bestFitness, "Best Fitness");
 		
 		/* Plot relationship between chromosome similarity and mutation rate from inbreeding */
 		SeriesPlot plot2 = new SeriesPlot("Chromosome Similarity and Mutation Rate due to In-Breeding", "Number of Generations", "Rate");
-		plot2.plot(similarity, mutationRate);
+		plot2.plot(similarity, "Chromosome Similarity", mutationRate, "Mutation Rate");
 		
 		/* Display the solutions to eight queens puzzle */
 		QueenGame myGame = null;

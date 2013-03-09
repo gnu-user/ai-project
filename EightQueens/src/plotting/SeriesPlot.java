@@ -23,8 +23,10 @@ package plotting;
 import java.awt.BasicStroke;
 import java.util.ArrayList;
 
+import de.erichseifert.gral.data.DataSeries;
 import de.erichseifert.gral.data.DataTable;
 import de.erichseifert.gral.plots.BarPlot;
+import de.erichseifert.gral.plots.Plot;
 import de.erichseifert.gral.plots.XYPlot;
 import de.erichseifert.gral.plots.axes.AxisRenderer;
 import de.erichseifert.gral.plots.lines.DefaultLineRenderer2D;
@@ -32,6 +34,7 @@ import de.erichseifert.gral.plots.lines.LineRenderer;
 import de.erichseifert.gral.plots.points.PointRenderer;
 import de.erichseifert.gral.ui.InteractivePanel;
 import de.erichseifert.gral.util.Insets2D;
+import de.erichseifert.gral.util.Location;
 
 public class SeriesPlot extends Panel
 {
@@ -59,9 +62,10 @@ public class SeriesPlot extends Panel
 	 * Plots the time series data provided and displays the plot
 	 * 
 	 * @param data The time series data to plot on the Y axis
+	 * @param label The label for the dataset
 	 */
 	@SuppressWarnings("unchecked")
-	public void plot(ArrayList<Double> data)
+	public void plot(ArrayList<Double> data, String label)
 	{
 		/* Add the data provided to the data table series */
 		DataTable dataTable = new DataTable(Integer.class, Double.class);
@@ -71,8 +75,11 @@ public class SeriesPlot extends Panel
 			dataTable.add(i, data.get(i));
 		}
 		
+		DataSeries series = new DataSeries(label, dataTable);
+		
+		
 		/* Create a time series plot */
-		XYPlot seriesPlot = new XYPlot(dataTable);
+		XYPlot seriesPlot = new XYPlot(series);
 		
 		/* Configure the line for the plot */
 		LineRenderer line = new DefaultLineRenderer2D();
@@ -83,19 +90,22 @@ public class SeriesPlot extends Panel
 		line.setSetting(LineRenderer.GAP, 0.0);
 		line.setSetting(LineRenderer.GAP_ROUNDED, true);
 		
-		seriesPlot.setLineRenderer(dataTable, line);
+		seriesPlot.setLineRenderer(series, line);
 		
 		
 		/* Configure the points for the plot */
-		PointRenderer points = seriesPlot.getPointRenderer(dataTable);
+		PointRenderer points = seriesPlot.getPointRenderer(series);
 		points.setSetting(PointRenderer.COLOR, BLUE);
 		points.setSetting(PointRenderer.SHAPE, null);
 		
 		/* Specify the spacing for the plot */
-		seriesPlot.setInsets(new Insets2D.Double(20.0, 60.0, 60.0, 20.0));
+		seriesPlot.setInsets(new Insets2D.Double(20.0, 60.0, 120.0, 20.0));
 		
-		/* Set the title and label the axes */
+		/* Set the title, legend, and label the axes */
 		seriesPlot.setSetting(BarPlot.TITLE, title);
+		seriesPlot.setSetting(Plot.LEGEND, true);
+		seriesPlot.setSetting(Plot.LEGEND_LOCATION, Location.SOUTH);
+		seriesPlot.setSetting(Plot.LEGEND_DISTANCE, 3.5);
 		seriesPlot.getAxisRenderer(XYPlot.AXIS_X).setSetting(AxisRenderer.LABEL, XAxisLabel);
 		seriesPlot.getAxisRenderer(XYPlot.AXIS_Y).setSetting(AxisRenderer.LABEL, YAxisLabel);
 		
@@ -111,9 +121,11 @@ public class SeriesPlot extends Panel
 	 * Plots two time series datasets on the same plots
 	 * 
 	 * @param data1 The first time series dataset to plot on the Y axis
+	 * @param label1 The label for the first time series dataset
 	 * @param data2 The second time series dataset to plot on the Y axis
+	 * @param label2 The label for the second time series dataset
 	 */
-	public void plot(ArrayList<Double> data1, ArrayList<Double> data2)
+	public void plot(ArrayList<Double> data1, String label1, ArrayList<Double> data2, String label2)
 	{
 		/* Add the data provided to the data table series */
 		DataTable dataTable1 = new DataTable(Integer.class, Double.class);
@@ -128,9 +140,12 @@ public class SeriesPlot extends Panel
 			dataTable2.add(i, data2.get(i));
 		}
 		
+		DataSeries series1 = new DataSeries(label1, dataTable1);
+		DataSeries series2 = new DataSeries(label2, dataTable2);
+		
 		
 		/* Create a time series plot of the two datasets */
-		XYPlot seriesPlot = new XYPlot(dataTable1, dataTable2);
+		XYPlot seriesPlot = new XYPlot(series1, series2);
 		
 		/* Configure the line for the plot */
 		LineRenderer line1 = new DefaultLineRenderer2D();
@@ -146,23 +161,26 @@ public class SeriesPlot extends Panel
 		line1.setSetting(LineRenderer.GAP_ROUNDED, true);
 		line2.setSetting(LineRenderer.GAP_ROUNDED, true);
 		
-		seriesPlot.setLineRenderer(dataTable1, line1);
-		seriesPlot.setLineRenderer(dataTable2, line2);
+		seriesPlot.setLineRenderer(series1, line1);
+		seriesPlot.setLineRenderer(series2, line2);
 		
 		
 		/* Configure the points for the plot */
-		PointRenderer points = seriesPlot.getPointRenderer(dataTable1);
-		PointRenderer points2 = seriesPlot.getPointRenderer(dataTable2);
+		PointRenderer points = seriesPlot.getPointRenderer(series1);
+		PointRenderer points2 = seriesPlot.getPointRenderer(series2);
 		points.setSetting(PointRenderer.COLOR, BLUE);
 		points2.setSetting(PointRenderer.COLOR, RED);
 		points.setSetting(PointRenderer.SHAPE, null);
 		points2.setSetting(PointRenderer.SHAPE, null);
 		
 		/* Specify the spacing for the plot */
-		seriesPlot.setInsets(new Insets2D.Double(20.0, 60.0, 60.0, 20.0));
+		seriesPlot.setInsets(new Insets2D.Double(20.0, 60.0, 120.0, 20.0));
 		
-		/* Set the title and label the axes */
+		/* Set the title, legend, and label the axes */
 		seriesPlot.setSetting(BarPlot.TITLE, title);
+		seriesPlot.setSetting(Plot.LEGEND, true);
+		seriesPlot.setSetting(Plot.LEGEND_LOCATION, Location.SOUTH);
+		seriesPlot.setSetting(Plot.LEGEND_DISTANCE, 3.5);
 		seriesPlot.getAxisRenderer(XYPlot.AXIS_X).setSetting(AxisRenderer.LABEL, XAxisLabel);
 		seriesPlot.getAxisRenderer(XYPlot.AXIS_Y).setSetting(AxisRenderer.LABEL, YAxisLabel);
 		
