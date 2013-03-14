@@ -1,0 +1,27 @@
+EIGHTQUEENS OPTIMIZATIONS/CHANGES
+======================================
+
+The following are changes made to my algorithm at the request of Dr. Sharyar
+to experiment and see if I can improve the performance.
+
+
+KILL SOLUTION CHROMOSOME REPLACE WITH RANDOM CHROMOSOME
+---------------------------------------------------------
+
+Each time a unique solution is found kill/remove that chromosome from the population
+and replace it with a randomly generated chromosome.
+
+This approach made it take on average about twice as many generations (close
+to 400,000 rather than only 200,000) to find all 92 unique solutions.
+
+The CSV file for this is attached incase you wish to plot it, it is named
+replace_solution.csv
+
+
+
+
+PIVOT
+-----------------------
+
+For each solution found perform a pivot operation and rotate the board three
+times so that you get a total of four solutions.
