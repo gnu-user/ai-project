@@ -78,9 +78,9 @@ public class DifferentalEvolution
 		solutions = new ArrayList<Double>(ControlVariables.RUNS_PER_FUNCTION);
 
 		fitnessFunction = new DeJong();
-		//fitnessFunction = new RosenbrocksValley();
 		//fitnessFunction = new HyperEllipsoid();
 		//fitnessFunction = new Schwefel();
+		//fitnessFunction = new RosenbrocksValley();
 		//fitnessFunction = new Rastrigin();
 	
 		/* Execute the differential evolution algorithm a number of times per function */
@@ -167,8 +167,6 @@ public class DifferentalEvolution
 		
 		/* Display the mean and standard deviation */
 		DescriptiveStatistics stats = new DescriptiveStatistics(Doubles.toArray(solutions));
-		
-		/* Display the mean and standard deviation */
 		System.out.println("MEAN: " + stats.getMean());
 		System.out.println("STD: " + stats.getStandardDeviation());
 		//System.out.println("MEAN: " + Statistics.mean(solutions));

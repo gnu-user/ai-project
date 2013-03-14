@@ -46,6 +46,7 @@ public class EightQueens
 	
 	private static ArrayList<Chromosome> population;
 	private static ArrayList<Chromosome> solutions;
+	private static Chromosome rotation;
 	
 	private static ArrayList<Double> avgFitness;
 	private static ArrayList<Double> bestFitness;
@@ -200,42 +201,8 @@ public class EightQueens
 		/* Create an initial population of uniformly random chromosomes */
 		initPopulation();
 		
-		/*
-		for (Chromosome chromosome : initPopulation)
-		{
-			System.out.println(chromosome.get().toString());
-		}*/
 		
-		/*
-		solutions.add(new Chromosome(new ArrayList<Integer>(Arrays.asList(4, 2, 0, 6, 1, 7, 5, 3))));
-		solutions.add(new Chromosome(new ArrayList<Integer>(Arrays.asList(4, 3, 0, 6, 1, 7, 5, 3))));
-		
-		Chromosome temp = new Chromosome(new ArrayList<Integer>(Arrays.asList(4, 3, 0, 6, 1, 7, 5, 3)));
-		
-		if (uniqueSolution(temp))
-		{
-			System.out.println("UNIQUE!");
-			System.exit(0);
-		}
-		else
-		{
-			System.out.println("NOT UNIQUE!");
-			System.exit(0);
-		}*/	
-		
-		/*
-		ArrayList<Chromosome> test = new ArrayList<Chromosome>();
-		
-		test.add(new Chromosome(new ArrayList<Integer>(Arrays.asList(4, 3, 0, 6, 1, 7, 5, 3))));
-		test.add(new Chromosome(new ArrayList<Integer>(Arrays.asList(4, 3, 0, 6, 1, 7, 5, 3))));
-		test.add(new Chromosome(new ArrayList<Integer>(Arrays.asList(3, 3, 0, 6, 1, 7, 5, 3))));
-		
-		System.out.println(similarChromosomes(test));
-		System.exit(0);
-		*/
-		
-		
-		while (solutions.size() < 1)
+		while (solutions.size() < 92)
 		{	
 			/* If the percentage of similar chromosomes due to in-breeding exceeds
 			 * the minimum threshold value, increase the amount of mutation
@@ -307,10 +274,7 @@ public class EightQueens
 			
 			/* If there are any solutions (fitness of 1) that are unique save them */
 			for (Chromosome chromosome : fitness.keySet())
-			{		
-				//System.out.println("\nCHROMOSOME: " + chromosome.get().toString());
-				//System.out.println("FITNESS: " + fitness.get(chromosome));
-				
+			{
 				if (fitness.get(chromosome) == 1.0 && uniqueSolution(chromosome))
 				{
 					/* Save a copy of the chromosome */
@@ -319,14 +283,18 @@ public class EightQueens
 					System.out.println("\nNUMBER OF SOLUTIONS:   " + solutions.size());
 					System.out.println("NUMBER OF GENERATIONS: " + numGenerations);
 					
-					/* Create a new initial initial population of uniformly random chromosomes */
-					/*initPopulation();
-					System.out.println("NEW POPULATION!");
-					
-					for (Chromosome chromosomeB : population)
+					/* Perform three rotations of the coordinates by 90 degrees to get new solutions */
+					for (int i = 0; i < 3; ++i)
 					{
-						System.out.println(chromosomeB.get().toString());
-					}*/
+						rotation = Pivot.rotate(solutions.get(solutions.size() - 1));
+						
+						if (uniqueSolution(rotation))
+						{
+							solutions.add(rotation);
+							System.out.println("\nNUMBER OF SOLUTIONS:   " + solutions.size());
+							System.out.println("NUMBER OF GENERATIONS: " + numGenerations);
+						}
+					}
 				}
 			}
 						
@@ -369,8 +337,23 @@ public class EightQueens
 		mutationPlot.plot(similarity, "Chromosome Similarity", mutationRate, "Mutation Rate");
 		mutationBoxPlot.plot(similarity, "Chromosome Similarity", mutationRate, "Mutation Rate");
 		
+		/* Display the mean and standard deviation for mutation rate and chromosome similarity */
+		DescriptiveStatistics similarityStats = new DescriptiveStatistics(Doubles.toArray(similarity));
+		System.out.println("Similarity MEDIAN: " + similarityStats.getPercentile(50.0));
+		System.out.println("Similarity MEAN: " + similarityStats.getMean());
+		System.out.println("STD: " + similarityStats.getStandardDeviation());
+		System.out.println("Q1: " + similarityStats.getPercentile(25.0));
+		System.out.println("Q3: " + similarityStats.getPercentile(75.0));
+
+		DescriptiveStatistics mutationStats = new DescriptiveStatistics(Doubles.toArray(mutationRate));
+		System.out.println("Mutation MEDIAN: " + mutationStats.getPercentile(50.0));
+		System.out.println("Mutation MEAN: " + mutationStats.getMean());
+		System.out.println("STD: " + mutationStats.getStandardDeviation());
+		System.out.println("Q1: " + mutationStats.getPercentile(25.0));
+		System.out.println("Q3: " + mutationStats.getPercentile(75.0));
 		
-		/* Plot the ratio of similarity/mutation rate */
+		
+		/* Plot the ratio of similarity/mutation rate 
 		SeriesPlot ratioPlot1 = new SeriesPlot( "Ratio of Chromosome Similarity to Mutation Rate due to In-Breeding",
 												"Number of Generations", 
 												"Rate"
@@ -379,23 +362,23 @@ public class EightQueens
 		
 		ratioPlot1.plot(similarityMutation, "Ratio of Chromosome Similarity to Mutation Rate");
 		ratioBoxPlot1.plot(similarityMutation, "Ratio of Chromosome Similarity to Mutation Rate");
+		*/
 		
-		
-		/* Plot the ratio of mutation rate/similarity */
+		/* Plot the ratio of mutation rate/similarity
 		SeriesPlot ratioPlot2 = new SeriesPlot( "Ratio of Mutation Rate to Chromosome Similarity due to In-Breeding",
 				"Number of Generations", 
 				"Rate"
 			  );
 		ratioPlot2.plot(mutationSimilarity, "Ratio of Mutation Rate to Chromosome Similarity");
-		
+		*/
 		
 
 		
-		/* Display the solutions to eight queens puzzle */
+		/* Display the solutions to eight queens puzzle
 		QueenGame myGame = null;
 		for (Chromosome solution : solutions)
 		{
-			/* Only display the specified number of solutions rather than all */
+			// Only display the specified number of solutions rather than all
 			if (solutions.indexOf(solution) < NUM_DISPLAY)
 			{
 				try
@@ -412,6 +395,6 @@ public class EightQueens
 			{
 				break;
 			}
-		}
+		}*/
 	}
 }
