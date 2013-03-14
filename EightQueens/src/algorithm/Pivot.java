@@ -21,7 +21,6 @@
 package algorithm;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * Performs a pivot operation on a chromosome and returns the
