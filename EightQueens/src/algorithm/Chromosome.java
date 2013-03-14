@@ -101,7 +101,7 @@ public class Chromosome
 	public Chromosome(ArrayList<Integer> coordinates) 
 		throws IllegalArgumentException
 	{
-		/* Throw an exception of length not 8 or any coordinates not [0, 7) */
+		/* Throw an exception of length not 8 or any coordinates not [0, 7] */
 		validateLength(coordinates);
 		validateCoordinates(coordinates);
 		
