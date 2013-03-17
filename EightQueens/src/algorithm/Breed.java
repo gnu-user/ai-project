@@ -47,10 +47,11 @@ public abstract class Breed
 	/**
 	 * Initialize the breeding selection with a uniform random number
 	 */
-	static public void init(Random random)
+	public static void init(Random random)
 	{
 		Breed.random = random;
 	}
+	
 	
 	/**
 	 * Increases the amount of genetic mutations that occur, which is usually
@@ -66,41 +67,24 @@ public abstract class Breed
 	 * @inBred True if the current population is in-bred and at the minimum threshold,
 	 * false otherwise.
 	 */
-	static public void inBreeding(boolean inBred)
+	public static void inBreeding(boolean inBred)
 	{
-		
 		if (inBred)
 		{
 			if (MUTATION.lowerEndpoint() > 1)
 			{
-				/* Decrease the CLONING upper endpoint by 2 */
-				//Breed.CLONING = Range.closedOpen(0, CLONING.upperEndpoint() - 2);
-				
-				/* Decrease the lower bound by 2 and upper bound by 5 for CROSSOVER */
-				//Breed.CROSSOVER = Range.closedOpen(CLONING.upperEndpoint(), CROSSOVER.upperEndpoint() - 5);
-				
-				/* Decrease the MUTATION lower bound by 5 */
+				/* Decrease the MUTATION lower bound by 1 */
 				Breed.MUTATION = Range.closedOpen(MUTATION.lowerEndpoint() - 1, 100);
 			}
 		}
 		else
 		{
 			if (MUTATION.lowerEndpoint() < 99)
-			{
-				/* Increase the CLONING upper endpoint by 2 */
-				//Breed.CLONING = Range.closedOpen(0, CLONING.upperEndpoint() + 2);
-				
-				/* Increase the lower bound by 2 and upper bound by 5 for CROSSOVER */
-				//Breed.CROSSOVER = Range.closedOpen(CLONING.upperEndpoint(), CROSSOVER.upperEndpoint() + 5);
-				
-				/* Increase the MUTATION lower bound by 5 */
+			{				
+				/* Increase the MUTATION lower bound by 1 */
 				Breed.MUTATION = Range.closedOpen(MUTATION.lowerEndpoint() + 1, 100);
 			}
 		}
-		
-		//System.out.println("\nCLONING:   " + Breed.CLONING.toString());
-		//System.out.println("CROSSOVER: " + Breed.CROSSOVER.toString());
-		//System.out.println("MUTATION:  " + Breed.MUTATION.toString());
 	}
 	
 	
@@ -114,7 +98,7 @@ public abstract class Breed
 	 * 
 	 * @return The pair of parent chromosomes
 	 */
-	static public ArrayList<Chromosome> cloning(Selection selection)
+	public static ArrayList<Chromosome> cloning(Selection selection)
 	{
 		return new ArrayList<Chromosome>(Arrays.asList(selection.next(), selection.next()));
 	}
@@ -129,15 +113,13 @@ public abstract class Breed
 	 * 
 	 * @return A pair of chromosomes that have had crossover
 	 */
-	static public ArrayList<Chromosome> crossover(Selection selection)
+	public static ArrayList<Chromosome> crossover(Selection selection)
 	{
 		ArrayList<Chromosome> chromosomes = new ArrayList<Chromosome>(2);
 
 		Chromosome parent1 = selection.next();
 		Chromosome parent2 = selection.next();
 		
-		//System.out.println("PARENT 1 BEFORE: " + parent1.get().toString());
-		//System.out.println("PARENT 2 BEFORE: " + parent2.get().toString());
 		
 		/* Select a cross-over point, copy the genes, and then crossover the genes.
 		 * The genes MUST be copied instead of by reference in order to copy the
@@ -154,17 +136,12 @@ public abstract class Breed
 														parent2.size() - 1)
 											);
 		
-		//System.out.println("CROSSOVER: " + crossover); 
-		
 		/* Perform crossover with the pair of genes from the chromosomes */
 		parent1.set(crossover, parent1.size() - 1, genes2);
 		parent2.set(crossover, parent2.size() - 1, genes1);
 		
 		chromosomes.add(parent1);
 		chromosomes.add(parent2);
-		
-		//System.out.println("PARENT 1 AFTER:  " + chromosomes.get(0).get().toString());
-		//System.out.println("PARENT 2 AFTER:  " + chromosomes.get(1).get().toString());
 		
 		return chromosomes;
 	}
@@ -179,7 +156,7 @@ public abstract class Breed
 	 * 
 	 * @return A pair of mutated chromosomes
 	 */
-	static public Chromosome mutation(Chromosome chromosome)
+	public static Chromosome mutation(Chromosome chromosome)
 	{
 		/* Mutate one of the genes in the chromosome */
 		chromosome.set(random.nextInt(chromosome.size()), 

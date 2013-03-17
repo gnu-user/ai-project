@@ -40,7 +40,7 @@ public class Selection
 	
 	/* The chromosome selection ranges used for roulette wheel */
 	
-	/* TODO NOTE LinkedHashMap MUST be used to maintain the order of items
+	/* NOTE LinkedHashMap MUST be used to maintain the order of items
 	 * (stable) data structure, HashMap does NOT guarantee the order!!!!
 	 */
 	private LinkedHashMap<Chromosome, Range<Double>> selection;
@@ -100,13 +100,6 @@ public class Selection
 			/* Increase the lower closed bound to previous right bound + EPSILON */
 			lower = upper + EPSILON;
 		}
-		
-		/* Print each interval
-		for (Chromosome chromosome : selection.keySet())
-		{
-			Range<Double> value = selection.get(chromosome);
-			System.out.println(value.toString());
-		}*/
 	}
 	
 	/**
@@ -130,11 +123,7 @@ public class Selection
 		for (Chromosome chromosome : selection.keySet())
 		{
 			if (selection.get(chromosome).contains(randomNum))
-			{
-				//System.out.println("RIGHT BOUND " + rightBound);
-				//System.out.println("VALUE: " + randomNum);
-				//System.out.println(selection.get(chromosome).toString());
-				
+			{				
 				/* Return a DEEP copy of the chromosome */
 				return new Chromosome(new ArrayList<Integer>(chromosome.get()));
 			}

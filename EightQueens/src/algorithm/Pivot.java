@@ -29,7 +29,6 @@ import java.util.ArrayList;
  */
 public abstract class Pivot
 {
-
 	/**
 	 * Rotate the coordinates of the eight queens stored in the chromosome 
 	 * by 90 degrees and return a new chromosome of the transposition.

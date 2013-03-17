@@ -47,7 +47,7 @@ public abstract class Fitness
 	 * 
 	 * @return A hash mapping each chromosome to it's fitness value
 	 */
-	static public HashMap<Chromosome, Double> calculate(ArrayList<Chromosome> chromosomes)
+	public static HashMap<Chromosome, Double> calculate(ArrayList<Chromosome> chromosomes)
 	{
 		/* Mapping of each chromosome to the total number of collisions */
 		HashMap<Chromosome, Integer> collisions = new HashMap<Chromosome, Integer>(chromosomes.size());
@@ -86,7 +86,7 @@ public abstract class Fitness
 	 * 
 	 * @return The number of collisions of queens that occurred for the chromosome
 	 */
-	static private int calcCollisions(Chromosome chromosome)
+	private static int calcCollisions(Chromosome chromosome)
 	{
 		int numCollisions = 0;
 		

@@ -62,6 +62,7 @@ public class EightQueens
 	private	static DescriptiveStatistics stats;
 	private static Integer numGenerations = 0;
 	
+	
 	/**
 	 * Determines if the solution to the eight queens puzzle is unique if
 	 * so returns true.
@@ -323,62 +324,42 @@ public class EightQueens
 		
 		
 		/* Plot the average and best fitness of generations */		
-		SeriesPlot fitnessPlot = new SeriesPlot("Fitness Over Generations", "Number of Generations", "Fitness");
-		SeriesBoxPlot fitnessBoxPlot = new SeriesBoxPlot("Fitness Over Generations", "Fitness");
+		//SeriesPlot fitnessPlot = new SeriesPlot("Fitness Over Generations", "Number of Generations", "Fitness");
+		//SeriesBoxPlot fitnessBoxPlot = new SeriesBoxPlot("Fitness Over Generations", "Fitness");
 		
-		fitnessPlot.plot(avgFitness, "Average Fitness", bestFitness, "Best Fitness");
-		fitnessBoxPlot.plot(avgFitness, "Average Fitness", bestFitness, "Best Fitness");
+		//fitnessPlot.plot(avgFitness, "Average Fitness", bestFitness, "Best Fitness");
+		//fitnessBoxPlot.plot(avgFitness, "Average Fitness", bestFitness, "Best Fitness");
 		
 		
 		/* Plot relationship between chromosome similarity and mutation rate from inbreeding */
-		SeriesPlot mutationPlot = new SeriesPlot("Chromosome Similarity and Mutation Rate due to In-Breeding", "Number of Generations", "Rate");
-		SeriesBoxPlot mutationBoxPlot = new SeriesBoxPlot("Chromosome Similarity and Mutation Rate due to In-Breeding", "Rate");
+		//SeriesPlot mutationPlot = new SeriesPlot("Chromosome Similarity and Mutation Rate due to In-Breeding", "Number of Generations", "Rate");
+		//SeriesBoxPlot mutationBoxPlot = new SeriesBoxPlot("Chromosome Similarity and Mutation Rate due to In-Breeding", "Rate");
 		
-		mutationPlot.plot(similarity, "Chromosome Similarity", mutationRate, "Mutation Rate");
-		mutationBoxPlot.plot(similarity, "Chromosome Similarity", mutationRate, "Mutation Rate");
+		//mutationPlot.plot(similarity, "Chromosome Similarity", mutationRate, "Mutation Rate");
+		//mutationBoxPlot.plot(similarity, "Chromosome Similarity", mutationRate, "Mutation Rate");
 		
-		/* Display the mean and standard deviation for mutation rate and chromosome similarity */
+		
+		/* Display descriptive statistics for mutation rate and chromosome similarity */
 		DescriptiveStatistics similarityStats = new DescriptiveStatistics(Doubles.toArray(similarity));
-		System.out.println("Similarity MEDIAN: " + similarityStats.getPercentile(50.0));
-		System.out.println("Similarity MEAN: " + similarityStats.getMean());
+		System.out.println("\nChromosome Similarity MEDIAN: " + similarityStats.getPercentile(50.0));
+		System.out.println("Chromosome Similarity MEAN: " + similarityStats.getMean());
 		System.out.println("STD: " + similarityStats.getStandardDeviation());
 		System.out.println("Q1: " + similarityStats.getPercentile(25.0));
 		System.out.println("Q3: " + similarityStats.getPercentile(75.0));
 
 		DescriptiveStatistics mutationStats = new DescriptiveStatistics(Doubles.toArray(mutationRate));
-		System.out.println("Mutation MEDIAN: " + mutationStats.getPercentile(50.0));
+		System.out.println("\nMutation MEDIAN: " + mutationStats.getPercentile(50.0));
 		System.out.println("Mutation MEAN: " + mutationStats.getMean());
 		System.out.println("STD: " + mutationStats.getStandardDeviation());
 		System.out.println("Q1: " + mutationStats.getPercentile(25.0));
 		System.out.println("Q3: " + mutationStats.getPercentile(75.0));
 		
 		
-		/* Plot the ratio of similarity/mutation rate 
-		SeriesPlot ratioPlot1 = new SeriesPlot( "Ratio of Chromosome Similarity to Mutation Rate due to In-Breeding",
-												"Number of Generations", 
-												"Rate"
-											  );
-		SeriesBoxPlot ratioBoxPlot1 = new SeriesBoxPlot( "Ratio of Chromosome Similarity to Mutation Rate due to In-Breeding","Rate");
-		
-		ratioPlot1.plot(similarityMutation, "Ratio of Chromosome Similarity to Mutation Rate");
-		ratioBoxPlot1.plot(similarityMutation, "Ratio of Chromosome Similarity to Mutation Rate");
-		*/
-		
-		/* Plot the ratio of mutation rate/similarity
-		SeriesPlot ratioPlot2 = new SeriesPlot( "Ratio of Mutation Rate to Chromosome Similarity due to In-Breeding",
-				"Number of Generations", 
-				"Rate"
-			  );
-		ratioPlot2.plot(mutationSimilarity, "Ratio of Mutation Rate to Chromosome Similarity");
-		*/
-		
-
-		
-		/* Display the solutions to eight queens puzzle
+		/* Display the solutions to the eight queens puzzle */
 		QueenGame myGame = null;
 		for (Chromosome solution : solutions)
 		{
-			// Only display the specified number of solutions rather than all
+			/* Only display the specified number of solutions rather than all */
 			if (solutions.indexOf(solution) < NUM_DISPLAY)
 			{
 				try
@@ -395,6 +376,6 @@ public class EightQueens
 			{
 				break;
 			}
-		}*/
+		}
 	}
 }
