@@ -189,7 +189,7 @@ public class EightQueens
 	}
 	
 	
-	public static void main(String[] args)
+	public static void main(String[] args) throws InterruptedException
 	{
 		solutions = new ArrayList<Chromosome>();
 		avgFitness = new ArrayList<Double>();
@@ -376,6 +376,7 @@ public class EightQueens
 			{
 				break;
 			}
+			Thread.sleep(2000);
 		}
 	}
 }
