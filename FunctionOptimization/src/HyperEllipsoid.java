@@ -90,8 +90,6 @@ public class HyperEllipsoid implements FitnessFunction
 	 * an easy, unimodal, scalable, convex function.
 	 * 
 	 * @return The fitness value
-	 * @throws IllegalArgumentException if one of the parameters in the vector
-	 * is outside the bounds of the axis parallel hyper-ellipsoid function.
 	 */
 	@Override
 	public Double evaluate(Vector vector)
@@ -107,12 +105,7 @@ public class HyperEllipsoid implements FitnessFunction
 		for (int i = 0; i < vector.size(); ++i)
 		{
 			parameter = vector.get(i);
-			
-			/*if (! BOUNDS.contains(parameter))
-			{
-				throw new IllegalArgumentException("A vector parameter was outside the bounds of the function.");
-			}*/
-			
+						
 			/* Increment i by one, summation starts at i = 1 */
 			fitness += (Double) ((i + 1) * Math.pow(parameter, 2.0));
 		}

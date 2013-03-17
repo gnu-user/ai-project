@@ -112,9 +112,9 @@ public abstract class PerformanceGraph
 		/* Display the plot in a JFrame */
 		ChartFrame frame = new ChartFrame(fitnessFunction + " Best Fitness Value", chart);
 		frame.setVisible(true);
-		frame.setSize(1600, 900);
+		frame.setSize(1000, 600);
 		
-		/* Save the plot as an image named after fitness function */
+		/* Save the plot as an image named after fitness function
 		try
 		{
 			ChartUtilities.saveChartAsJPEG(new File("plots/" + fitnessFunction + ".jpg"), chart, 1600, 900);
@@ -122,6 +122,6 @@ public abstract class PerformanceGraph
 		catch (IOException e)
 		{
 			e.printStackTrace();
-		}
+		}*/
 	}
 }

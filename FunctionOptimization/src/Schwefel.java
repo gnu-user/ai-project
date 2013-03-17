@@ -88,24 +88,13 @@ public class Schwefel implements FitnessFunction
 	 * a unimodal and scalable function.
 	 * 
 	 * @return The fitness value
-	 * @throws IllegalArgumentException if one of the parameters in the vector
-	 * is outside the bounds of Schwefel's problem.
 	 */
 	@Override
 	public Double evaluate(Vector vector)
 	{
 		Double fitness = 0.0;
 		Double innerSum = 0.0;
-		
-		/* First check that the parameters in the vector are within the bounds */
-		/*for (Double parameter : vector.get())
-		{
-			if (! BOUNDS.contains(parameter))
-			{
-				throw new IllegalArgumentException("A vector parameter was outside the bounds of the function.");
-			}
-		}*/
-		
+				
 		/* Compute the fitness function for Schwefel's problem:
 		 * 
 		 * f(X) = sigma ((sigma xj)^2)

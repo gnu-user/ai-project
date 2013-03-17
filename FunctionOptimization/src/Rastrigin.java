@@ -86,8 +86,6 @@ public class Rastrigin implements FitnessFunction
 	 * Evaluates the fitness of Rastrigin's Function benchmark function.
 	 * 
 	 * @return The fitness value
-	 * @throws IllegalArgumentException if one of the parameters in the vector
-	 * is outside the bounds of Rastrigin's Function.
 	 */
 	@Override
 	public Double evaluate(Vector vector)
@@ -101,11 +99,6 @@ public class Rastrigin implements FitnessFunction
 		 */
 		for (Double parameter : vector.get())
 		{
-			/*if (! BOUNDS.contains(parameter))
-			{
-				throw new IllegalArgumentException("A vector parameter was outside the bounds of the function.");
-			}*/
-
 			/* Calculate the fitness */
 			fitness += Math.pow(parameter, 2.0) - 10.0 * Math.cos(2 * Math.PI * parameter);
 		}

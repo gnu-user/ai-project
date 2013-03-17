@@ -89,11 +89,9 @@ public class DeJong implements FitnessFunction
 	 * unimodal, scalable, convex function.
 	 * 
 	 * @return The fitness value
-	 * @throws IllegalArgumentException if one of the parameters in the vector
-	 * is outside the bounds of the De Jong function.
 	 */
 	@Override
-	public Double evaluate(Vector vector) throws IllegalArgumentException
+	public Double evaluate(Vector vector)
 	{
 		Double fitness = 0.0;
 	
@@ -103,12 +101,7 @@ public class DeJong implements FitnessFunction
 		 * 
 		 */
 		for (Double parameter : vector.get())
-		{
-			/*if (! BOUNDS.contains(parameter))
-			{
-				throw new IllegalArgumentException("A vector parameter was outside the bounds of the function.");
-			}*/
-			
+		{	
 			fitness += Math.pow(parameter, 2.0);
 		}
 	

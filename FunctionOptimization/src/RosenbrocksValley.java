@@ -91,22 +91,11 @@ public class RosenbrocksValley implements FitnessFunction
 	 * problem that is very challenging for many optimizers.
 	 * 
 	 * @return The fitness value
-	 * @throws IllegalArgumentException if one of the parameters in the vector
-	 * is outside the bounds of Rosenbrock's Valley.
 	 */
 	@Override
 	public Double evaluate(Vector vector)
 	{
 		Double fitness = 0.0;
-		
-		/* First check that the parameters in the vector are within the bounds */
-		/*for (Double parameter : vector.get())
-		{
-			if (! BOUNDS.contains(parameter))
-			{
-				throw new IllegalArgumentException("A vector parameter was outside the bounds of the function.");
-			}
-		}*/
 		
 		/* Compute the fitness function for Rosenbrock's Valley:
 		 * 

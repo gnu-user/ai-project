@@ -23,7 +23,6 @@ import java.util.Random;
 
 public abstract class VectorOperations
 {
-
 	/**
 	 * Mutation operation, used to create the noisyVector. The equation will be: 
 	 * postiveV2 + F * (positiveV - negativeV). 
