@@ -173,8 +173,8 @@ public class DifferentalEvolution
 			/* Display the mean and standard deviation */
 			System.out.println("\nResults for " + fitnessFunction.getName());			
 			DescriptiveStatistics stats = new DescriptiveStatistics(Doubles.toArray(solutions));
-			System.out.println("MEAN: " + stats.getMean());
-			System.out.println("STD: " + stats.getStandardDeviation());
+			System.out.println("AVERAGE BEST FITNESS: " + stats.getMean());
+			System.out.println("STANDARD DEVIATION:   " + stats.getStandardDeviation());
 			
 			/* Set the last value (NFC) to the best value found */
 			lowestFit.put(ControlVariables.MAX_FUNCTION_CALLS, bestValue);
