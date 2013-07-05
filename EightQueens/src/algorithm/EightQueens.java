@@ -20,19 +20,17 @@
  */
 package algorithm;
 
-import gameboard.QueenGame;
 import gameboard.QueenBoard;
-
-import plotting.SeriesPlot;
-import plotting.SeriesBoxPlot;
+import gameboard.QueenGame;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
-
 
 import com.google.common.primitives.Doubles;
 import com.google.common.primitives.Ints;
@@ -188,9 +186,85 @@ public class EightQueens
 		}
 	}
 	
-	
 	public static void main(String[] args) throws InterruptedException
 	{
+		//Example: p=100 o=/home/joseph/github/ai_project r=1 i=0.9
+		//args layout = "p=\\d* o=.* r=\\d* q=\\d* u=\\d*\\.\\d* i=\\d*\\.\\d*
+		System.out.println(args.length);
+		if (args.length >= 3)
+		{
+			Pattern patternPop = Pattern.compile("p=(\\d*)");
+			Matcher mPop = patternPop.matcher(args[0]);
+			
+			if(mPop.matches() && mPop.groupCount() == 1)
+			{
+				System.out.println(mPop.group(1));
+			}
+			else
+			{
+				//Error
+			}
+			
+			Pattern patternOut = Pattern.compile("o=(.*)");
+			Matcher mOut = patternOut.matcher(args[1]);
+			
+			if(mOut.matches() && mOut.groupCount() == 1)
+			{
+				System.out.println(mOut.group(1));
+			}
+			
+			Pattern patternRun = Pattern.compile("r=(\\d*)");
+			Matcher mRun = patternRun.matcher(args[2]);
+			
+			if(mRun.matches() && mRun.groupCount() == 1)
+			{
+				System.out.println(mRun.group(1));
+			}
+			
+			if(args.length >= 4)
+			{
+				Pattern patternQueen = Pattern.compile("q=(\\d*)");
+				Matcher mQueen = patternQueen.matcher(args[3]);
+				
+				int intOffset = 0;
+				
+				if(mQueen.matches() && mQueen.groupCount() == 1)
+				{
+					System.out.println(mQueen.group(1));
+					
+					intOffset++;
+				}
+				else
+				{
+					System.out.println("Not given, using default 8");
+				}
+				
+				if(mQueen.matches() && args.length == 5 || !mQueen.matches() && args.length == 4)
+				{
+					Pattern patternMut = Pattern.compile("u=(\\d*\\.\\d*)");
+					Matcher mMutation = patternMut.matcher(args[3+intOffset]);
+					
+					if(mMutation.matches() && mMutation.groupCount() == 1)
+					{
+						System.out.println(mMutation.group(1));
+					}
+					
+					Pattern patternInbreed = Pattern.compile("i=(\\d*\\.\\d*)");
+					Matcher mInbreed = patternInbreed.matcher(args[3+intOffset]);
+					
+					if(mInbreed.matches() && mInbreed.groupCount() == 1)
+					{
+						System.out.println(mInbreed.group(1));
+					}
+				}
+			}
+		}
+		//Population
+		//Number of queens
+		//Output dir
+		//Run number
+		//Inbreeding Or Mutation rate
+		
 		solutions = new ArrayList<Chromosome>();
 		avgFitness = new ArrayList<Double>();
 		bestFitness = new ArrayList<Double>();
