@@ -38,9 +38,14 @@ import com.google.common.primitives.Ints;
 
 public class EightQueens
 {
-	private static final Integer POPULATION = 8;
-	private static final Double INBREEDING_THRESHOLD = 0.15;
+	private static Integer POPULATION = 8;
+	private static Double INBREEDING_THRESHOLD = 0.15;
 	private static final Integer NUM_DISPLAY = 10;
+	
+	private static String OutputDir;
+	private static Integer RunNumber;
+	private static Integer NumQueens = 8;
+	private static Double MutationRate;	
 	
 	private static ArrayList<Chromosome> population;
 	private static ArrayList<Chromosome> solutions;
@@ -189,6 +194,8 @@ public class EightQueens
 	public static void main(String[] args) throws InterruptedException
 	{
 		//Example: p=100 o=/home/joseph/github/ai_project r=1 i=0.9
+		//i and u are optional and are exclusive
+		//q is optional, will default to 8 if not given
 		//args layout = "p=\\d* o=.* r=\\d* q=\\d* u=\\d*\\.\\d* i=\\d*\\.\\d*
 		System.out.println(args.length);
 		if (args.length >= 3)
@@ -198,7 +205,8 @@ public class EightQueens
 			
 			if(mPop.matches() && mPop.groupCount() == 1)
 			{
-				System.out.println(mPop.group(1));
+				POPULATION = Integer.valueOf(mPop.group(1));
+				System.out.println("Population set to " + POPULATION);
 			}
 			else
 			{
@@ -210,7 +218,8 @@ public class EightQueens
 			
 			if(mOut.matches() && mOut.groupCount() == 1)
 			{
-				System.out.println(mOut.group(1));
+				OutputDir = mOut.group(1);
+				System.out.println(OutputDir);
 			}
 			
 			Pattern patternRun = Pattern.compile("r=(\\d*)");
@@ -218,7 +227,8 @@ public class EightQueens
 			
 			if(mRun.matches() && mRun.groupCount() == 1)
 			{
-				System.out.println(mRun.group(1));
+				RunNumber = Integer.valueOf(mRun.group(1));
+				System.out.println(RunNumber);
 			}
 			
 			if(args.length >= 4)
@@ -230,7 +240,8 @@ public class EightQueens
 				
 				if(mQueen.matches() && mQueen.groupCount() == 1)
 				{
-					System.out.println(mQueen.group(1));
+					NumQueens = Integer.valueOf(mQueen.group(1));
+					System.out.println(NumQueens);
 					
 					intOffset++;
 				}
@@ -246,7 +257,8 @@ public class EightQueens
 					
 					if(mMutation.matches() && mMutation.groupCount() == 1)
 					{
-						System.out.println(mMutation.group(1));
+						MutationRate = Double.valueOf(mMutation.group(1));
+						System.out.println(MutationRate);
 					}
 					
 					Pattern patternInbreed = Pattern.compile("i=(\\d*\\.\\d*)");
@@ -254,7 +266,8 @@ public class EightQueens
 					
 					if(mInbreed.matches() && mInbreed.groupCount() == 1)
 					{
-						System.out.println(mInbreed.group(1));
+						INBREEDING_THRESHOLD = Double.valueOf(mInbreed.group(1));
+						System.out.println(INBREEDING_THRESHOLD);
 					}
 				}
 			}
