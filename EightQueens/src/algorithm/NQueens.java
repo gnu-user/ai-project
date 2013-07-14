@@ -37,7 +37,7 @@ import com.google.common.primitives.Doubles;
 import com.google.common.primitives.Ints;
 
 
-public class EightQueens
+public class NQueens
 {
 	private static Integer POPULATION = 64;
 	private static Double INBREEDING_THRESHOLD = 0.15;
