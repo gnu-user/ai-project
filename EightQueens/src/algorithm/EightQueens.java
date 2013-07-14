@@ -23,7 +23,10 @@ package algorithm;
 import gameboard.QueenBoard;
 import gameboard.QueenGame;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -38,7 +41,7 @@ import com.google.common.primitives.Ints;
 
 public class EightQueens
 {
-	private static Integer POPULATION = 8;
+	private static Integer POPULATION = 64;
 	private static Double INBREEDING_THRESHOLD = 0.15;
 	private static final Integer NUM_DISPLAY = 10;
 	
@@ -113,64 +116,57 @@ public class EightQueens
 	 */
 	public static Double similarChromosomes(ArrayList<Chromosome> chromosomes)
 	{
-		boolean unique = true;
-		
 		int similar = 0;
-		int curSimilar = 0;
+		boolean matched = false;
+		BigInteger value = BigInteger.valueOf(0);
 		
-		/* Create a copy of the chromosome arraylist */
-		CopyOnWriteArrayList<Chromosome> localChromosomes = new CopyOnWriteArrayList<Chromosome>(chromosomes);
 		
-		for (Chromosome chromosomeA : localChromosomes)
+		/* Create an array with a single numeric value for each chromosome */
+		ArrayList<BigInteger> numericChromosomes = new ArrayList<BigInteger>(POPULATION);
+		
+		for (Chromosome chromosome : chromosomes)
 		{
-			curSimilar = 0;
-			
-			/* Check each chromosome to see if there are any similar */
-			for (Chromosome chromosomeB : localChromosomes)
-			{	
-				/* If the current iterator index is not ourselves */
-				if (chromosomes.indexOf(chromosomeA) != chromosomes.indexOf(chromosomeB))
-				{
-					/* Check to see if the chromosomes are similar */
-					for (int i = 0; i < chromosomeB.size(); ++i)
-					{
-						/* If any of the chromosome genes differ the genes are unique */
-						if (chromosomeA.get(i).compareTo(chromosomeB.get(i)) == 0)
-						{
-							/* Current genes match */
-							unique = false;
-						}
-						else
-						{
-							unique = true;
-							break;
-						}
-					}
-					
-					/* If the chromosome is not unique increment counter, remove chromosome */
-					if (! unique)
-					{
-						++curSimilar;
-						localChromosomes.remove(chromosomeB);
-					}
-				}
-			}
-			
-			/* If there were any similar chromosomes found, remove chromosomeA */
-			if (curSimilar > 0)
-			{
-				++curSimilar;
-				localChromosomes.remove(chromosomeA);
-				
-				similar += curSimilar;
-			}
+		    value = BigInteger.valueOf(0);
+		    
+		    /* For each gene compute the numeric value */
+		    for (int i = 0, j = chromosome.size() - 1; i < chromosome.size(); ++i)
+		    {
+		        BigInteger gene = BigInteger.valueOf(chromosome.get(i).intValue());
+		        value = value.add(gene.multiply(BigInteger.TEN.pow(j - i)));
+		    }
+		    
+		    numericChromosomes.add(value);
 		}
 		
-		/* Calculate the percentage of chromosomes that were similar */
-		if (similar > 0)
+
+		/* Count the number of similar chromosomes based on their numeric value */
+		Collections.sort(numericChromosomes);
+		for (int i = 0; i < numericChromosomes.size() - 1;  ++i)
 		{
-			return (double) similar / (double) chromosomes.size();
+		    if (numericChromosomes.get(i).compareTo(numericChromosomes.get(i+1)) == 0)
+		    {
+	            ++similar;
+	            matched = true;
+		    }
+		    /* Add an additional match for the last match in a set */
+		    else if (matched)
+		    {
+		        ++similar;
+		        matched = false;
+		    }
+		    
+	        /* Add an additional match if there is a match with the last item in list */
+            if(matched && (i + 1 == numericChromosomes.size() - 1))
+            {
+                ++similar;
+            }
 		}
+		
+        /* Calculate the percentage of chromosomes that were similar */
+        if (similar > 1)
+        {
+            return (double) similar / (double) chromosomes.size();
+        }
 		
 		return 0.0;
 	}
