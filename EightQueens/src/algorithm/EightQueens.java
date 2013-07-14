@@ -26,10 +26,8 @@ import gameboard.QueenGame;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Random;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -183,9 +181,10 @@ public class EightQueens
 		
 		while (population.size() < POPULATION)
 		{
-			population.add(new Chromosome(random));
+			population.add(new Chromosome(random, NumQueens));
 		}
 	}
+
 	
 	public static void main(String[] args) throws InterruptedException
 	{
@@ -362,7 +361,7 @@ public class EightQueens
 				if (fitness.get(chromosome) == 1.0 && uniqueSolution(chromosome))
 				{
 					/* Save a copy of the chromosome */
-					solutions.add(new Chromosome(new ArrayList<Integer>(chromosome.get())));
+					solutions.add(new Chromosome(new ArrayList<Integer>(chromosome.get()), chromosome.size()));
 					
 					System.out.println("\nNUMBER OF SOLUTIONS:   " + solutions.size());
 					System.out.println("NUMBER OF GENERATIONS: " + numGenerations);

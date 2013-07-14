@@ -29,7 +29,7 @@ import com.google.common.collect.Range;
 
 
 /**
- * Represents a chromosome for the 8 queens puzzle, each gene represents the 
+ * Represents a chromosome for the N queens puzzle, each gene represents the 
  * position (x) of each queen in one row is based on the order of the genes in
  * the chromosome and the corresponding y value of the queen is stored in the 
  * gene of the chromosome.
@@ -37,7 +37,7 @@ import com.google.common.collect.Range;
  * Rather than having each queen represented as x & y, the x value of the queen
  * is the order of the gene in the chromosome.
  * 
- * The following is an example of a chromose with the 8 queens represented as genes
+ * The following is an example of a chromosome with the 8 queens represented as genes
  * of the chromosome.
  *
  *   	-----------------------------
@@ -47,44 +47,44 @@ import com.google.common.collect.Range;
  */
 public class Chromosome
 {
-	private static final Integer NUMBER_GENES = 8;
+	private final Integer NUMBER_GENES;
 	private ArrayList<Integer> chromosome;
 	
 	
 	/**
-	 * Validate the coordinates, throws and exception  if any of the coordinates
-	 * is not [0, 7]
+	 * Validate the coordinates, throws an exception if any of the coordinates
+	 * is not [0, (NUMBER_GENES - 1)]
 	 * 
-	 * @throws IllegalArgumentException If any of the coordinates is not [0, 7]
-	*/
-	private void validateCoordinates(ArrayList<Integer> coordinates) throws IllegalArgumentException
-	{		
-		/* If any coordinate is not [0, 7] throw exception */
+	 * @throws IllegalArgumentException If any of the coordinates is not within bounds.
+	 */
+	private void validateCoordinates(ArrayList<Integer> coordinates) 
+        throws IllegalArgumentException
+	{
 		for (Integer coordinate : coordinates)
 		{
-			if (! Range.closed(0, 7).contains(coordinate))
+			if (! Range.closed(0, (NUMBER_GENES - 1)).contains(coordinate))
 			{
-				throw new IllegalArgumentException("Invalid coordinate value, must be less than 8");
+				throw new IllegalArgumentException("Invalid coordinate value, must be between [0, "
+				        + (NUMBER_GENES - 1) + "]");
 			}
 		}
 	}
 	
 	
 	/**
-	 * Validate the length, throw an exception if the length is not 8
+	 * Validate the length, throw an exception if the length does not match number of genes.
 	 * 
 	 * @throws IllegalArgumentException If an arraylist of coordinates that does
-	 * not contain 8 elements is given, or if any of the coordinates is not [0, 7]
-	*/
+	 * not contain NUMBER_GENES elements is given.
+	 */
 	private void validateLength(ArrayList<Integer> coordinates) 
 		throws IllegalArgumentException
-	{		
-		/* Throw an exception if the length is not 8 */
-		if (coordinates.size() != 8)
+	{
+		if (coordinates.size() != NUMBER_GENES)
 		{
-			throw new IllegalArgumentException("Invalid coordinates size, must be 8 elements");
+			throw new IllegalArgumentException("Invalid coordinates size, must be " + NUMBER_GENES);
 		}
-	}	
+	}
 	
 	
 	/**
@@ -92,17 +92,21 @@ public class Chromosome
 	 * (genes) provided.
 	 * 
 	 * @param coordinates The arraylist of vertical coordinates to construct 
-	 * the chromosome with, the maximum size of the array is 8 and no value
-	 * in the array can be greater than 7.
+	 * the chromosome with, the coordinates must match the number of genes,
+	 * which is the size of the N-Queens problem.
+	 * 
+	 * @param genes The number of genes or coordinates for the N queens problem, this
+	 * value is the size of the N queens problem.
 	 * 
 	 * @throws IllegalArgumentException If an arraylist of coordinates that does
-	 * not contain 8 elements is given, or if any of the coordinates is not [0, 7]
+	 * not contain the same number of coordinates as the number of genes.
 	 */
-	public Chromosome(ArrayList<Integer> coordinates) 
+	public Chromosome(ArrayList<Integer> coordinates, Integer genes) 
 		throws IllegalArgumentException
 	{
-		/* Throw an exception of length not 8 or any coordinates not [0, 7] */
-		validateLength(coordinates);
+		/* Throw an exception if coordinates do not correspond to length */
+	    NUMBER_GENES = genes;
+	    validateLength(coordinates);
 		validateCoordinates(coordinates);
 		
 		this.chromosome = coordinates;
@@ -115,11 +119,15 @@ public class Chromosome
 	 * 
 	 * @param random A secure random number generator used to seed the generation of 
 	 * a uniform random distribution of coordinates for the genes of the chromosome.
+	 * 
+     * @param genes The number of genes or coordinates for the N queens problem, this
+     * value is the size of the N queens problem.
 	 */
-	public Chromosome(Random random)
+	public Chromosome(Random random, Integer genes)
 	{	
-		/* Generate random coordinates for the genes within [0, 7] range */
-		chromosome = new ArrayList<Integer>(NUMBER_GENES);
+		/* Generate random coordinates for the genes within the bounds */
+	    NUMBER_GENES = genes;
+	    chromosome = new ArrayList<Integer>(NUMBER_GENES);
 		
 		while (chromosome.size() < NUMBER_GENES)
 		{

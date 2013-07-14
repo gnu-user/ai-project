@@ -38,9 +38,9 @@ public class Selection
 	/* Epsilon for ranges defined as the MIN value for Double */
 	private static final Double EPSILON = 1.0E-15;
 	
-	/* The chromosome selection ranges used for roulette wheel */
-	
-	/* NOTE LinkedHashMap MUST be used to maintain the order of items
+	/* The chromosome selection ranges used for roulette wheel
+	 * 
+	 * NOTE: LinkedHashMap MUST be used to maintain the order of items
 	 * (stable) data structure, HashMap does NOT guarantee the order!!!!
 	 */
 	private LinkedHashMap<Chromosome, Range<Double>> selection;
@@ -125,7 +125,7 @@ public class Selection
 			if (selection.get(chromosome).contains(randomNum))
 			{				
 				/* Return a DEEP copy of the chromosome */
-				return new Chromosome(new ArrayList<Integer>(chromosome.get()));
+				return new Chromosome(new ArrayList<Integer>(chromosome.get()), chromosome.size());
 			}
 		}
 		

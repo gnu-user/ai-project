@@ -77,6 +77,6 @@ public abstract class Pivot
 		}
 		
 		/* Return the new chromosome */
-		return new Chromosome(coordinates);
+		return new Chromosome(coordinates, chromosome.size());
 	}
 }
