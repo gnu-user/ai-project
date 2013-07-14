@@ -1,5 +1,5 @@
 /**
- * Artificial Intelligence Project -- Eight Queens Puzzle
+ * Genetic Algorithm Research -- N Queens Puzzle
  *
  * Copyright (C) 2013, Jonathan Gillett, Joseph Heron, and Daniel Smullen
  * All rights reserved.
