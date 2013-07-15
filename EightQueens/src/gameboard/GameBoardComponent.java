@@ -62,7 +62,6 @@ public class GameBoardComponent extends JComponent
 		//int player =-1;
 		int col = -1;
 		int row = -1;
-		int [][] myMove = new int[0][2];
 		
 		// TODO Use this if NOT using JAR for better looking icons
 		image = ImageIO.read(new File("img/queen.png"));
