@@ -442,7 +442,7 @@ public class NQueens
 			{
 				try
 				{
-					myGame = new QueenGame (new QueenBoard(Ints.toArray(solution.get())));
+					myGame = new QueenGame (new QueenBoard(Ints.toArray(solution.get()), NumQueens));
 					myGame.playGame();
 				}
 				catch (Exception e)

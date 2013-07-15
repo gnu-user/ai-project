@@ -22,13 +22,14 @@ package gameboard;
 
 public class QueenBoard extends GameBoard
 {	
-	private static final int NUMBER_OF_QUEENS = 8;
+	private final int NUMBER_OF_QUEENS;
 	
-	public QueenBoard (int[] queenPosition) throws IllegalArgumentException
+	public QueenBoard (int[] queenPosition, int NumQueens) throws IllegalArgumentException
 	{
-		row = 8; 
-		column = 8;
-		piece = new QueenPiece[8];
+	    NUMBER_OF_QUEENS = NumQueens;
+		row = NumQueens;
+		column = NumQueens;
+		piece = new QueenPiece[NumQueens];
 		tiles = new Tile[column][row];
 			
 		gridOn = true;

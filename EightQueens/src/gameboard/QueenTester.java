@@ -30,7 +30,7 @@ public class QueenTester
 		QueenGame myGame = null;
 		try
 		{
-			myGame = new QueenGame (new QueenBoard(positions));
+			myGame = new QueenGame (new QueenBoard(positions, 8));
 			myGame.playGame();
 		}
 		catch (Exception e)
