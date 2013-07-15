@@ -23,7 +23,6 @@ package algorithm;
 import gameboard.QueenBoard;
 import gameboard.QueenGame;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -116,32 +115,30 @@ public class NQueens
 	{
 		int similar = 0;
 		boolean matched = false;
-		BigInteger value = BigInteger.valueOf(0);
+		String value = "";
 		
 		
-		/* Create an array with a single numeric value for each chromosome */
-		ArrayList<BigInteger> numericChromosomes = new ArrayList<BigInteger>(POPULATION);
+		/* Create an array with a single string representation for each chromosome */
+		ArrayList<String> stringChromosomes = new ArrayList<String>(POPULATION);
 		
 		for (Chromosome chromosome : chromosomes)
 		{
-		    value = BigInteger.valueOf(0);
+		    value = "";
 		    
-		    /* For each gene compute the numeric value */
-		    for (int i = 0, j = chromosome.size() - 1; i < chromosome.size(); ++i)
+		    /* For each gene compute the value */
+		    for (int i = 0; i < chromosome.size(); ++i)
 		    {
-		        BigInteger gene = BigInteger.valueOf(chromosome.get(i).intValue());
-		        value = value.add(gene.multiply(BigInteger.TEN.pow(j - i)));
+		        value += chromosome.get(i).toString();
 		    }
-		    
-		    numericChromosomes.add(value);
+		    stringChromosomes.add(value);
 		}
 		
 
-		/* Count the number of similar chromosomes based on their numeric value */
-		Collections.sort(numericChromosomes);
-		for (int i = 0; i < numericChromosomes.size() - 1;  ++i)
+		/* Count the number of similar chromosomes based on their value */
+		Collections.sort(stringChromosomes);
+		for (int i = 0; i < stringChromosomes.size() - 1;  ++i)
 		{
-		    if (numericChromosomes.get(i).compareTo(numericChromosomes.get(i+1)) == 0)
+		    if (stringChromosomes.get(i).compareTo(stringChromosomes.get(i+1)) == 0)
 		    {
 	            ++similar;
 	            matched = true;
@@ -154,7 +151,7 @@ public class NQueens
 		    }
 		    
 	        /* Add an additional match if there is a match with the last item in list */
-            if(matched && (i + 1 == numericChromosomes.size() - 1))
+            if(matched && (i + 1 == stringChromosomes.size() - 1))
             {
                 ++similar;
             }
@@ -283,7 +280,7 @@ public class NQueens
 		
 		/* Create an initial population of uniformly random chromosomes */
 		initPopulation();
-		
+
 		
 		while (solutions.size() < 92)
 		{	
@@ -294,7 +291,6 @@ public class NQueens
 			{
 				Breed.inBreeding(true);
 			}
-			
 			else
 			{
 				Breed.inBreeding(false);
