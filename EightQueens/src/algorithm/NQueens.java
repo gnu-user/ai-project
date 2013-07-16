@@ -23,14 +23,20 @@ package algorithm;
 import gameboard.QueenBoard;
 import gameboard.QueenGame;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+
+import static org.kohsuke.args4j.ExampleMode.ALL;
+import org.kohsuke.args4j.Argument;
+import org.kohsuke.args4j.CmdLineException;
+import org.kohsuke.args4j.CmdLineParser;
+import org.kohsuke.args4j.Option;
 
 import com.google.common.primitives.Doubles;
 import com.google.common.primitives.Ints;
@@ -38,32 +44,49 @@ import com.google.common.primitives.Ints;
 
 public class NQueens
 {
-	private static Integer POPULATION = 64;
-	private static Double INBREEDING_THRESHOLD = 0.15;
-	private static final Integer NUM_DISPLAY = 10;
+	/* Command line arguments */
+    @Option(name="-p", usage="Population size, default is 64")
+    private static Integer populationSize = 64;
+    
+    @Option(name="-i", usage="Inbreeding percentage threshold, default is 0.15 (15%)")
+    private static Double inbreedingThreshold = 0.15;
+    
+    @Option(name="-m", usage="The fixed mutation rate, not used by default")
+    private static Double mutation;
+    
+    @Option(name="-q", usage="The number of queens, the default is 8")
+    private static Integer numQueens = 8;
+    
+    @Option(name="-o", required=true, metaVar="OUTPUT", usage="The output directory to store the results")
+    private static String outputDir;
+    
+    @Option(name="-r", required=true, usage="The program run number, a unique identifier")
+    private static Integer runNumber;
+    
+    @Option(name="-s", usage="Number of solutions to display, default is 10")
+    private static Integer numDisplay = 10;
 	
-	private static String OutputDir;
-	private static Integer RunNumber;
-	private static Integer NumQueens = 8;
-	private static Double MutationRate;	
+    @Argument
+    private static List<String> arguments = new ArrayList<String>();
 	
 	private static ArrayList<Chromosome> population;
-	private static ArrayList<Chromosome> solutions;
+	private static ArrayList<Chromosome> solutions = new ArrayList<Chromosome>();
 	private static Chromosome rotation;
 	
-	private static ArrayList<Double> avgFitness;
-	private static ArrayList<Double> bestFitness;
+	private static ArrayList<Double> avgFitness = new ArrayList<Double>();
+	private static ArrayList<Double> bestFitness = new ArrayList<Double>();
 	
-	private static ArrayList<Double> similarity;
-	private static ArrayList<Double> mutationRate;
+	private static ArrayList<Double> similarity = new ArrayList<Double>();
+	private static ArrayList<Double> mutationRate = new ArrayList<Double>();
 
 	/* Ratio of similarity to mutation and mutation to similarity */
-	private static ArrayList<Double> similarityMutation;
-	private static ArrayList<Double> mutationSimilarity;
+	private static ArrayList<Double> similarityMutation = new ArrayList<Double>();
+	private static ArrayList<Double> mutationSimilarity = new ArrayList<Double>();
 	
 	private static Random random = new Random();
 	private	static DescriptiveStatistics stats;
 	private static Integer numGenerations = 0;
+	private static Double curSimilarity = 0.0;
 	
 	
 	/**
@@ -119,7 +142,7 @@ public class NQueens
 		
 		
 		/* Create an array with a single string representation for each chromosome */
-		ArrayList<String> stringChromosomes = new ArrayList<String>(POPULATION);
+		ArrayList<String> stringChromosomes = new ArrayList<String>(populationSize);
 		
 		for (Chromosome chromosome : chromosomes)
 		{
@@ -173,127 +196,78 @@ public class NQueens
 	static public void initPopulation()
 	{
 		/* Create an array of uniformly random chromosomes for initial population */
-		population =  new ArrayList<Chromosome>(POPULATION);
+		population =  new ArrayList<Chromosome>(populationSize);
 		
 		
-		while (population.size() < POPULATION)
+		while (population.size() < populationSize)
 		{
-			population.add(new Chromosome(random, NumQueens));
+			population.add(new Chromosome(random, numQueens));
 		}
 	}
 
 	
-	public static void main(String[] args) throws InterruptedException
+	public static void main(String[] args) throws InterruptedException, IOException
 	{
-		//Example: p=100 o=/home/joseph/github/ai_project r=1 i=0.9
-		//i and u are optional and are exclusive
-		//q is optional, will default to 8 if not given
-		//args layout = "p=\\d* o=.* r=\\d* q=\\d* u=\\d*\\.\\d* i=\\d*\\.\\d*
-		System.out.println(args.length);
-		if (args.length >= 3)
-		{
-			Pattern patternPop = Pattern.compile("p=(\\d*)");
-			Matcher mPop = patternPop.matcher(args[0]);
-			
-			if(mPop.matches() && mPop.groupCount() == 1)
-			{
-				POPULATION = Integer.valueOf(mPop.group(1));
-				System.out.println("Population set to " + POPULATION);
-			}
-			else
-			{
-				//Error
-			}
-			
-			Pattern patternOut = Pattern.compile("o=(.*)");
-			Matcher mOut = patternOut.matcher(args[1]);
-			
-			if(mOut.matches() && mOut.groupCount() == 1)
-			{
-				OutputDir = mOut.group(1);
-				System.out.println(OutputDir);
-			}
-			
-			Pattern patternRun = Pattern.compile("r=(\\d*)");
-			Matcher mRun = patternRun.matcher(args[2]);
-			
-			if(mRun.matches() && mRun.groupCount() == 1)
-			{
-				RunNumber = Integer.valueOf(mRun.group(1));
-				System.out.println(RunNumber);
-			}
-			
-			if(args.length >= 4)
-			{
-				Pattern patternQueen = Pattern.compile("q=(\\d*)");
-				Matcher mQueen = patternQueen.matcher(args[3]);
-				
-				int intOffset = 0;
-				
-				if(mQueen.matches() && mQueen.groupCount() == 1)
-				{
-					NumQueens = Integer.valueOf(mQueen.group(1));
-					System.out.println(NumQueens);
-					
-					intOffset++;
-				}
-				else
-				{
-					System.out.println("Not given, using default 8");
-				}
-				
-				if(mQueen.matches() && args.length == 5 || !mQueen.matches() && args.length == 4)
-				{
-					Pattern patternMut = Pattern.compile("u=(\\d*\\.\\d*)");
-					Matcher mMutation = patternMut.matcher(args[3+intOffset]);
-					
-					if(mMutation.matches() && mMutation.groupCount() == 1)
-					{
-						MutationRate = Double.valueOf(mMutation.group(1));
-						System.out.println(MutationRate);
-					}
-					
-					Pattern patternInbreed = Pattern.compile("i=(\\d*\\.\\d*)");
-					Matcher mInbreed = patternInbreed.matcher(args[3+intOffset]);
-					
-					if(mInbreed.matches() && mInbreed.groupCount() == 1)
-					{
-						INBREEDING_THRESHOLD = Double.valueOf(mInbreed.group(1));
-						System.out.println(INBREEDING_THRESHOLD);
-					}
-				}
-			}
-		}
-		//Population
-		//Number of queens
-		//Output dir
-		//Run number
-		//Inbreeding Or Mutation rate
-		
-		solutions = new ArrayList<Chromosome>();
-		avgFitness = new ArrayList<Double>();
-		bestFitness = new ArrayList<Double>();
-		similarity = new ArrayList<Double>();
-		mutationRate = new ArrayList<Double>();
-		similarityMutation = new ArrayList<Double>();
-		mutationSimilarity = new ArrayList<Double>();
-		
+	    new NQueens().doMain(args);
+	}
+	
+	public void doMain(String[] args) throws InterruptedException, IOException 
+	{ 
+	    CmdLineParser parser = new CmdLineParser(this);
+	    
+        try
+        {
+            /* Parse the arguments */
+            parser.parseArgument(args);
+
+            System.out.println(outputDir);
+            System.out.println(runNumber);
+        }
+        catch (CmdLineException e) 
+        {
+            System.err.println(e.getMessage());
+            System.err.println("java NQueens [options...] arguments...");
+            parser.printUsage(System.err);
+            System.err.println();
+
+            /* Print program sample showing all of the options */
+            System.err.println(" Example: java NQueens"+parser.printExample(ALL));
+
+            System.exit(1);
+        }
+	    
+        
 		/* Create an initial population of uniformly random chromosomes */
 		initPopulation();
 
+		/* Initialize the Breed operation */
+        if (mutation != null)
+        {
+            Breed.init(new Random(), mutation);
+        }
+        else
+        {
+            Breed.init(new Random());
+        }
 		
+        
+        /* Iterate until all of the solutions for the N queens problem has been found */
 		while (solutions.size() < 92)
 		{	
 			/* If the percentage of similar chromosomes due to in-breeding exceeds
 			 * the minimum threshold value, increase the amount of mutation
 			 */
-			if (similarChromosomes(population) >= INBREEDING_THRESHOLD)
+		    curSimilarity = similarChromosomes(population);
+			if (mutation == null)
 			{
-				Breed.inBreeding(true);
-			}
-			else
-			{
-				Breed.inBreeding(false);
+			    if(curSimilarity >= inbreedingThreshold)
+    			{
+    				Breed.inBreeding(true);
+    			}
+    			else
+    			{
+    				Breed.inBreeding(false);
+    			}
 			}
 			
 			
@@ -313,11 +287,11 @@ public class NQueens
 			 * population using selection iterator and applying the cloning, crossover,
 			 * and mutation operations.
 			 */
-			ArrayList<Chromosome> nextPopulation =  new ArrayList<Chromosome>(POPULATION);
+			ArrayList<Chromosome> nextPopulation =  new ArrayList<Chromosome>(populationSize);
 			ArrayList<Chromosome> chromosomes = new ArrayList<Chromosome>(2);
-			Breed.init(new Random());
 			
-			while (nextPopulation.size() < POPULATION)
+			
+			while (nextPopulation.size() < populationSize)
 			{
 				/* Select a random number and apply the breeding operation */
 				Integer randomNum = random.nextInt(100);
@@ -383,7 +357,7 @@ public class NQueens
 			bestFitness.add(stats.getMax());
 			
 			/* Save chromosome similarity and mutation rate for current generation */
-			similarity.add(similarChromosomes(nextPopulation));
+			similarity.add(curSimilarity);
 			mutationRate.add((Breed.MUTATION.upperEndpoint() - Breed.MUTATION.lowerEndpoint()) / 100.0 );
 			
 			/* Save the ratios of chromosome similarity and mutation rates */
@@ -438,11 +412,11 @@ public class NQueens
 		for (Chromosome solution : solutions)
 		{
 			/* Only display the specified number of solutions rather than all */
-			if (solutions.indexOf(solution) < NUM_DISPLAY)
+			if (solutions.indexOf(solution) < numDisplay)
 			{
 				try
 				{
-					myGame = new QueenGame (new QueenBoard(Ints.toArray(solution.get()), NumQueens));
+					myGame = new QueenGame (new QueenBoard(Ints.toArray(solution.get()), numQueens));
 					myGame.playGame();
 				}
 				catch (Exception e)
