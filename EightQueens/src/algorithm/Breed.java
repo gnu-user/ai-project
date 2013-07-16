@@ -46,10 +46,26 @@ public abstract class Breed
 	
 	/**
 	 * Initialize the breeding selection with a uniform random number
+	 * 
+	 * @param random The random number generator
 	 */
 	public static void init(Random random)
 	{
 		Breed.random = random;
+	}
+	
+	
+	/**
+	 * Initialize the breeding selection with a uniform random number and
+	 * a fixed mutation rate instead of using a variable mutation rate.
+	 * 
+	 * @param random The random number generator
+	 * @param rate The fixed mutation rate as a percentage to use.
+	 */
+	public static void init(Random random, Double rate)
+	{
+	    Breed.random = random;
+	    MUTATION = Range.closedOpen((int) (100 - rate * 100), 100);
 	}
 	
 	
