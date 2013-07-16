@@ -69,22 +69,17 @@ public class NQueens
     @Argument
     private static List<String> arguments = new ArrayList<String>();
 	
+    
 	private static ArrayList<Chromosome> population;
 	private static ArrayList<Chromosome> solutions = new ArrayList<Chromosome>();
 	private static Chromosome rotation;
 	
-	private static ArrayList<Double> avgFitness = new ArrayList<Double>();
-	private static ArrayList<Double> bestFitness = new ArrayList<Double>();
-	
+	/* Descriptive statistics */
+	private static ArrayList<DescriptiveStatistics> fitnessStats = new ArrayList<DescriptiveStatistics>();
 	private static ArrayList<Double> similarity = new ArrayList<Double>();
 	private static ArrayList<Double> mutationRate = new ArrayList<Double>();
-
-	/* Ratio of similarity to mutation and mutation to similarity */
-	private static ArrayList<Double> similarityMutation = new ArrayList<Double>();
-	private static ArrayList<Double> mutationSimilarity = new ArrayList<Double>();
 	
 	private static Random random = new Random();
-	private	static DescriptiveStatistics stats;
 	private static Integer numGenerations = 0;
 	private static Double curSimilarity = 0.0;
 	
@@ -351,21 +346,12 @@ public class NQueens
 				}
 			}
 						
-			/* Save the average and best fitness values for the current generation */
-			stats = new DescriptiveStatistics(Doubles.toArray(fitness.values()));
-			avgFitness.add(stats.getMean());
-			bestFitness.add(stats.getMax());
-			
+			/* Save the fitness stats for the current generation */
+			fitnessStats.add(new DescriptiveStatistics(Doubles.toArray(fitness.values())));
+
 			/* Save chromosome similarity and mutation rate for current generation */
 			similarity.add(curSimilarity);
 			mutationRate.add((Breed.MUTATION.upperEndpoint() - Breed.MUTATION.lowerEndpoint()) / 100.0 );
-			
-			/* Save the ratios of chromosome similarity and mutation rates */
-			similarityMutation.add(   (similarity.get(similarity.size() - 1)) 
-									/ (mutationRate.get(mutationRate.size() -1)) );
-			
-			mutationSimilarity.add(   (mutationRate.get(mutationRate.size() -1))
-									/ (similarity.get(similarity.size() - 1)) );
 			
 			/* Set the current population as the NEXT population */
 			fitness.clear();
@@ -408,7 +394,6 @@ public class NQueens
 		
 		
 		/* Display the solutions to the eight queens puzzle */
-		QueenGame myGame = null;
 		for (Chromosome solution : solutions)
 		{
 			/* Only display the specified number of solutions rather than all */
@@ -416,7 +401,7 @@ public class NQueens
 			{
 				try
 				{
-					myGame = new QueenGame (new QueenBoard(Ints.toArray(solution.get()), numQueens));
+				    QueenGame myGame = new QueenGame (new QueenBoard(Ints.toArray(solution.get()), numQueens));
 					myGame.playGame();
 				}
 				catch (Exception e)
