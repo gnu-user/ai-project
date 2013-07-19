@@ -27,6 +27,6 @@ public abstract class Game
 	
 	public abstract void drawGameBoard(); 
 	
-	public abstract void playGame ();
+	public abstract void playGame (String filename);
 	
 }

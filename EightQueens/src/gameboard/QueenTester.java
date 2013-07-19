@@ -26,12 +26,12 @@ public class QueenTester
 	
 	public static void main (String[] args) throws InterruptedException
 	{
-		int[] positions = new int[]{ 0, 1, 2, 3, 5, 4, 3, 2};
+		int[] positions = new int[]{ 0, 3, 2, 4, 6, 7, 1, 5};
 		QueenGame myGame = null;
 		try
 		{
 			myGame = new QueenGame (new QueenBoard(positions, 8));
-			myGame.playGame();
+			myGame.playGame("~/test.png");
 		}
 		catch (Exception e)
 		{

@@ -242,7 +242,10 @@ public class NQueens
         	{
         		resultantPath += mutation.toString() + "/";
         	}
-        	File dir = new File(outputDir + resultantPath);
+        	
+        	outputDir += resultantPath;
+        	
+        	File dir = new File(outputDir);
         	
         	/* 
         	 * Returns true if all the directories are created
@@ -417,7 +420,7 @@ public class NQueens
 		System.out.println("Q1: " + mutationStats.getPercentile(25.0));
 		System.out.println("Q3: " + mutationStats.getPercentile(75.0));
 		
-		
+		int counter = 0;
 		/* Display the solutions to the eight queens puzzle */
 		for (Chromosome solution : solutions)
 		{
@@ -427,7 +430,7 @@ public class NQueens
 				try
 				{
 				    QueenGame myGame = new QueenGame (new QueenBoard(Ints.toArray(solution.get()), numQueens));
-					myGame.playGame();
+					myGame.playGame(outputDir + "r_" + String.valueOf(runNumber) + "f_" + counter + ".png");
 				}
 				catch (Exception e)
 				{
@@ -439,6 +442,7 @@ public class NQueens
 				break;
 			}
 			Thread.sleep(2000);
+			counter++;
 		}
 	}
 }
