@@ -447,7 +447,7 @@ public class NQueens
 				try
 				{
 				    QueenGame myGame = new QueenGame (new QueenBoard(Ints.toArray(solution.get()), numQueens));
-					myGame.playGame(outputDir + "r_" + String.valueOf(runNumber) + "f_" + counter + ".jpg");
+					myGame.playGame(outputDir + "r_" + String.valueOf(runNumber) + "f_" + counter + ".png");
 				}
 				catch (Exception e)
 				{

@@ -76,7 +76,7 @@ public class QueenGame extends Game
 		g2d.dispose();
 		
 		try {
-			ImageIO.write(img, "jpg", new File(filepath));
+			ImageIO.write(img, "png", new File(filepath));
 		}
 		catch (IOException e)
 		{
