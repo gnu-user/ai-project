@@ -350,12 +350,13 @@ public class NQueens
 				if (fitness.get(chromosome) == 1.0 && uniqueSolution(chromosome))
 				{
 					/* Save a copy of the chromosome */
-					solutions.add(new Chromosome(new ArrayList<Integer>(chromosome.get()), chromosome.size()));
+				    Chromosome solution = new Chromosome(new ArrayList<Integer>(chromosome.get()), chromosome.size());
+					solutions.add(solution);
 					
 					System.out.println("\nNUMBER OF SOLUTIONS:   " + solutions.size());
 					System.out.println("NUMBER OF GENERATIONS: " + numGenerations);
 					
-					/* Perform three rotations then a reflection followed by three more rotation */
+					/* Perform three rotations then a reflection followed by three more rotations */
 					for (int i = 0; i < 6; ++i)
 					{
 						rotation = Transformation.rotate(solutions.get(solutions.size() - 1));
@@ -373,7 +374,7 @@ public class NQueens
 					
 						if (i == 2)
 						{
-        					reflection =  Transformation.reflect(solutions.get(solutions.size() - 4));
+        					reflection =  Transformation.reflect(solution);
         					
                             if (uniqueSolution(reflection))
                             {
