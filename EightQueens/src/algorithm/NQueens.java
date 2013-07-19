@@ -23,6 +23,7 @@ package algorithm;
 import gameboard.QueenBoard;
 import gameboard.QueenGame;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -69,8 +70,7 @@ public class NQueens
     @Argument
     private static List<String> arguments = new ArrayList<String>();
 	
-    
-	private static ArrayList<Chromosome> population;
+   	private static ArrayList<Chromosome> population;
 	private static ArrayList<Chromosome> solutions = new ArrayList<Chromosome>();
 	private static Chromosome rotation;
 	
@@ -230,8 +230,33 @@ public class NQueens
 
             System.exit(1);
         }
-	    
         
+        try
+        {
+        	String resultantPath = "/" + numQueens + "_q" + "/";
+        	if (mutation == null)
+        	{
+        		resultantPath += "variable/";
+        	}
+        	else
+        	{
+        		resultantPath += mutation.toString() + "/";
+        	}
+        	File dir = new File(outputDir + resultantPath);
+        	
+        	/* 
+        	 * Returns true if all the directories are created
+        	 * Returns false and the directories may have been made
+        	 * (so far returns false every other time and it works every time)
+        	 */        	
+        	dir.mkdirs();
+        }
+        catch (Exception e)
+        {
+        	System.err.println(e.getMessage());
+        	System.exit(1);
+        }
+
 		/* Create an initial population of uniformly random chromosomes */
 		initPopulation();
 
@@ -244,7 +269,7 @@ public class NQueens
         {
             Breed.init(new Random());
         }
-		
+
         
         /* Iterate until all of the solutions for the N queens problem has been found */
 		while (solutions.size() < 92)
