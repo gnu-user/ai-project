@@ -215,20 +215,15 @@ public class NQueens
         {
             /* Parse the arguments */
             parser.parseArgument(args);
-
-            System.out.println(outputDir);
-            System.out.println(runNumber);
         }
         catch (CmdLineException e) 
         {
             System.err.println(e.getMessage());
             System.err.println("java NQueens [options...] arguments...");
             parser.printUsage(System.err);
-            System.err.println();
 
             /* Print program sample showing all of the options */
-            System.err.println(" Example: java NQueens"+parser.printExample(ALL));
-
+            System.err.println("\n Example: java NQueens"+parser.printExample(ALL));
             System.exit(1);
         }
         
@@ -361,38 +356,37 @@ public class NQueens
 					System.out.println("NUMBER OF GENERATIONS: " + numGenerations);
 					
 					/* Perform three rotations then a reflection followed by three more rotation */
-					for (int i = 0; i < 2; ++i)
+					for (int i = 0; i < 6; ++i)
 					{
-    					/* Perform three rotations of the coordinates by 90 degrees to get new solutions */
-    					for (int j = 0; j < 3; ++j)
-    					{
-    						rotation = Transformation.rotate(solutions.get(solutions.size() - 1));
-    						
-    						if (uniqueSolution(rotation))
-    						{ 
-    							solutions.add(rotation);
-    							System.out.println("\nNUMBER OF SOLUTIONS:   " + solutions.size());
-    							System.out.println("NUMBER OF GENERATIONS: " + numGenerations);
-    						}
-                            else
-                            {
-                                System.out.println("\nROTATION NOT UNIQUE:   " + solutions.size());
-                            }
-    					}
-    					
-    					reflection =  Transformation.reflect(solutions.get(solutions.size() - 4));
-    					
-                        if (uniqueSolution(reflection))
-                        {
-                            solutions.add(reflection);
-                            System.out.println("\nNUMBER OF SOLUTIONS:   " + solutions.size());
-                            System.out.println("NUMBER OF GENERATIONS: " + numGenerations);
-                        }
+						rotation = Transformation.rotate(solutions.get(solutions.size() - 1));
+						
+						if (uniqueSolution(rotation))
+						{ 
+							solutions.add(rotation);
+							System.out.println("\nNUMBER OF SOLUTIONS:   " + solutions.size());
+							System.out.println("NUMBER OF GENERATIONS: " + numGenerations);
+						}
                         else
                         {
-                            System.out.println("\nREFLECTION NOT UNIQUE:   " + solutions.size());
+                            System.out.println("\nROTATION NOT UNIQUE:   " + solutions.size());
                         }
-    				}
+					
+						if (i == 2)
+						{
+        					reflection =  Transformation.reflect(solutions.get(solutions.size() - 4));
+        					
+                            if (uniqueSolution(reflection))
+                            {
+                                solutions.add(reflection);
+                                System.out.println("\nNUMBER OF SOLUTIONS:   " + solutions.size());
+                                System.out.println("NUMBER OF GENERATIONS: " + numGenerations);
+                            }
+                            else
+                            {
+                                System.out.println("\nREFLECTION NOT UNIQUE:   " + solutions.size());
+                            }
+						}
+					}
 				}
 			}
 						
