@@ -44,7 +44,6 @@ public class OutputWriter {
 			
 			writeRow(fileWriter, columns);
 			
-			
 			Enumeration<Integer> iterator = ht.keys();
 			while(iterator.hasMoreElements())
 			{
@@ -62,10 +61,10 @@ public class OutputWriter {
 		catch (IOException e)
 		{
 			e.printStackTrace();
+			return false;
 		}
 		
-		
-		return false;
+		return true;
 	}	
 	
 	public void writeRow(FileWriter writer, ArrayList<String> columns) throws IOException
@@ -73,9 +72,18 @@ public class OutputWriter {
 		for (int i = 0; i < columns.size(); i++)
 		{
 			writer.append(columns.get(i));
-			writer.append(",");
+			
+			/* Add a comma after each element and a new line at the end of the row */
+			if (i < (columns.size() - 1))
+			{
+				writer.append(",");
+			}
+			else
+			{
+				writer.append("\n");
+			}
 		}
-		writer.append("\n");
+		
 	}
 	
 	/**
@@ -118,9 +126,9 @@ public class OutputWriter {
 		catch (IOException e)
 		{
 			e.printStackTrace();
+			return false;
 		}
 		
-		
-		return false;
+		return true;
 	}
 }
