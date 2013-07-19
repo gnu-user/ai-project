@@ -73,6 +73,7 @@ public class NQueens
    	private static ArrayList<Chromosome> population;
 	private static ArrayList<Chromosome> solutions = new ArrayList<Chromosome>();
 	private static Chromosome rotation;
+	private static Chromosome reflection;
 	
 	/* Descriptive statistics */
 	private static ArrayList<DescriptiveStatistics> fitnessStats = new ArrayList<DescriptiveStatistics>();
@@ -359,18 +360,39 @@ public class NQueens
 					System.out.println("\nNUMBER OF SOLUTIONS:   " + solutions.size());
 					System.out.println("NUMBER OF GENERATIONS: " + numGenerations);
 					
-					/* Perform three rotations of the coordinates by 90 degrees to get new solutions */
-					for (int i = 0; i < 3; ++i)
+					/* Perform three rotations then a reflection followed by three more rotation */
+					for (int i = 0; i < 2; ++i)
 					{
-						rotation = Pivot.rotate(solutions.get(solutions.size() - 1));
-						
-						if (uniqueSolution(rotation))
-						{
-							solutions.add(rotation);
-							System.out.println("\nNUMBER OF SOLUTIONS:   " + solutions.size());
-							System.out.println("NUMBER OF GENERATIONS: " + numGenerations);
-						}
-					}
+    					/* Perform three rotations of the coordinates by 90 degrees to get new solutions */
+    					for (int j = 0; j < 3; ++j)
+    					{
+    						rotation = Transformation.rotate(solutions.get(solutions.size() - 1));
+    						
+    						if (uniqueSolution(rotation))
+    						{ 
+    							solutions.add(rotation);
+    							System.out.println("\nNUMBER OF SOLUTIONS:   " + solutions.size());
+    							System.out.println("NUMBER OF GENERATIONS: " + numGenerations);
+    						}
+                            else
+                            {
+                                System.out.println("\nROTATION NOT UNIQUE:   " + solutions.size());
+                            }
+    					}
+    					
+    					reflection =  Transformation.reflect(solutions.get(solutions.size() - 4));
+    					
+                        if (uniqueSolution(reflection))
+                        {
+                            solutions.add(reflection);
+                            System.out.println("\nNUMBER OF SOLUTIONS:   " + solutions.size());
+                            System.out.println("NUMBER OF GENERATIONS: " + numGenerations);
+                        }
+                        else
+                        {
+                            System.out.println("\nREFLECTION NOT UNIQUE:   " + solutions.size());
+                        }
+    				}
 				}
 			}
 						
