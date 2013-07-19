@@ -18,5 +18,10 @@
 			<attribute name="javadoc_location" value="jar:file:../lib/commons-math3-3.1.1-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="../lib/args4j-2.0.21.jar" sourcepath="../lib/args4j-2.0.21-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:../lib/args4j-2.0.21-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
