@@ -58,6 +58,12 @@ public class NQueens
     @Option(name="-q", usage="The number of queens, the default is 8")
     private static Integer numQueens = 8;
     
+    @Option(name="-g", usage="The maximum number of generations before terminating, the default is 100 Million")
+    private static Integer maxGenerations = 100000000;
+    
+    @Option(name="-b", usage="Perform a benchmark, writes the number of generations, not used by default")
+    private static boolean benchmark = false;
+    
     @Option(name="-o", required=true, metaVar="OUTPUT", usage="The output directory to store the results")
     private static String outputDir;
     
@@ -70,6 +76,10 @@ public class NQueens
     @Argument
     private static List<String> arguments = new ArrayList<String>();
 	
+    /* Mapping of the distinct solutions for the N Queens problem, sequence A000170 from OEIS */
+    private static int[] distinctSolutions = {1, 0, 0, 2, 10, 4, 40, 92, 352, 724, 2680, 14200, 
+        73712, 365596, 2279184, 14772512, 95815104, 666090624};
+    
    	private static ArrayList<Chromosome> population;
 	private static ArrayList<Chromosome> solutions = new ArrayList<Chromosome>();
 	private static Chromosome rotation;
@@ -185,7 +195,6 @@ public class NQueens
 		return 0.0;
 	}
 	
-	
 	/**
 	 * Creates an initial population of uniformly random chromosomes
 	 */
@@ -256,6 +265,7 @@ public class NQueens
         	System.exit(1);
         }
 
+        
 		/* Create an initial population of uniformly random chromosomes */
 		initPopulation();
 
@@ -271,8 +281,8 @@ public class NQueens
 
         
         /* Iterate until all of the solutions for the N queens problem has been found */
-		while (solutions.size() < 92)
-		{	
+		while (solutions.size() < distinctSolutions[numQueens - 1] && numGenerations < maxGenerations)
+		{
 			/* If the percentage of similar chromosomes due to in-breeding exceeds
 			 * the minimum threshold value, increase the amount of mutation
 			 */
