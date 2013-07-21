@@ -43,9 +43,9 @@ public class QueenGame extends Game
 	{
 		this.myGame = chessBoard;
 		
-		frame = new JFrame ();
+		frame = new JFrame();
 		frame.setSize(600,625);
-		frame.setTitle("8 Queens Problem");
+		frame.setTitle("N Queens Problem");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 	}
@@ -74,6 +74,7 @@ public class QueenGame extends Game
 		content.printAll(g2d);
 
 		g2d.dispose();
+		frame.dispose();
 		
 		try {
 			ImageIO.write(img, "png", new File(filepath));
