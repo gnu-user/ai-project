@@ -1,24 +1,24 @@
 package algorithm;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.LinkedHashMap;
 
 public class testOutputWriter {
 	
 	public static void main (String[] args)
 	{
-		OutputWriter ow = new OutputWriter("/home/joseph/test/");
+		OutputWriter ow = new OutputWriter("/home/jon/test/");
 		
-		Hashtable<Integer, Integer> ht = new Hashtable<Integer, Integer>();
+		LinkedHashMap<Integer, Integer> ht = new LinkedHashMap<Integer, Integer>();
 		ht.put(1, 1324);
 		ArrayList<String> al = new ArrayList<String>();
 		al.add("solution");
 		al.add("generation");
 		
 		
-		System.out.println(ow.save_solutions(ht, al, "test.csv"));
+		System.out.println(ow.saveResults(ht, al, "test.csv"));
 		
-		Hashtable<Integer, ArrayList<Integer>> ot = new Hashtable<Integer, ArrayList<Integer>>();
+		LinkedHashMap<Integer, ArrayList<Integer>> ot = new LinkedHashMap<Integer, ArrayList<Integer>>();
 		
 		ArrayList<Integer> ai1 = new ArrayList<Integer>();
 		ai1.add(1);
@@ -41,7 +41,7 @@ public class testOutputWriter {
 		
 		
 		
-		System.out.println(ow.saveSolutions(ot, co, "test2.csv"));
+		System.out.println(ow.saveResultsMul(ot, co, "test2.csv"));
 	}
 
 }

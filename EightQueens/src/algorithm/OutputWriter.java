@@ -3,12 +3,10 @@ package algorithm;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Iterator;
+import java.util.Map;
 
-public class OutputWriter {
-
+public class OutputWriter
+{
 	private String outputDir;
 	
 	public OutputWriter(String outputDir)
@@ -19,40 +17,41 @@ public class OutputWriter {
 	/**
 	 * @return the outputDir
 	 */
-	public String getOutputDir() {
+	public String getOutputDir()
+	{
 		return outputDir;
 	}
 
 	/**
 	 * @param outputDir the outputDir to set
 	 */
-	public void setOutputDir(String outputDir) {
+	public void setOutputDir(String outputDir)
+	{
 		this.outputDir = outputDir;
 	}
 	
 	/**
-	 * Save the solutions to the to the given file. When the output is only 2 columns.
-	 * @param ht
+	 * Save the results to the to the given file. When the output is only 2 columns.
+	 * @param data
 	 * @param columns
 	 * @param filename
 	 * @return
 	 */
-	public boolean save_solutions(Hashtable<Integer, Integer> ht, ArrayList<String> columns, String filename)
+	public <K, V> boolean saveResults(Map<K, V> data, ArrayList<String> columns, String filename)
 	{
-		try {
+		try
+		{
 			FileWriter fileWriter = new FileWriter(outputDir + filename);
 			
 			writeRow(fileWriter, columns);
 			
-			Enumeration<Integer> iterator = ht.keys();
-			while(iterator.hasMoreElements())
+			for (Object key : data.keySet())
 			{
-				Integer element = iterator.nextElement();
-				ArrayList<String> list = new ArrayList<String>();
-				list.add(String.valueOf(element));
-				list.add(String.valueOf(ht.get(element)));
-				
-				writeRow(fileWriter, list);
+			    ArrayList<String> list = new ArrayList<String>();
+			    list.add(String.valueOf(key));
+                list.add(String.valueOf(data.get(key)));
+                
+                writeRow(fileWriter, list);
 			}
 			
 			fileWriter.flush();
@@ -67,7 +66,7 @@ public class OutputWriter {
 		return true;
 	}	
 	
-	public void writeRow(FileWriter writer, ArrayList<String> columns) throws IOException
+	private void writeRow(FileWriter writer, ArrayList<String> columns) throws IOException
 	{
 		for (int i = 0; i < columns.size(); i++)
 		{
@@ -83,42 +82,38 @@ public class OutputWriter {
 				writer.append("\n");
 			}
 		}
-		
 	}
 	
 	/**
-	 * More abstract version of save_solution which should work for files containing 2 or more columns. 
-	 * @param ht <Integer, ArrayList<Integer>> run number -> list of columns involved
+	 * More abstract version of saveResults which should work for files containing 2 or more columns. 
+	 * @param data <Integer, ArrayList<Integer>> run number -> list of columns involved
 	 * @param columns
 	 * @param filename
 	 * @return
 	 */
-	public boolean saveSolutions(Hashtable<Integer, ArrayList<Integer>> ht, ArrayList<String> columns, String filename)
+	public <K, E> boolean saveResultsMul(Map<K, ArrayList<E>> data, ArrayList<String> columns, String filename)
 	{
-		try {
+		try
+		{
 			FileWriter fileWriter = new FileWriter(outputDir + filename);
 			
 			writeRow(fileWriter, columns);
 			
 			/* Get all of the keys */ 
-			Enumeration<Integer> iterator = ht.keys();
-			while(iterator.hasMoreElements())
-			{
-				/* Create the list of the elements in the array list */
-				Integer element = iterator.nextElement();
-				ArrayList<String> list = new ArrayList<String>();
-				list.add(String.valueOf(element));
-				
-				/* Get the list of all the columns */ 
-				Iterator<Integer> values = ht.get(element).iterator();
-				while(values.hasNext())
-				{
-					list.add(String.valueOf(values.next()));
-				}
-				
-				/* Write the columns to the file */ 
-				writeRow(fileWriter, list);
-			}
+            for (Object key : data.keySet())
+            {
+                ArrayList<String> list = new ArrayList<String>();
+                list.add(String.valueOf(key));
+                
+                /* Get the list of all the columns */ 
+                for (Object value : data.get(key))
+                {
+                    list.add(String.valueOf(value));
+                }
+                
+                /* Write the columns to the file */ 
+                writeRow(fileWriter, list);
+            }
 			
 			fileWriter.flush();
 			fileWriter.close();
