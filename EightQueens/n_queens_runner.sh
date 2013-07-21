@@ -65,13 +65,13 @@ do
     do
         # Execute the job for variable mutation rate
         log_file=q_${queen}_variable_${run_num}.log
-        sqsub -q serial -r 2d --mpp 6G -o ${LOG_DIR}/${log_file} n_queens.sh -o /scratch/jgillett/n_queens -r ${run_num} -q ${queen}
+        sqsub -q serial -r 2d --mpp 6G -o ${LOG_DIR}/${log_file} n_queens.sh -o /scratch/jgillett/n_queens -r ${run_num} -q ${queen} -s 0
 
         # Execute the job for each of the fixed mutation rates
         for rate in 0.01 0.05 0.10 0.25 0.50 0.75 1.0
         do
             log_file=q_${queen}_${rate}_${run_num}.log
-            sqsub -q serial -r 2d --mpp 6G -o ${LOG_DIR}/${log_file} n_queens.sh -o /scratch/jgillett/n_queens -r ${run_num} -m ${rate} -q ${queen}
+            sqsub -q serial -r 2d --mpp 6G -o ${LOG_DIR}/${log_file} n_queens.sh -o /scratch/jgillett/n_queens -r ${run_num} -m ${rate} -q ${queen} -s 0
         done
     done
 done
