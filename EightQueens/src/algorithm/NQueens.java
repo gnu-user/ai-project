@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -61,9 +62,6 @@ public class NQueens
     @Option(name="-g", usage="The maximum number of generations before terminating, the default is 100 Million")
     private static Integer maxGenerations = 100000000;
     
-    @Option(name="-b", usage="Perform a benchmark, writes the number of generations, not used by default")
-    private static boolean benchmark = false;
-    
     @Option(name="-o", required=true, metaVar="OUTPUT", usage="The output directory to store the results")
     private static String outputDir;
     
@@ -85,14 +83,81 @@ public class NQueens
 	private static Chromosome rotation;
 	private static Chromosome reflection;
 	
-	/* Descriptive statistics */
-	private static ArrayList<DescriptiveStatistics> fitnessStats = new ArrayList<DescriptiveStatistics>();
-	private static ArrayList<Double> similarity = new ArrayList<Double>();
-	private static ArrayList<Double> mutationRate = new ArrayList<Double>();
+	/* Data for calculating descriptive statistics */
+	private static LinkedHashMap<Integer, Integer> solutionGeneration = new LinkedHashMap<Integer, Integer>();
+	private static LinkedHashMap<Integer, Integer> duplicateSolution= new LinkedHashMap<Integer, Integer>();
+	private static LinkedHashMap<Integer, Integer> rotationMiss = new LinkedHashMap<Integer, Integer>();
+	private static LinkedHashMap<Integer, Integer> reflectionMiss = new LinkedHashMap<Integer, Integer>();
+	private static LinkedHashMap<Integer, ArrayList<Double>> fitnessStats = new LinkedHashMap<Integer, ArrayList<Double>>();
+	private static LinkedHashMap<Integer, Double> similarity = new LinkedHashMap<Integer, Double>();
+	private static LinkedHashMap<Integer, Double> mutationRate = new LinkedHashMap<Integer, Double>();
 	
 	private static Random random = new Random();
-	private static Integer numGenerations = 0;
+	private static Integer numGenerations = 1;
 	private static Double curSimilarity = 0.0;
+	private static Integer curIndex = 0;
+	
+	
+	/**
+	 * Writes the current results for the number of solutions found, as well as the record of
+	 * population fitness, mutation rate, and chromosome similarity to disk. After the results
+	 * have been saved the fitness, mutation rate, and chromosome similarity arrays are reset.
+	 */
+	public static void writeResults()
+	{
+	    OutputWriter ow = new OutputWriter(outputDir);
+	    
+	    /* Write the number of solutions found and the generation */
+	    ow.saveResults(solutionGeneration,  
+	                   new ArrayList<String>() {{ add("solution"); add("generation");}}, 
+	                   "solution_generation_" + runNumber + ".csv");
+	    
+	    
+	    /* Write the number of duplicate solutions found for each generation */
+	    ow.saveResults(duplicateSolution, 
+	                   new ArrayList<String>() {{ add("generation"); add("duplicates");}}, 
+	                   "duplicate_solutions_" + runNumber + ".csv");
+	    
+	    
+	    /* Write the number of rotation misses found for each generation */
+        ow.saveResults(rotationMiss, 
+                       new ArrayList<String>() {{ add("generation"); add("misses");}}, 
+                       "rotation_misses_" + runNumber + ".csv");
+        
+        
+        /* Write the number of reflection misses found for each generation */
+        ow.saveResults(reflectionMiss, 
+                       new ArrayList<String>() {{ add("generation"); add("misses");}}, 
+                       "reflection_misses_" + runNumber + ".csv");
+        
+        
+        /* Write the fitness statistics for each generation */
+        ow.saveResultsMul(fitnessStats, 
+                new ArrayList<String>() {{ add("generation"); add("min"); add("mean"); 
+                                           add("Q1"); add("median"); add("Q3");
+                                           add("max"); add("std");}}, 
+                "fitness_stats_" + runNumber + ".csv");
+	 
+        /* Write the chromosome similarity for each generation */
+        ow.saveResults(similarity, 
+                       new ArrayList<String>() {{ add("generation"); add("similarity");}}, 
+                       "chromosome_similarity_" + runNumber + ".csv");
+        
+        /* Write the mutation rate for each generation */
+        ow.saveResults(mutationRate, 
+                       new ArrayList<String>() {{ add("generation"); add("mutation");}}, 
+                       "mutation_rate_" + runNumber + ".csv");
+       
+        
+        /* Clear all of the data */
+        solutionGeneration.clear();
+        duplicateSolution.clear();
+        rotationMiss.clear();
+        reflectionMiss.clear();
+        fitnessStats.clear();
+        similarity.clear();
+        mutationRate.clear();
+	}
 	
 	
 	/**
@@ -198,7 +263,7 @@ public class NQueens
 	/**
 	 * Creates an initial population of uniformly random chromosomes
 	 */
-	static public void initPopulation()
+	public static void initPopulation()
 	{
 		/* Create an array of uniformly random chromosomes for initial population */
 		population =  new ArrayList<Chromosome>(populationSize);
@@ -210,6 +275,30 @@ public class NQueens
 		}
 	}
 
+	
+	/**
+	 * Calculates the fitness statistics for the current generation and returns an
+	 * arraylist containing the min, mean, Q1, median, Q3, max, and std.
+	 * 
+	 * @param fitness The fitness object for the current population
+	 * @return An arraylist of the min, mean, Q1, median, Q3, max, and std.
+	 */
+	public static ArrayList<Double> getFitnessStats(HashMap<Chromosome, Double> fitness)
+	{
+        DescriptiveStatistics descStats = new DescriptiveStatistics(Doubles.toArray(fitness.values()));
+        
+        ArrayList<Double> stats = new ArrayList<Double>();
+        stats.add(descStats.getMin());
+        stats.add(descStats.getMean());
+        stats.add(descStats.getPercentile(25.0));
+        stats.add(descStats.getPercentile(50.0));
+        stats.add(descStats.getPercentile(75.0));
+        stats.add(descStats.getMax());
+        stats.add(descStats.getStandardDeviation());
+        
+        return stats;
+	}
+	
 	
 	public static void main(String[] args) throws InterruptedException, IOException
 	{
@@ -251,13 +340,14 @@ public class NQueens
         	outputDir += resultantPath;
         	
         	File dir = new File(outputDir);
-        	
+        	File figureDir = new File(outputDir + "/figures/");
         	/* 
         	 * Returns true if all the directories are created
         	 * Returns false and the directories may have been made
         	 * (so far returns false every other time and it works every time)
         	 */        	
         	dir.mkdirs();
+        	figureDir.mkdirs();
         }
         catch (Exception e)
         {
@@ -281,7 +371,7 @@ public class NQueens
 
         
         /* Iterate until all of the solutions for the N queens problem has been found */
-		while (solutions.size() < distinctSolutions[numQueens - 1] && numGenerations < maxGenerations)
+		while (solutions.size() < distinctSolutions[numQueens - 1] && numGenerations <= maxGenerations)
 		{
 			/* If the percentage of similar chromosomes due to in-breeding exceeds
 			 * the minimum threshold value, increase the amount of mutation
@@ -357,119 +447,115 @@ public class NQueens
 			/* If there are any solutions (fitness of 1) that are unique save them */
 			for (Chromosome chromosome : fitness.keySet())
 			{
-				if (fitness.get(chromosome) == 1.0 && uniqueSolution(chromosome))
+				if (fitness.get(chromosome) == 1.0)
 				{
-					/* Save a copy of the chromosome */
-				    Chromosome solution = new Chromosome(new ArrayList<Integer>(chromosome.get()), chromosome.size());
-					solutions.add(solution);
-					
-					System.out.println("\nNUMBER OF SOLUTIONS:   " + solutions.size());
-					System.out.println("NUMBER OF GENERATIONS: " + numGenerations);
-					
-					/* Perform three rotations then a reflection followed by three more rotations */
-					for (int i = 0; i < 6; ++i)
-					{
-						rotation = Transformation.rotate(solutions.get(solutions.size() - 1));
-						
-						if (uniqueSolution(rotation))
-						{ 
-							solutions.add(rotation);
-							System.out.println("\nNUMBER OF SOLUTIONS:   " + solutions.size());
-							System.out.println("NUMBER OF GENERATIONS: " + numGenerations);
-						}
-                        else
-                        {
-                            System.out.println("\nROTATION NOT UNIQUE:   " + solutions.size());
-                        }
-					
-						if (i == 2)
-						{
-        					reflection =  Transformation.reflect(solution);
-        					
-                            if (uniqueSolution(reflection))
-                            {
-                                solutions.add(reflection);
-                                System.out.println("\nNUMBER OF SOLUTIONS:   " + solutions.size());
-                                System.out.println("NUMBER OF GENERATIONS: " + numGenerations);
-                            }
+				    if (uniqueSolution(chromosome))
+				    {
+    					/* Save a copy of the chromosome */
+    				    Chromosome solution = new Chromosome(new ArrayList<Integer>(chromosome.get()), chromosome.size());
+    					solutions.add(solution);
+    					solutionGeneration.put(solutions.size(), numGenerations);
+    					
+    					/* Perform three rotations then a reflection followed by three more rotations */
+    					for (int i = 0; i < 6; ++i)
+    					{
+    						rotation = Transformation.rotate(solutions.get(solutions.size() - 1));
+    						
+    						if (uniqueSolution(rotation))
+    						{ 
+    							solutions.add(rotation);
+    							solutionGeneration.put(solutions.size(), numGenerations);
+    						}
                             else
                             {
-                                System.out.println("\nREFLECTION NOT UNIQUE:   " + solutions.size());
+                                if (rotationMiss.containsKey(numGenerations))
+                                {
+                                    rotationMiss.put(numGenerations, rotationMiss.get(numGenerations) + 1);
+                                }
+                                else
+                                {
+                                    rotationMiss.put(numGenerations, 1);
+                                }
                             }
-						}
-					}
+    					
+    						if (i == 2)
+    						{
+            					reflection =  Transformation.reflect(solution);
+            					
+                                if (uniqueSolution(reflection))
+                                {
+                                    solutions.add(reflection);
+                                    solutionGeneration.put(solutions.size(), numGenerations);
+                                }
+                                else
+                                {
+                                    if (reflectionMiss.containsKey(numGenerations))
+                                    {
+                                        reflectionMiss.put(numGenerations, reflectionMiss.get(numGenerations) + 1);
+                                    }
+                                    else
+                                    {
+                                        reflectionMiss.put(numGenerations, 1);
+                                    }
+                                }
+    						}
+    					}
+    				}
+    				else
+    				{
+                        if (duplicateSolution.containsKey(numGenerations))
+                        {
+                            duplicateSolution.put(numGenerations, duplicateSolution.get(numGenerations) + 1);
+                        }
+                        else
+                        {
+                            duplicateSolution.put(numGenerations, 1);
+                        }
+    				}
 				}
 			}
 						
 			/* Save the fitness stats for the current generation */
-			fitnessStats.add(new DescriptiveStatistics(Doubles.toArray(fitness.values())));
-
+			fitnessStats.put(numGenerations,  getFitnessStats(fitness));
+			
 			/* Save chromosome similarity and mutation rate for current generation */
-			similarity.add(curSimilarity);
-			mutationRate.add((Breed.MUTATION.upperEndpoint() - Breed.MUTATION.lowerEndpoint()) / 100.0 );
+			similarity.put(numGenerations, curSimilarity);
+			mutationRate.put(numGenerations, (Breed.MUTATION.upperEndpoint() - Breed.MUTATION.lowerEndpoint()) / 100.0 );
+			
+	         
+            /* Write the current results to file every 10,000 generations */
+            if ((numGenerations % 10000) == 0)
+            {
+                writeResults();
+            }
 			
 			/* Set the current population as the NEXT population */
 			fitness.clear();
 			population = nextPopulation;			
 			
-			++numGenerations;
+			++numGenerations;			
 		}
 		
 		
-		/* Plot the average and best fitness of generations */		
-		//SeriesPlot fitnessPlot = new SeriesPlot("Fitness Over Generations", "Number of Generations", "Fitness");
-		//SeriesBoxPlot fitnessBoxPlot = new SeriesBoxPlot("Fitness Over Generations", "Fitness");
-		
-		//fitnessPlot.plot(avgFitness, "Average Fitness", bestFitness, "Best Fitness");
-		//fitnessBoxPlot.plot(avgFitness, "Average Fitness", bestFitness, "Best Fitness");
+		/* Write any remaining results */
+		writeResults();
 		
 		
-		/* Plot relationship between chromosome similarity and mutation rate from inbreeding */
-		//SeriesPlot mutationPlot = new SeriesPlot("Chromosome Similarity and Mutation Rate due to In-Breeding", "Number of Generations", "Rate");
-		//SeriesBoxPlot mutationBoxPlot = new SeriesBoxPlot("Chromosome Similarity and Mutation Rate due to In-Breeding", "Rate");
-		
-		//mutationPlot.plot(similarity, "Chromosome Similarity", mutationRate, "Mutation Rate");
-		//mutationBoxPlot.plot(similarity, "Chromosome Similarity", mutationRate, "Mutation Rate");
-		
-		
-		/* Display descriptive statistics for mutation rate and chromosome similarity */
-		DescriptiveStatistics similarityStats = new DescriptiveStatistics(Doubles.toArray(similarity));
-		System.out.println("\nChromosome Similarity MEDIAN: " + similarityStats.getPercentile(50.0));
-		System.out.println("Chromosome Similarity MEAN: " + similarityStats.getMean());
-		System.out.println("STD: " + similarityStats.getStandardDeviation());
-		System.out.println("Q1: " + similarityStats.getPercentile(25.0));
-		System.out.println("Q3: " + similarityStats.getPercentile(75.0));
-
-		DescriptiveStatistics mutationStats = new DescriptiveStatistics(Doubles.toArray(mutationRate));
-		System.out.println("\nMutation MEDIAN: " + mutationStats.getPercentile(50.0));
-		System.out.println("Mutation MEAN: " + mutationStats.getMean());
-		System.out.println("STD: " + mutationStats.getStandardDeviation());
-		System.out.println("Q1: " + mutationStats.getPercentile(25.0));
-		System.out.println("Q3: " + mutationStats.getPercentile(75.0));
-		
-		int counter = 0;
-		/* Display the solutions to the eight queens puzzle */
-		for (Chromosome solution : solutions)
+		/* Display random solutions for the number of solutions specified */
+		for (int j = 0; j < numDisplay; ++j)
 		{
-			/* Only display the specified number of solutions rather than all */
-			if (solutions.indexOf(solution) < numDisplay)
+		    /* Display a random solution */
+		    Chromosome solution = solutions.get(random.nextInt(solutions.size()));
+		    
+			try
 			{
-				try
-				{
-				    QueenGame myGame = new QueenGame (new QueenBoard(Ints.toArray(solution.get()), numQueens));
-					myGame.playGame(outputDir + "r_" + String.valueOf(runNumber) + "f_" + counter + ".png");
-				}
-				catch (Exception e)
-				{
-					System.out.println("Bad set of Queens");
-				}
+			    QueenGame myGame = new QueenGame (new QueenBoard(Ints.toArray(solution.get()), numQueens));
+				myGame.playGame(outputDir + "/figures/" + "figure_run_" + String.valueOf(runNumber) + "_" + j + ".png");
 			}
-			else
+			catch (Exception e)
 			{
-				break;
+				System.out.println("Bad set of Queens");
 			}
-			Thread.sleep(2000);
-			counter++;
 		}
 	}
 }
