@@ -103,6 +103,7 @@ public class NQueens
 	 * population fitness, mutation rate, and chromosome similarity to disk. After the results
 	 * have been saved the fitness, mutation rate, and chromosome similarity arrays are reset.
 	 */
+	@SuppressWarnings("serial") 
 	public static void writeResults()
 	{
 	    OutputWriter ow = new OutputWriter(outputDir);

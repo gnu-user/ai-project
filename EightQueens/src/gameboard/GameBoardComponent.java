@@ -30,10 +30,8 @@ import java.awt.Color;
 import java.awt.Graphics;			//Used to create a 2D graphic
 import java.awt.Graphics2D;			//Used to Draw a Rectangle and a name
 import java.awt.Image;
-import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
@@ -48,9 +46,9 @@ public class GameBoardComponent extends JComponent
 		this.myGame = myGame;
 		
 		// TODO use this ONLY if creating a JAR file
-		//URL imageurl = getClass().getResource("/image/queen.png");
-		//this.image = Toolkit.getDefaultToolkit().getImage(imageurl);
-		//new JLabel(new ImageIcon( image ));
+		URL imageurl = getClass().getResource("/image/queen.png");
+		this.image = Toolkit.getDefaultToolkit().getImage(imageurl);
+		new JLabel(new ImageIcon( image ));
 	}
 	
 	/**
@@ -66,7 +64,7 @@ public class GameBoardComponent extends JComponent
 		//int row = -1;
 		
 		// TODO Use this if NOT using JAR for better looking icons
-		image = ImageIO.read(new File("img/queen.png"));
+		//image = ImageIO.read(new File("img/queen.png"));
 	
 		//Draw order
 		//	Squares

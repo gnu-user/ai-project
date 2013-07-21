@@ -21,7 +21,6 @@
 package gameboard;
 
 import java.awt.Container;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -29,7 +28,6 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 
 public class QueenGame extends Game
