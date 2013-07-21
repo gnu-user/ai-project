@@ -15,8 +15,12 @@ public class testOutputWriter {
 		al.add("solution");
 		al.add("generation");
 		
+      LinkedHashMap<Integer, Integer> ht2 = new LinkedHashMap<Integer, Integer>();
+        ht2.put(999, 1);
+		
 		
 		System.out.println(ow.saveResults(ht, al, "test.csv"));
+		System.out.println(ow.saveResults(ht2, al, "test.csv"));
 		
 		LinkedHashMap<Integer, ArrayList<Integer>> ot = new LinkedHashMap<Integer, ArrayList<Integer>>();
 		

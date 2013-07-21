@@ -1,5 +1,6 @@
 package algorithm;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -41,10 +42,21 @@ public class OutputWriter
 	{
 		try
 		{
-			FileWriter fileWriter = new FileWriter(outputDir + filename);
-			
-			writeRow(fileWriter, columns);
-			
+		    File file = new File(outputDir + filename);
+		    FileWriter fileWriter;
+		    
+		    if (! file.exists())
+	        {
+		        fileWriter = new FileWriter(outputDir + filename);
+		        writeRow(fileWriter, columns);
+	        }
+		    else
+		    {
+		        fileWriter = new FileWriter(outputDir + filename, true);
+		    }
+
+		    		    
+		    /* Get all of the keys */ 
 			for (Object key : data.keySet())
 			{
 			    ArrayList<String> list = new ArrayList<String>();
@@ -95,10 +107,20 @@ public class OutputWriter
 	{
 		try
 		{
-			FileWriter fileWriter = new FileWriter(outputDir + filename);
+            File file = new File(outputDir + filename);
+            FileWriter fileWriter;
+            
+            if (! file.exists())
+            {
+                fileWriter = new FileWriter(outputDir + filename);
+                writeRow(fileWriter, columns);
+            }
+            else
+            {
+                fileWriter = new FileWriter(outputDir + filename, true);
+            }
 			
-			writeRow(fileWriter, columns);
-			
+            
 			/* Get all of the keys */ 
             for (Object key : data.keySet())
             {
