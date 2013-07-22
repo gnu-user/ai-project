@@ -36,49 +36,41 @@ public class OutputWriter
 	 * @param data
 	 * @param columns
 	 * @param filename
-	 * @return
+	 * @throws IOException 
 	 */
-	public <K, V> boolean saveResults(Map<K, V> data, ArrayList<String> columns, String filename)
+	public <K, V> void saveResults(Map<K, V> data, ArrayList<String> columns, String filename) 
+        throws IOException
 	{
-		try
-		{
-		    File file = new File(outputDir + filename);
-		    FileWriter fileWriter;
-		    
-		    if (! file.exists())
-	        {
-		        fileWriter = new FileWriter(outputDir + filename);
-		        writeRow(fileWriter, columns);
-	        }
-		    else
-		    {
-		        fileWriter = new FileWriter(outputDir + filename, true);
-		    }
+	    File file = new File(outputDir + filename);
+	    FileWriter fileWriter;
+	    
+	    if (! file.exists())
+        {
+	        fileWriter = new FileWriter(outputDir + filename);
+	        writeRow(fileWriter, columns);
+        }
+	    else
+	    {
+	        fileWriter = new FileWriter(outputDir + filename, true);
+	    }
 
-		    		    
-		    /* Get all of the keys */ 
-			for (Object key : data.keySet())
-			{
-			    ArrayList<String> list = new ArrayList<String>();
-			    list.add(String.valueOf(key));
-                list.add(String.valueOf(data.get(key)));
-                
-                writeRow(fileWriter, list);
-			}
-			
-			fileWriter.flush();
-			fileWriter.close();
-		}
-		catch (IOException e)
+	    		    
+	    /* Get all of the keys */ 
+		for (Object key : data.keySet())
 		{
-			e.printStackTrace();
-			return false;
+		    ArrayList<String> list = new ArrayList<String>();
+		    list.add(String.valueOf(key));
+            list.add(String.valueOf(data.get(key)));
+            
+            writeRow(fileWriter, list);
 		}
 		
-		return true;
+		fileWriter.flush();
+		fileWriter.close();
 	}	
 	
-	private void writeRow(FileWriter writer, ArrayList<String> columns) throws IOException
+	private void writeRow(FileWriter writer, ArrayList<String> columns)
+        throws IOException
 	{
 		for (int i = 0; i < columns.size(); i++)
 		{
@@ -101,51 +93,42 @@ public class OutputWriter
 	 * @param data <Integer, ArrayList<Integer>> run number -> list of columns involved
 	 * @param columns
 	 * @param filename
-	 * @return
+	 * @throws IOException 
 	 */
-	public <K, E> boolean saveResultsMul(Map<K, ArrayList<E>> data, ArrayList<String> columns, String filename)
+	public <K, E> void saveResultsMul(Map<K, ArrayList<E>> data, ArrayList<String> columns, String filename)
+        throws IOException
 	{
-		try
-		{
-            File file = new File(outputDir + filename);
-            FileWriter fileWriter;
-            
-            if (! file.exists())
-            {
-                fileWriter = new FileWriter(outputDir + filename);
-                writeRow(fileWriter, columns);
-            }
-            else
-            {
-                fileWriter = new FileWriter(outputDir + filename, true);
-            }
-			
-            
-			/* Get all of the keys */ 
-            for (Object key : data.keySet())
-            {
-                ArrayList<String> list = new ArrayList<String>();
-                list.add(String.valueOf(key));
-                
-                /* Get the list of all the columns */ 
-                for (Object value : data.get(key))
-                {
-                    list.add(String.valueOf(value));
-                }
-                
-                /* Write the columns to the file */ 
-                writeRow(fileWriter, list);
-            }
-			
-			fileWriter.flush();
-			fileWriter.close();
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-			return false;
-		}
+        File file = new File(outputDir + filename);
+        FileWriter fileWriter;
+        
+        if (! file.exists())
+        {
+            fileWriter = new FileWriter(outputDir + filename);
+            writeRow(fileWriter, columns);
+        }
+        else
+        {
+            fileWriter = new FileWriter(outputDir + filename, true);
+        }
 		
-		return true;
+        
+		/* Get all of the keys */ 
+        for (Object key : data.keySet())
+        {
+            ArrayList<String> list = new ArrayList<String>();
+            list.add(String.valueOf(key));
+            
+            /* Get the list of all the columns */ 
+            for (Object value : data.get(key))
+            {
+                list.add(String.valueOf(value));
+            }
+            
+            /* Write the columns to the file */ 
+            writeRow(fileWriter, list);
+        }
+		
+		fileWriter.flush();
+		fileWriter.close();
 	}
 }

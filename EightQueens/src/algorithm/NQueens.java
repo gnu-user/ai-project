@@ -108,47 +108,56 @@ public class NQueens
 	{
 	    OutputWriter ow = new OutputWriter(outputDir);
 	    
-	    /* Write the number of solutions found and the generation */
-	    ow.saveResults(solutionGeneration,  
-	                   new ArrayList<String>() {{ add("solution"); add("generation");}}, 
-	                   "solution_generation_" + runNumber + ".csv");
-	    
-	    
-	    /* Write the number of duplicate solutions found for each generation */
-	    ow.saveResults(duplicateSolution, 
-	                   new ArrayList<String>() {{ add("generation"); add("duplicates");}}, 
-	                   "duplicate_solutions_" + runNumber + ".csv");
-	    
-	    
-	    /* Write the number of rotation misses found for each generation */
-        ow.saveResults(rotationMiss, 
-                       new ArrayList<String>() {{ add("generation"); add("misses");}}, 
-                       "rotation_misses_" + runNumber + ".csv");
-        
-        
-        /* Write the number of reflection misses found for each generation */
-        ow.saveResults(reflectionMiss, 
-                       new ArrayList<String>() {{ add("generation"); add("misses");}}, 
-                       "reflection_misses_" + runNumber + ".csv");
-        
-        
-        /* Write the fitness statistics for each generation */
-        ow.saveResultsMul(fitnessStats, 
-                new ArrayList<String>() {{ add("generation"); add("min"); add("mean"); 
-                                           add("Q1"); add("median"); add("Q3");
-                                           add("max"); add("std");}}, 
-                "fitness_stats_" + runNumber + ".csv");
-	 
-        /* Write the chromosome similarity for each generation */
-        ow.saveResults(similarity, 
-                       new ArrayList<String>() {{ add("generation"); add("similarity");}}, 
-                       "chromosome_similarity_" + runNumber + ".csv");
-        
-        /* Write the mutation rate for each generation */
-        ow.saveResults(mutationRate, 
-                       new ArrayList<String>() {{ add("generation"); add("mutation");}}, 
-                       "mutation_rate_" + runNumber + ".csv");
-       
+	    try
+	    {
+    	    /* Write the number of solutions found and the generation */
+    	    ow.saveResults(solutionGeneration,  
+    	                   new ArrayList<String>() {{ add("solution"); add("generation");}}, 
+    	                   "solution_generation_" + runNumber + ".csv");
+    	    
+    	    
+    	    /* Write the number of duplicate solutions found for each generation */
+    	    ow.saveResults(duplicateSolution, 
+    	                   new ArrayList<String>() {{ add("generation"); add("duplicates");}}, 
+    	                   "duplicate_solutions_" + runNumber + ".csv");
+    	    
+    	    
+    	    /* Write the number of rotation misses found for each generation */
+            ow.saveResults(rotationMiss, 
+                           new ArrayList<String>() {{ add("generation"); add("misses");}}, 
+                           "rotation_misses_" + runNumber + ".csv");
+            
+            
+            /* Write the number of reflection misses found for each generation */
+            ow.saveResults(reflectionMiss, 
+                           new ArrayList<String>() {{ add("generation"); add("misses");}}, 
+                           "reflection_misses_" + runNumber + ".csv");
+            
+            
+            /* Write the fitness statistics for each generation */
+            ow.saveResultsMul(fitnessStats, 
+                    new ArrayList<String>() {{ add("generation"); add("min"); add("mean"); 
+                                               add("Q1"); add("median"); add("Q3");
+                                               add("max"); add("std");}}, 
+                    "fitness_stats_" + runNumber + ".csv");
+    	 
+            /* Write the chromosome similarity for each generation */
+            ow.saveResults(similarity, 
+                           new ArrayList<String>() {{ add("generation"); add("similarity");}}, 
+                           "chromosome_similarity_" + runNumber + ".csv");
+            
+            /* Write the mutation rate for each generation */
+            ow.saveResults(mutationRate, 
+                           new ArrayList<String>() {{ add("generation"); add("mutation");}}, 
+                           "mutation_rate_" + runNumber + ".csv");
+	    }
+	    /* Exit if a write error occurs, no point in continuing with missing data */
+	    catch (IOException e)
+        {
+	        System.err.println("FATAL ERROR: Failed to write results to file!");
+            e.printStackTrace();
+            System.exit(1);
+        }
         
         /* Clear all of the data */
         solutionGeneration.clear();

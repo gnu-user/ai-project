@@ -1,5 +1,6 @@
 package algorithm;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
@@ -19,8 +20,16 @@ public class testOutputWriter {
         ht2.put(999, 1);
 		
 		
-		System.out.println(ow.saveResults(ht, al, "test.csv"));
-		System.out.println(ow.saveResults(ht2, al, "test.csv"));
+		try
+        {
+            ow.saveResults(ht, al, "test.csv");
+            ow.saveResults(ht2, al, "test.csv");
+        }
+        catch (IOException e1)
+        {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
 		
 		LinkedHashMap<Integer, ArrayList<Integer>> ot = new LinkedHashMap<Integer, ArrayList<Integer>>();
 		
@@ -45,7 +54,15 @@ public class testOutputWriter {
 		
 		
 		
-		System.out.println(ow.saveResultsMul(ot, co, "test2.csv"));
+		try
+        {
+            ow.saveResultsMul(ot, co, "test2.csv");
+        }
+        catch (IOException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 	}
 
 }
