@@ -88,7 +88,7 @@ public class NQueens
 	private static LinkedHashMap<Integer, Integer> duplicateSolution= new LinkedHashMap<Integer, Integer>();
 	private static LinkedHashMap<Integer, Integer> rotationMiss = new LinkedHashMap<Integer, Integer>();
 	private static LinkedHashMap<Integer, Integer> reflectionMiss = new LinkedHashMap<Integer, Integer>();
-	private static LinkedHashMap<Integer, ArrayList<Double>> fitnessStats = new LinkedHashMap<Integer, ArrayList<Double>>();
+	private static LinkedHashMap<Integer, Double> fitnessStats = new LinkedHashMap<Integer, Double>();
 	private static LinkedHashMap<Integer, Double> similarity = new LinkedHashMap<Integer, Double>();
 	private static LinkedHashMap<Integer, Double> mutationRate = new LinkedHashMap<Integer, Double>();
 	
@@ -135,10 +135,8 @@ public class NQueens
             
             
             /* Write the fitness statistics for each generation */
-            ow.saveResultsMul(fitnessStats, 
-                    new ArrayList<String>() {{ add("generation"); add("min"); add("mean"); 
-                                               add("Q1"); add("median"); add("Q3");
-                                               add("max"); add("std");}}, 
+            ow.saveResults(fitnessStats, 
+                    new ArrayList<String>() {{ add("generation"); add("mean_fitness");}}, 
                     "fitness_stats_" + runNumber + ".csv");
     	 
             /* Write the chromosome similarity for each generation */
@@ -283,30 +281,6 @@ public class NQueens
 		{
 			population.add(new Chromosome(random, numQueens));
 		}
-	}
-
-	
-	/**
-	 * Calculates the fitness statistics for the current generation and returns an
-	 * arraylist containing the min, mean, Q1, median, Q3, max, and std.
-	 * 
-	 * @param fitness The fitness object for the current population
-	 * @return An arraylist of the min, mean, Q1, median, Q3, max, and std.
-	 */
-	public static ArrayList<Double> getFitnessStats(HashMap<Chromosome, Double> fitness)
-	{
-        DescriptiveStatistics descStats = new DescriptiveStatistics(Doubles.toArray(fitness.values()));
-        
-        ArrayList<Double> stats = new ArrayList<Double>();
-        stats.add(descStats.getMin());
-        stats.add(descStats.getMean());
-        stats.add(descStats.getPercentile(25.0));
-        stats.add(descStats.getPercentile(50.0));
-        stats.add(descStats.getPercentile(75.0));
-        stats.add(descStats.getMax());
-        stats.add(descStats.getStandardDeviation());
-        
-        return stats;
 	}
 	
 	
@@ -525,8 +499,9 @@ public class NQueens
 				}
 			}
 						
-			/* Save the fitness stats for the current generation */
-			fitnessStats.put(numGenerations,  getFitnessStats(fitness));
+			/* Save average fitness for the current generation */
+			DescriptiveStatistics descStats = new DescriptiveStatistics(Doubles.toArray(fitness.values()));
+			fitnessStats.put(numGenerations,  descStats.getMean());
 			
 			/* Save chromosome similarity and mutation rate for current generation */
 			similarity.put(numGenerations, curSimilarity);
