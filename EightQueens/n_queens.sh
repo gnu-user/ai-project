@@ -25,4 +25,3 @@
 ###############################################################################
 
 java -d64 -Xms1024m -Xmx4096m -jar /home/jgillett/ai-project/EightQueens/bin/NQueens.jar "$@"
-exit $?
