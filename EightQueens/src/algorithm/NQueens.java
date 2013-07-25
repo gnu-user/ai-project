@@ -59,8 +59,8 @@ public class NQueens
     @Option(name="-q", usage="The number of queens, the default is 8")
     private static Integer numQueens = 8;
     
-    @Option(name="-g", usage="The maximum number of generations before terminating, the default is 100 Million")
-    private static Integer maxGenerations = 100000000;
+    @Option(name="-g", usage="The maximum number of generations before terminating, the default is 10 Million")
+    private static Integer maxGenerations = 10000000;
     
     @Option(name="-o", required=true, metaVar="OUTPUT", usage="The output directory to store the results")
     private static String outputDir;
