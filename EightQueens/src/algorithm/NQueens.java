@@ -87,13 +87,14 @@ public class NQueens
 	private static ArrayList<Double> fitnessBuffer = new ArrayList<Double>();
 	private static ArrayList<Double> similarityBuffer = new ArrayList<Double>();
 	private static ArrayList<Double> mutationBuffer = new ArrayList<Double>();
+	private static HashMap<Integer, Integer> duplicateBuffer = new HashMap<Integer, Integer>();
 	
 	
 	/* Data for calculating descriptive statistics */
 	private static LinkedHashMap<Integer, Integer> solutionGeneration = new LinkedHashMap<Integer, Integer>();
-	private static LinkedHashMap<Integer, Integer> duplicateSolution= new LinkedHashMap<Integer, Integer>();
 	private static LinkedHashMap<Integer, Integer> rotationMiss = new LinkedHashMap<Integer, Integer>();
 	private static LinkedHashMap<Integer, Integer> reflectionMiss = new LinkedHashMap<Integer, Integer>();
+	private static LinkedHashMap<Integer, ArrayList<Double>> duplicateStats = new LinkedHashMap<Integer, ArrayList<Double>>();
 	private static LinkedHashMap<Integer, Double> fitnessStats = new LinkedHashMap<Integer, Double>();
 	private static LinkedHashMap<Integer, Double> similarityStats = new LinkedHashMap<Integer, Double>();
 	private static LinkedHashMap<Integer, Double> mutationStats = new LinkedHashMap<Integer, Double>();
@@ -111,10 +112,11 @@ public class NQueens
 	 * 
 	 * @param units The units for generations such as thousands (1000) or millions.
 	 */
+	@SuppressWarnings("serial")
 	public static void calcStatistics(int units)
 	{
 	    /* Calculate fitness stats */
-        DescriptiveStatistics descStats = new DescriptiveStatistics(Doubles.toArray(fitnessBuffer));
+	    DescriptiveStatistics descStats = new DescriptiveStatistics(Doubles.toArray(fitnessBuffer));
         fitnessStats.put((int) Math.ceil(numGenerations / (double) units), descStats.getMean());
         
         /* Calculate chromosome similarity stats */
@@ -128,10 +130,32 @@ public class NQueens
             mutationStats.put((int) Math.ceil(numGenerations / (double) units), descStats.getMean());
         }
         
+        /* Calculate the duplicate solutions statistics */
+        if (duplicateBuffer.size() > 0)
+        {
+            final DescriptiveStatistics descDupStats = new DescriptiveStatistics(Doubles.toArray(duplicateBuffer.values()));
+            duplicateStats.put((int) Math.ceil(numGenerations / (double) units), 
+                                new ArrayList<Double>() {{ 
+                                           add((double) duplicateBuffer.size()); 
+                                           add(descDupStats.getMean());
+                                    }}
+            );
+        }
+        else
+        {
+            duplicateStats.put((int) Math.ceil(numGenerations / (double) units), 
+                    new ArrayList<Double>() {{ 
+                            add(0.0); 
+                            add(0.0);
+                        }}
+            );
+        }
+        
         /* Clear the buffers */
 		mutationBuffer.clear();
         fitnessBuffer.clear();
         similarityBuffer.clear();
+        duplicateBuffer.clear();
 	}
 	
 	
@@ -153,10 +177,10 @@ public class NQueens
     	                   "solution_generation_" + runNumber + ".csv");
     	    
     	    
-    	    /* Write the number of duplicate solutions found for each generation */
-    	    ow.saveResults(duplicateSolution, 
-    	                   new ArrayList<String>() {{ add("generation"); add("duplicates");}}, 
-    	                   "duplicate_solutions_" + runNumber + ".csv");
+    	    /* Write the number of duplicate statistics aggregated for every 1000 generations */
+    	    ow.saveResultsMul(duplicateStats, 
+    	                      new ArrayList<String>() {{ add("generation"); add("n"); add("duplicates");}}, 
+    	                      "duplicate_solutions_" + runNumber + ".csv");
     	    
     	    
     	    /* Write the number of rotation misses found for each generation */
@@ -176,10 +200,12 @@ public class NQueens
                     new ArrayList<String>() {{ add("generation"); add("fitness");}}, 
                     "fitness_stats_" + runNumber + ".csv");
     	 
+            
             /* Write the chromosome similarity statistics aggregated for every 1000 generations */
             ow.saveResults(similarityStats, 
                            new ArrayList<String>() {{ add("generation"); add("similarity");}}, 
                            "chromosome_similarity_" + runNumber + ".csv");
+            
             
             /* Write the mutation rate statistics aggregated for every 1000 generations */
             if (mutation == null)
@@ -199,7 +225,7 @@ public class NQueens
         
         /* Clear all of the data */
         solutionGeneration.clear();
-        duplicateSolution.clear();
+        duplicateStats.clear();
         rotationMiss.clear();
         reflectionMiss.clear();
         fitnessStats.clear();
@@ -527,13 +553,13 @@ public class NQueens
     				}
     				else
     				{
-                        if (duplicateSolution.containsKey(numGenerations))
+                        if (duplicateBuffer.containsKey(numGenerations))
                         {
-                            duplicateSolution.put(numGenerations, duplicateSolution.get(numGenerations) + 1);
+                            duplicateBuffer.put(numGenerations, duplicateBuffer.get(numGenerations) + 1);
                         }
                         else
                         {
-                            duplicateSolution.put(numGenerations, 1);
+                            duplicateBuffer.put(numGenerations, 1);
                         }
     				}
 				}
