@@ -25,9 +25,13 @@
 
 OUTPUT_DIR=""
 LOG_DIR="/scratch/jgillett/log/n_queens/"
-NUM_RUNS=($(seq 1 1 30))
+RUN_NUMBER_SHORT=(1)
+RUNS_SHORT=30
+RUN_NUMBER_LONG=(1 16)
+RUNS_LONG=15
 MUTATION_RATES=(0.01 $(seq 0.05 0.05 1.0))
-QUEENS=($(seq 8 1 16))
+QUEENS_SHORT=($(seq 8 1 12))
+QUEENS_LONG=($(seq 13 1 16))
 
 
 # Make sure the user provided the path
@@ -64,21 +68,39 @@ do
 done
 
 
-# Execute multiple jobs for each N Queens problem
-for run_num in ${NUM_RUNS[@]}
+# Execute multiple jobs for each N Queens short problem
+for run_num in ${RUN_NUMBER_SHORT[@]}
 do
-    for queen in ${QUEENS[@]}
+    for queen in ${QUEENS_SHORT[@]}
     do
         # Execute the job for variable mutation rate
         log_file=q_${queen}_variable_${run_num}.log
-        sqsub -q serial -r 8h --mpp 6G -o ${LOG_DIR}/${queen}/${log_file} n_queens.sh -o "${OUTPUT_DIR}" -r ${run_num} -q ${queen} -s 0
+        sqsub -q serial -r 7d --mpp 6G -o ${LOG_DIR}/${queen}/${log_file} n_queens.sh -o "${OUTPUT_DIR}" -r ${run_num} -n ${RUNS_SHORT} -q ${queen} -s 0
 
         # Execute the job for each of the fixed mutation rates
         for rate in ${MUTATION_RATES[@]}
         do
             log_file=q_${queen}_${rate}_${run_num}.log
-            sqsub -q serial -r 8h --mpp 6G -o ${LOG_DIR}/${queen}/${log_file} n_queens.sh -o "${OUTPUT_DIR}" -r ${run_num} -m ${rate} -q ${queen} -s 0
+            sqsub -q serial -r 7d --mpp 6G -o ${LOG_DIR}/${queen}/${log_file} n_queens.sh -o "${OUTPUT_DIR}" -r ${run_num} -n ${RUNS_SHORT} -m ${rate} -q ${queen} -s 0
         done
     done
 done
 
+
+# Execute multiple jobs for each N Queens long problem
+for run_num in ${RUN_NUMBER_LONG[@]}
+do
+    for queen in ${QUEENS_LONG[@]}
+    do
+        # Execute the job for variable mutation rate
+        log_file=q_${queen}_variable_${run_num}.log
+        sqsub -q serial -r 7d --mpp 6G -o ${LOG_DIR}/${queen}/${log_file} n_queens.sh -o "${OUTPUT_DIR}" -r ${run_num} -n ${RUNS_LONG} -q ${queen} -s 0
+
+        # Execute the job for each of the fixed mutation rates
+        for rate in ${MUTATION_RATES[@]}
+        do
+            log_file=q_${queen}_${rate}_${run_num}.log
+            sqsub -q serial -r 7d --mpp 6G -o ${LOG_DIR}/${queen}/${log_file} n_queens.sh -o "${OUTPUT_DIR}" -r ${run_num} -n ${RUNS_LONG} -m ${rate} -q ${queen} -s 0
+        done
+    done
+done
