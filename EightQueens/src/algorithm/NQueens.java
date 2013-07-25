@@ -68,6 +68,9 @@ public class NQueens
     @Option(name="-r", required=true, usage="The program run number, a unique identifier")
     private static Integer runNumber;
     
+    @Option(name="-n", usage="Multi-run mode, the number of times to re-run the program, default is 1")
+    private static Integer numRuns = 1;
+    
     @Option(name="-s", usage="Number of solutions to display, default is 10")
     private static Integer numDisplay = 10;
 	
@@ -350,6 +353,39 @@ public class NQueens
 	}
 	
 	
+	/**
+	 * In the case of mult-run mode resets the current program state so that another
+	 * fresh execution can be done.
+	 */
+	public static void reset()
+	{
+	    /* Reset chromosome population and solutions */
+	    population.clear();
+	    solutions.clear();
+	    
+	    /* Reset buffers */
+	    fitnessBuffer.clear();
+	    similarityBuffer.clear();
+	    mutationBuffer.clear();
+	    duplicateBuffer.clear();
+	    
+	    /* Reset statistics */
+	    solutionGeneration.clear();
+	    rotationMiss.clear();
+	    reflectionMiss.clear();
+	    duplicateStats.clear();
+	    fitnessStats.clear();
+	    similarityStats.clear();
+	    mutationStats.clear();
+	    
+	    /* Rest counters, indexes */
+	    random = new Random();
+	    numGenerations = 1;
+	    curSimilarity = 0.0;
+	    curIndex = 0;
+	}
+	
+	
 	public static void main(String[] args) throws InterruptedException, IOException
 	{
 	    new NQueens().doMain(args);
@@ -406,221 +442,229 @@ public class NQueens
         }
 
         
-		/* Create an initial population of uniformly random chromosomes */
-		initPopulation();
-
-		/* Initialize the Breed operation */
-        if (mutation != null)
+        for (int count = 0; count < numRuns; ++count)
         {
-            Breed.init(new Random(), mutation);
-        }
-        else
-        {
-            Breed.init(new Random());
-        }
-
-        
-        /* Iterate until all of the solutions for the N queens problem has been found */
-		while (solutions.size() < distinctSolutions[numQueens - 1] && numGenerations <= maxGenerations)
-		{
-			/* If the percentage of similar chromosomes due to in-breeding exceeds
-			 * the minimum threshold value, increase the amount of mutation
-			 */
-		    curSimilarity = similarChromosomes(population);
-			if (mutation == null)
-			{
-			    if(curSimilarity >= inbreedingThreshold)
+    		/* Create an initial population of uniformly random chromosomes */
+    		initPopulation();
+    
+    		/* Initialize the Breed operation */
+            if (mutation != null)
+            {
+                Breed.init(new Random(), mutation);
+            }
+            else
+            {
+                Breed.init(new Random());
+            }
+    
+            
+            /* Iterate until all of the solutions for the N queens problem has been found */
+    		while (solutions.size() < distinctSolutions[numQueens - 1] && numGenerations <= maxGenerations)
+    		{
+    			/* If the percentage of similar chromosomes due to in-breeding exceeds
+    			 * the minimum threshold value, increase the amount of mutation
+    			 */
+    		    curSimilarity = similarChromosomes(population);
+    			if (mutation == null)
     			{
-    				Breed.inBreeding(true);
+    			    if(curSimilarity >= inbreedingThreshold)
+        			{
+        				Breed.inBreeding(true);
+        			}
+        			else
+        			{
+        				Breed.inBreeding(false);
+        			}
     			}
-    			else
+    			
+    			
+    			/* Calculate the fitness distribution of the current population */
+    			HashMap<Chromosome, Double> fitness = Fitness.calculate(population);			
+    			
+    			
+    			/* Instantiate the selection iterator using the fitness distribution,
+    			 * the selection iterator uses roulette wheel selection to select
+    			 * each chromosome.
+    			 */
+    			Selection selection = new Selection(new Random());
+    			selection.init(fitness);
+    			
+    			
+    			/* Generate the next population by selecting chromosomes from the current
+    			 * population using selection iterator and applying the cloning, crossover,
+    			 * and mutation operations.
+    			 */
+    			ArrayList<Chromosome> nextPopulation =  new ArrayList<Chromosome>(populationSize);
+    			ArrayList<Chromosome> chromosomes = new ArrayList<Chromosome>(2);
+    			
+    			
+    			while (nextPopulation.size() < populationSize)
     			{
-    				Breed.inBreeding(false);
-    			}
-			}
-			
-			
-			/* Calculate the fitness distribution of the current population */
-			HashMap<Chromosome, Double> fitness = Fitness.calculate(population);			
-			
-			
-			/* Instantiate the selection iterator using the fitness distribution,
-			 * the selection iterator uses roulette wheel selection to select
-			 * each chromosome.
-			 */
-			Selection selection = new Selection(new Random());
-			selection.init(fitness);
-			
-			
-			/* Generate the next population by selecting chromosomes from the current
-			 * population using selection iterator and applying the cloning, crossover,
-			 * and mutation operations.
-			 */
-			ArrayList<Chromosome> nextPopulation =  new ArrayList<Chromosome>(populationSize);
-			ArrayList<Chromosome> chromosomes = new ArrayList<Chromosome>(2);
-			
-			
-			while (nextPopulation.size() < populationSize)
-			{
-				/* Select a random number and apply the breeding operation */
-				Integer randomNum = random.nextInt(100);
-				
-				/* Pair of parent chromosomes continue on to the next generation.*/
-				if (Breed.CLONING.contains(randomNum))
-				{
-					chromosomes.addAll(Breed.cloning(selection));
-				}
-				/* Pair of parent chromosomes are cross-overed to create new pair */
-				else if (Breed.CROSSOVER.contains(randomNum))
-				{
-					chromosomes.addAll(Breed.crossover(selection));
-				}
-				
-				/* Apply the background mutation operator to the chromosomes */
-				for (Chromosome chromosome : chromosomes)
-				{
-					randomNum = random.nextInt(100);
-					
-					if (Breed.MUTATION.contains(randomNum))
-					{
-						nextPopulation.add(Breed.mutation(chromosome));
-					}
-					else
-					{
-						nextPopulation.add(chromosome);
-					}
-				}
-				chromosomes.clear();
-			}
-			
-			
-			/* If there are any solutions (fitness of 1) that are unique save them */
-			for (Chromosome chromosome : fitness.keySet())
-			{
-				if (fitness.get(chromosome) == 1.0)
-				{
-				    if (uniqueSolution(chromosome))
-				    {
-    					/* Save a copy of the chromosome */
-    				    Chromosome solution = new Chromosome(new ArrayList<Integer>(chromosome.get()), chromosome.size());
-    					solutions.add(solution);
-    					solutionGeneration.put(solutions.size(), numGenerations);
+    				/* Select a random number and apply the breeding operation */
+    				Integer randomNum = random.nextInt(100);
+    				
+    				/* Pair of parent chromosomes continue on to the next generation.*/
+    				if (Breed.CLONING.contains(randomNum))
+    				{
+    					chromosomes.addAll(Breed.cloning(selection));
+    				}
+    				/* Pair of parent chromosomes are cross-overed to create new pair */
+    				else if (Breed.CROSSOVER.contains(randomNum))
+    				{
+    					chromosomes.addAll(Breed.crossover(selection));
+    				}
+    				
+    				/* Apply the background mutation operator to the chromosomes */
+    				for (Chromosome chromosome : chromosomes)
+    				{
+    					randomNum = random.nextInt(100);
     					
-    					/* Perform three rotations then a reflection followed by three more rotations */
-    					for (int i = 0; i < 6; ++i)
+    					if (Breed.MUTATION.contains(randomNum))
     					{
-    						rotation = Transformation.rotate(solutions.get(solutions.size() - 1));
-    						
-    						if (uniqueSolution(rotation))
-    						{ 
-    							solutions.add(rotation);
-    							solutionGeneration.put(solutions.size(), numGenerations);
-    						}
-                            else
-                            {
-                                if (rotationMiss.containsKey(numGenerations))
-                                {
-                                    rotationMiss.put(numGenerations, rotationMiss.get(numGenerations) + 1);
-                                }
+    						nextPopulation.add(Breed.mutation(chromosome));
+    					}
+    					else
+    					{
+    						nextPopulation.add(chromosome);
+    					}
+    				}
+    				chromosomes.clear();
+    			}
+    			
+    			
+    			/* If there are any solutions (fitness of 1) that are unique save them */
+    			for (Chromosome chromosome : fitness.keySet())
+    			{
+    				if (fitness.get(chromosome) == 1.0)
+    				{
+    				    if (uniqueSolution(chromosome))
+    				    {
+        					/* Save a copy of the chromosome */
+        				    Chromosome solution = new Chromosome(new ArrayList<Integer>(chromosome.get()), chromosome.size());
+        					solutions.add(solution);
+        					solutionGeneration.put(solutions.size(), numGenerations);
+        					
+        					/* Perform three rotations then a reflection followed by three more rotations */
+        					for (int i = 0; i < 6; ++i)
+        					{
+        						rotation = Transformation.rotate(solutions.get(solutions.size() - 1));
+        						
+        						if (uniqueSolution(rotation))
+        						{ 
+        							solutions.add(rotation);
+        							solutionGeneration.put(solutions.size(), numGenerations);
+        						}
                                 else
                                 {
-                                    rotationMiss.put(numGenerations, 1);
-                                }
-                            }
-    					
-    						if (i == 2)
-    						{
-            					reflection =  Transformation.reflect(solution);
-            					
-                                if (uniqueSolution(reflection))
-                                {
-                                    solutions.add(reflection);
-                                    solutionGeneration.put(solutions.size(), numGenerations);
-                                }
-                                else
-                                {
-                                    if (reflectionMiss.containsKey(numGenerations))
+                                    if (rotationMiss.containsKey(numGenerations))
                                     {
-                                        reflectionMiss.put(numGenerations, reflectionMiss.get(numGenerations) + 1);
+                                        rotationMiss.put(numGenerations, rotationMiss.get(numGenerations) + 1);
                                     }
                                     else
                                     {
-                                        reflectionMiss.put(numGenerations, 1);
+                                        rotationMiss.put(numGenerations, 1);
                                     }
                                 }
-    						}
-    					}
+        					
+        						if (i == 2)
+        						{
+                					reflection =  Transformation.reflect(solution);
+                					
+                                    if (uniqueSolution(reflection))
+                                    {
+                                        solutions.add(reflection);
+                                        solutionGeneration.put(solutions.size(), numGenerations);
+                                    }
+                                    else
+                                    {
+                                        if (reflectionMiss.containsKey(numGenerations))
+                                        {
+                                            reflectionMiss.put(numGenerations, reflectionMiss.get(numGenerations) + 1);
+                                        }
+                                        else
+                                        {
+                                            reflectionMiss.put(numGenerations, 1);
+                                        }
+                                    }
+        						}
+        					}
+        				}
+        				else
+        				{
+                            if (duplicateBuffer.containsKey(numGenerations))
+                            {
+                                duplicateBuffer.put(numGenerations, duplicateBuffer.get(numGenerations) + 1);
+                            }
+                            else
+                            {
+                                duplicateBuffer.put(numGenerations, 1);
+                            }
+        				}
     				}
-    				else
-    				{
-                        if (duplicateBuffer.containsKey(numGenerations))
-                        {
-                            duplicateBuffer.put(numGenerations, duplicateBuffer.get(numGenerations) + 1);
-                        }
-                        else
-                        {
-                            duplicateBuffer.put(numGenerations, 1);
-                        }
-    				}
-				}
-			}
-						
-			/* Save average fitness for the current generation */
-			DescriptiveStatistics descStats = new DescriptiveStatistics(Doubles.toArray(fitness.values()));
-			fitnessBuffer.add(descStats.getMean());
-			
-			/* Save chromosome similarity and mutation rate for current generation */
-			similarityBuffer.add(curSimilarity);
-			
-			/* Save the variable mutation rate */
-			if (mutation == null)
-            {
-			    mutationBuffer.add((Breed.MUTATION.upperEndpoint() - Breed.MUTATION.lowerEndpoint()) / 100.0);
-            }
-			
-			/* Calculate statistics for the fitness, similarity, and mutation buffer every 1000, generations */
-			if ((numGenerations % 1000) == 0)
-			{
-			    calcStatistics(1000);
-			}
-			
-            /* Write the current results to file every 10,000 generations */
-            if ((numGenerations % 10000) == 0)
-            {
-                writeResults();
-            }
-			
-			/* Set the current population as the NEXT population */
-			fitness.clear();
-			population = nextPopulation;			
-			
-			++numGenerations;			
-		}
-		
-		
-        /* Calculate statistics and write any remaining results */
-		if (fitnessBuffer.size() > 0)
-		{
-		    calcStatistics(1000);
-		}
-	    writeResults();
-		
-		
-		/* Display random solutions for the number of solutions specified */
-		for (int j = 0; j < numDisplay; ++j)
-		{
-		    /* Display a random solution */
-		    Chromosome solution = solutions.get(random.nextInt(solutions.size()));
-		    
-			try
-			{
-			    QueenGame myGame = new QueenGame (new QueenBoard(Ints.toArray(solution.get()), numQueens));
-				myGame.playGame(outputDir + "/figures/" + "figure_run_" + String.valueOf(runNumber) + "_" + j + ".png");
-			}
-			catch (Exception e)
-			{
-				System.out.println("Bad set of Queens");
-			}
-		}
+    			}
+    						
+    			/* Save average fitness for the current generation */
+    			DescriptiveStatistics descStats = new DescriptiveStatistics(Doubles.toArray(fitness.values()));
+    			fitnessBuffer.add(descStats.getMean());
+    			
+    			/* Save chromosome similarity and mutation rate for current generation */
+    			similarityBuffer.add(curSimilarity);
+    			
+    			/* Save the variable mutation rate */
+    			if (mutation == null)
+                {
+    			    mutationBuffer.add((Breed.MUTATION.upperEndpoint() - Breed.MUTATION.lowerEndpoint()) / 100.0);
+                }
+    			
+    			/* Calculate statistics for the fitness, similarity, and mutation buffer every 1000, generations */
+    			if ((numGenerations % 1000) == 0)
+    			{
+    			    calcStatistics(1000);
+    			}
+    			
+                /* Write the current results to file every 10,000 generations */
+                if ((numGenerations % 10000) == 0)
+                {
+                    writeResults();
+                }
+    			
+    			/* Set the current population as the NEXT population */
+    			fitness.clear();
+    			population = nextPopulation;			
+    			
+    			++numGenerations;			
+    		}
+    		
+    		
+            /* Calculate statistics and write any remaining results */
+    		if (fitnessBuffer.size() > 0)
+    		{
+    		    calcStatistics(1000);
+    		}
+    	    writeResults();
+    		
+    		
+    		/* Display random solutions for the number of solutions specified */
+    		for (int j = 0; j < numDisplay; ++j)
+    		{
+    		    /* Display a random solution */
+    		    Chromosome solution = solutions.get(random.nextInt(solutions.size()));
+    		    
+    			try
+    			{
+    			    QueenGame myGame = new QueenGame (new QueenBoard(Ints.toArray(solution.get()), numQueens));
+    				myGame.playGame(outputDir + "/figures/" + "figure_run_" + String.valueOf(runNumber) + "_" + j + ".png");
+    			}
+    			catch (Exception e)
+    			{
+    				System.out.println("Bad set of Queens");
+    			}
+    		}
+    		
+    		
+    		/* Reset the current state for the next run and increment run number */
+    		reset();
+    		++runNumber;
+        }
 	}
 }
