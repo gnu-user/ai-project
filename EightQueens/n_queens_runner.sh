@@ -32,6 +32,7 @@ RUNS_LONG=15
 MUTATION_RATES=(0.01 $(seq 0.05 0.05 1.0))
 QUEENS_SHORT=($(seq 8 1 12))
 QUEENS_LONG=($(seq 13 1 16))
+ALL_QUEENS=(${QUEENS_SHORT[@]} ${QUEENS_LONG[@]})
 
 
 # Make sure the user provided the path
@@ -59,7 +60,7 @@ then
 fi
 
 # Make a log directory for the sharcnet job execution logs
-for queen_dir in ${QUEENS[@]}
+for queen_dir in ${ALL_QUEENS[@]}
 do
     if [[ ! -d "$LOG_DIR/${queen_dir}" ]]
     then
