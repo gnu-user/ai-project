@@ -83,19 +83,56 @@ public class NQueens
 	private static Chromosome rotation;
 	private static Chromosome reflection;
 	
+	/* Buffers for storing the fitness, mutation, and similarity for multiple generations */
+	private static ArrayList<Double> fitnessBuffer = new ArrayList<Double>();
+	private static ArrayList<Double> similarityBuffer = new ArrayList<Double>();
+	private static ArrayList<Double> mutationBuffer = new ArrayList<Double>();
+	
+	
 	/* Data for calculating descriptive statistics */
 	private static LinkedHashMap<Integer, Integer> solutionGeneration = new LinkedHashMap<Integer, Integer>();
 	private static LinkedHashMap<Integer, Integer> duplicateSolution= new LinkedHashMap<Integer, Integer>();
 	private static LinkedHashMap<Integer, Integer> rotationMiss = new LinkedHashMap<Integer, Integer>();
 	private static LinkedHashMap<Integer, Integer> reflectionMiss = new LinkedHashMap<Integer, Integer>();
 	private static LinkedHashMap<Integer, Double> fitnessStats = new LinkedHashMap<Integer, Double>();
-	private static LinkedHashMap<Integer, Double> similarity = new LinkedHashMap<Integer, Double>();
-	private static LinkedHashMap<Integer, Double> mutationRate = new LinkedHashMap<Integer, Double>();
+	private static LinkedHashMap<Integer, Double> similarityStats = new LinkedHashMap<Integer, Double>();
+	private static LinkedHashMap<Integer, Double> mutationStats = new LinkedHashMap<Integer, Double>();
 	
 	private static Random random = new Random();
 	private static Integer numGenerations = 1;
 	private static Double curSimilarity = 0.0;
 	private static Integer curIndex = 0;
+	
+	
+	/**
+	 * Calculates statistics for the current data in the fitness, similarity, and mutation rate
+	 * buffers. After the statistics have been calculated they are added to the appropriate
+	 * fitnessStats, similarityStats, and mutationStats class members.
+	 * 
+	 * @param units The units for generations such as thousands (1000) or millions.
+	 */
+	public static void calcStatistics(int units)
+	{
+	    /* Calculate fitness stats */
+        DescriptiveStatistics descStats = new DescriptiveStatistics(Doubles.toArray(fitnessBuffer));
+        fitnessStats.put((int) Math.ceil(numGenerations / (double) units), descStats.getMean());
+        
+        /* Calculate chromosome similarity stats */
+        descStats = new DescriptiveStatistics(Doubles.toArray(similarityBuffer));
+        similarityStats.put((int) Math.ceil(numGenerations / (double) units), descStats.getMean());
+        
+        /* Calculate mutation rate stats for variable mutation */
+        if (mutation == null)
+        {
+            descStats = new DescriptiveStatistics(Doubles.toArray(mutationBuffer));
+            mutationStats.put((int) Math.ceil(numGenerations / (double) units), descStats.getMean());
+        }
+        
+        /* Clear the buffers */
+		mutationBuffer.clear();
+        fitnessBuffer.clear();
+        similarityBuffer.clear();
+	}
 	
 	
 	/**
@@ -134,20 +171,23 @@ public class NQueens
                            "reflection_misses_" + runNumber + ".csv");
             
             
-            /* Write the fitness statistics for each generation */
+            /* Write the fitness statistics aggregated for every 1000 generations */
             ow.saveResults(fitnessStats, 
-                    new ArrayList<String>() {{ add("generation"); add("mean_fitness");}}, 
+                    new ArrayList<String>() {{ add("generation"); add("fitness");}}, 
                     "fitness_stats_" + runNumber + ".csv");
     	 
-            /* Write the chromosome similarity for each generation */
-            ow.saveResults(similarity, 
+            /* Write the chromosome similarity statistics aggregated for every 1000 generations */
+            ow.saveResults(similarityStats, 
                            new ArrayList<String>() {{ add("generation"); add("similarity");}}, 
                            "chromosome_similarity_" + runNumber + ".csv");
             
-            /* Write the mutation rate for each generation */
-            ow.saveResults(mutationRate, 
-                           new ArrayList<String>() {{ add("generation"); add("mutation");}}, 
-                           "mutation_rate_" + runNumber + ".csv");
+            /* Write the mutation rate statistics aggregated for every 1000 generations */
+            if (mutation == null)
+            {
+                ow.saveResults(mutationStats, 
+                               new ArrayList<String>() {{ add("generation"); add("mutation");}}, 
+                               "mutation_rate_" + runNumber + ".csv");
+            }
 	    }
 	    /* Exit if a write error occurs, no point in continuing with missing data */
 	    catch (IOException e)
@@ -163,8 +203,8 @@ public class NQueens
         rotationMiss.clear();
         reflectionMiss.clear();
         fitnessStats.clear();
-        similarity.clear();
-        mutationRate.clear();
+        similarityStats.clear();
+        mutationStats.clear();
 	}
 	
 	
@@ -501,13 +541,23 @@ public class NQueens
 						
 			/* Save average fitness for the current generation */
 			DescriptiveStatistics descStats = new DescriptiveStatistics(Doubles.toArray(fitness.values()));
-			fitnessStats.put(numGenerations,  descStats.getMean());
+			fitnessBuffer.add(descStats.getMean());
 			
 			/* Save chromosome similarity and mutation rate for current generation */
-			similarity.put(numGenerations, curSimilarity);
-			mutationRate.put(numGenerations, (Breed.MUTATION.upperEndpoint() - Breed.MUTATION.lowerEndpoint()) / 100.0 );
+			similarityBuffer.add(curSimilarity);
 			
-	         
+			/* Save the variable mutation rate */
+			if (mutation == null)
+            {
+			    mutationBuffer.add((Breed.MUTATION.upperEndpoint() - Breed.MUTATION.lowerEndpoint()) / 100.0);
+            }
+			
+			/* Calculate statistics for the fitness, similarity, and mutation buffer every 1000, generations */
+			if ((numGenerations % 1000) == 0)
+			{
+			    calcStatistics(1000);
+			}
+			
             /* Write the current results to file every 10,000 generations */
             if ((numGenerations % 10000) == 0)
             {
@@ -522,8 +572,12 @@ public class NQueens
 		}
 		
 		
-		/* Write any remaining results */
-		writeResults();
+        /* Calculate statistics and write any remaining results */
+		if (fitnessBuffer.size() > 0)
+		{
+		    calcStatistics(1000);
+		}
+	    writeResults();
 		
 		
 		/* Display random solutions for the number of solutions specified */
