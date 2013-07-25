@@ -55,13 +55,13 @@ then
 fi
 
 # Make a log directory for the sharcnet job execution logs
-if [[ ! -d "${LOG_DIR}" ]]
-then
-    for queen_dir in ${QUEENS[@]}
-    do
-        mkdir -p $LOG_DIR/${queen_dir}
-    done
-fi
+for queen_dir in ${QUEENS[@]}
+do
+    if [[ ! -d "$LOG_DIR/${queen_dir}" ]]
+    then
+        mkdir -p "$LOG_DIR/${queen_dir}"
+    fi
+done
 
 
 # Execute multiple jobs for each N Queens problem
