@@ -25,6 +25,7 @@
 
 OUTPUT_DIR=""
 LOG_DIR="/scratch/jgillett/log/n_queens/"
+MUTATION_RATES=(0.01 $(seq 0.05 0.05 1.0))
 
 
 # Make sure the user provided the path
@@ -59,16 +60,16 @@ fi
 
 
 # Execute multiple jobs for each N Queens problem
-for run_num in {1..3}
+for run_num in {1..30}
 do
-    for queen in {4..16}
+    for queen in {8..16}
     do
         # Execute the job for variable mutation rate
         log_file=q_${queen}_variable_${run_num}.log
         sqsub -q serial -r 2d --mpp 6G -o ${LOG_DIR}/${log_file} n_queens.sh -o "${OUTPUT_DIR}" -r ${run_num} -q ${queen} -s 0
 
         # Execute the job for each of the fixed mutation rates
-        for rate in 0.01 0.05 0.10 0.25 0.50 0.75 1.0
+        for rate in ${MUTATION_RATES[@]}
         do
             log_file=q_${queen}_${rate}_${run_num}.log
             sqsub -q serial -r 2d --mpp 6G -o ${LOG_DIR}/${log_file} n_queens.sh -o "${OUTPUT_DIR}" -r ${run_num} -m ${rate} -q ${queen} -s 0
