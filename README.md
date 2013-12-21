@@ -16,12 +16,15 @@ Summary of Course Projects and Their Solutions
     Our solution inolves the use of Differential Evolution **(DE)** in order to approach and optimal solution to find the
     minimum for the functions quickly.
 
+3.  The third project involved using MATLAB's Fuzzy Logic Toolbox in order to create a hypothetical marriage finder
+    to help in finding the best match.
+
 
 Methodology, Analysis, and Conclusions
 ---------------------------------------
 
 For more information on our methodology, the algorithms used, as well as our analysis and conlcusions please see
-our report located in the [research](research/) directory.
+our [Part A Report](doc/Project%20Part%20A%20Report.pdf) located in the [doc/](doc/) directory.
 
 
 Copyright (Really Copyleft)
